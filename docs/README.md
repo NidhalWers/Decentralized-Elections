@@ -53,6 +53,13 @@ Sur Trello les tickets sont numérotés, pour chaque ticket (ou card) une branch
 <img width="1267" alt="lier_ticket_github_2" src="https://user-images.githubusercontent.com/32906777/194014848-bf391db9-d357-4010-ac11-06e46fcd0425.png">
 
 ### étape n°2
+<img width="1280" alt="lier_ticket_github_2" src="https://user-images.githubusercontent.com/32906777/194019532-ba7110ca-379e-4377-a22d-39328e25d9c2.png">
+
+### étape n°3
+<img width="1280" alt="lier_ticket_github_3" src="https://user-images.githubusercontent.com/32906777/194019581-798443a5-9fc2-4fc0-8b92-9c5afd1272af.png">
+
+
+### étape n°4
 <img width="1277" alt="lier_ticket_github_1" src="https://user-images.githubusercontent.com/32906777/194014821-e14f6955-91b9-4e28-a4d6-e5b066cebad1.png">
 
 
