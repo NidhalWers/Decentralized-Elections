@@ -1,11 +1,17 @@
 # Gestion de projet 
 
-Sur Trello on retrouve les tableaux [Application](https://trello.com/b/D8Ap5Bh6/application), [BlockChain](https://trello.com/b/Lzb7U1go/blockchain) et [MachineLearning](https://trello.com/b/BsiMh4QB/machinelearning)
+Sur Trello on retrouve les tableaux 
+- [Application](https://trello.com/b/D8Ap5Bh6/application) 
+- [BlockChain](https://trello.com/b/Lzb7U1go/blockchain)
+- [MachineLearning](https://trello.com/b/BsiMh4QB/machinelearning)
 
 ## Fonctionnement du Github
 
-Chaque projet a sa propre branche main : Application, BlockChain, MachineLearning
-
+Chaque projet a sa propre branche main : 
+- [Application](https://github.com/NidhalWers/Decentralized-Elections/tree/Application)
+- [BlockChain](https://github.com/NidhalWers/Decentralized-Elections/tree/BlockChain)
+- [MachineLearning](https://github.com/NidhalWers/Decentralized-Elections/tree/MachineLearning)
+ 
 ## Fonctionnement du Trello
 
 ### Constitution d'un ticket
