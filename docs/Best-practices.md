@@ -4,7 +4,7 @@ Sur Trello on retrouve les tableaux [Application](https://trello.com/b/D8Ap5Bh6/
 
 ## Fonctionnement du Github
 
-Chaque projet a sa propre branche main : Application --> main-Application, BlockChain --> main-BlockChain, MachineLearning --> main-MachineLearning
+Chaque projet a sa propre branche main : Application, BlockChain, MachineLearning
 
 ## Fonctionnement du Trello
 
