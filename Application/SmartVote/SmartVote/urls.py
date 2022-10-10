@@ -20,4 +20,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('connect/', include('Connect.urls')),
     path('adminspace/', include('AdminSpace.urls')),
+    path('base/', include('base.urls')),
 ]
