@@ -12,7 +12,8 @@
 - Si ce n'est pas déjà fait, créez un rôle appelé "postgres" et comme mot de passe "password".
 **Le login de base est nommé postgres, assurez vous bien que son mot de passe soit le bon**
 
-Screenshot 2022-10-10 122051.png
+![Screenshot 2022-10-10 122051](https://user-images.githubusercontent.com/56387759/194850943-78fbf032-1a5e-43a1-a28c-ea356a5f554f.png)
+
 
 Screenshot 2022-10-10 122524.png
 
