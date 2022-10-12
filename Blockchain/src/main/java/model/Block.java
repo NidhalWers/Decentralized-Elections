@@ -1,5 +1,7 @@
 package model;
 
+import service.Cryptography;
+
 import java.time.LocalDateTime;
 
 public class Block {
@@ -16,12 +18,9 @@ public class Block {
         this.previousHash = builder.previousHash;
         this.timeStamp = builder.timeStamp;
         this.data = builder.data;
-        this.hash = new StringBuilder()
-                .append(previousHash)
-                .append(timeStamp.toString())
-                .append(data).toString();
+        this.hash = computeHash();
     }
-
+    
     public String getHash() {
         return hash;
     }
@@ -36,6 +35,17 @@ public class Block {
 
     public String getData() {
         return data;
+    }
+
+    public String computeHash() {
+        return Cryptography.computeAlgorithmSha3(new StringBuilder()
+                .append(previousHash)
+                .append(timeStamp.toString())
+                .append(data).toString());
+    }
+
+    public boolean isValid(){
+        return computeHash().equals(this.hash);
     }
 
     public static Builder builder(){
