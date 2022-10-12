@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - choix du compte</title>
+    {% load static %}
+    <link rel="shortcut icon" href="{% static 'Connect/images/fc_avatar.png'%} " />
+    <link rel="stylesheet" href="../../static/connect/css/style.css">
+    <!-- Library / Plugin Css Build -->
+    <link rel="stylesheet" href="{% static 'base/css/core/libs.min.css' %}">
+    <!-- Hope Ui Design System Css -->
+    <link rel="stylesheet" href="{% static 'base/css/hope-ui.min.css' %}">
+</head>
+<body>
+    <div class="container-fc">
+        <div><img src="{% static 'Connect/images/fc_avatar.png'%} " alt="France-Connect" class="img-fc img-top"></div>
+        <div class="text-top"> 
+            <div class="france"> 
+                France 
+            </div> 
+            <div class="connect"> 
+                Connect
+            </div>
+        </div>
+    </div>
+    <div class="zone-text-1">
+        <div class="text-1">
+            Je choisis un compte pour me connecter sur :
+        </div>
+    </div>
+    <div class="zone-text-2">
+        <div class="text-2">
+            les sites de l'Agence Nationale des
+        </div>
+        <div class="text-2">
+            Titres Sécurisés
+        </div>
+    </div>
+    <div class="container-logo-fc">
+        <div class="row">
+            <div class="col-4">
+                <button class="btn-logo-fc"><img src="{% static 'Connect/images/fi-impots.png'%} " alt="impots.gouv.fr" class="img-logo-fc"></button>
+            </div>
+            <div class="col-4">
+                <button class="btn-logo-fc"><img src="{% static 'Connect/images/fi-ameli.png'%} " alt="impots.gouv.fr" class="img-logo-fc"></button>
+            </div>
+            <div class="col-4">
+                <button class="btn-logo-fc"><img src="{% static 'Connect/images/fi-laposte.png'%} " alt="impots.gouv.fr" class="img-logo-fc"></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <button class="btn-logo-fc"><img src="{% static 'Connect/images/fi-mcm.png'%} " alt="impots.gouv.fr" class="img-logo-fc"></button>
+            </div>
+            <div class="col-4">
+                <button class="btn-logo-fc"><img src="{% static 'Connect/images/fi-msa.png'%} " alt="impots.gouv.fr" class="img-logo-fc"></button>
+            </div>
+            <div class="col-4">
+                <button class="btn-logo-fc"><img src="{% static 'Connect/images/logo-yris-font-black.svg'%} " alt="impots.gouv.fr" class="img-logo-fc"></button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
