@@ -20,7 +20,7 @@ public class Block {
         this.data = builder.data;
         this.hash = computeHash();
     }
-    
+
     public String getHash() {
         return hash;
     }
@@ -35,6 +35,16 @@ public class Block {
 
     public String getData() {
         return data;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder()
+                .append("Block #").append(hash)
+                .append("[previous Hash : ").append(previousHash).append(",\n")
+                .append("timestamp : ").append(timeStamp.toString()).append(",\n")
+                .append("data : ").append(data).append(" ]")
+                .toString();
     }
 
     public String computeHash() {
