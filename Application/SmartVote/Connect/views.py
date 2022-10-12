@@ -7,3 +7,6 @@ def login(request):
 
 def fc(request):
     return render(request,'Connect/fc.html')
+
+def impots(request):
+    return render(request,'Connect/impots.html')

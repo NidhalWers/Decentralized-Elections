@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Identification France-Connect avec mon compte impots.gouv.fr.">
+    
+    {% load static %}
+    <!-- Library / Plugin Css Build -->
+    <link rel="stylesheet" href="{% static 'base/css/core/libs.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Connect/css/style.css' %}" ">
+    <!-- Hope Ui Design System Css -->
+    <link rel="stylesheet" href="{% static 'base/css/hope-ui.min.css' %}">
+    <link rel="shortcut icon" href="https://www.impots.gouv.fr/themes/custom/pus_inea/favicon.ico" type="image/ico">
+
+    <title>Particuliers | authentification</title>
+</head>
+
+<body>
+    <div class="alert alert-bottom alert-danger alert-dismissible fade show " role="alert">
+        <span> Attention, ce site internet est à but expérimental, il ne s'agit en aucun cas d'un site officiel.</span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="row justify-content-md-center container-header-impots">
+        <div class="col-2 trou"></div>
+        <div class="col-8">
+            <div class="container-impots">
+                <div class="impots-header-img">
+                    <img class="img-logo-marianne" src="{% static 'Connect/images/marianne.jpg'%}" alt="République Française - Liberté, Égalité, Fraternité">
+                    <img class="img-logo-impots" src="{% static 'Connect/images/fi-impots.png'%} " alt="impots.gouv.fr">
+            </div> 
+                <a href="/connect/login/franceconnect"><button class="return-fc">Retourner à FranceConnect</button></a>
+            </div>
+        </div>
+        <div class="col-2 trou"></div>
+    </div>
+    <div class="row justify-content-md-center container-body-impots">
+        <div class="col-4">
+            <div class="card-impots">
+                <div class="text-center little-title">Je me connecte avec mon compte impots.gouv.fr </div>
+                <div class="form-section-impots">
+                    <div class="identifiant-impots">
+                        <div class="text-impots">
+                            Numéro fiscal
+                        </div>
+                        <input class="form-control" name="spi_tmp" type="tel" aria-required="true" autocomplete="username" id="spi_tmp" placeholder="13 chiffres" data-original-title="13 chiffres" data-toggle="tooltip" data-placement="top" data-mask="int" data-max="13" data-feedbackok="1/" data-dashlane-rid="4d8be10a0b8ceeda" data-kwimpalastatus="alive" data-kwimpalaid="1665573937601-0" style="color: green;" data-kwcachedvalue="3030596490103" data-dashlane-vault-type="Credential" data-dashlane-filled-by-user="true" data-dashlane-corrected-by-user="true" data-form-type="id_document,tax,username">    
+                    </div>
+                    <div class="identifiant-impots">
+                        <div class="text-impots">
+                            Mot de passe
+                        </div>
+                        <input class="form-control" type="password" name="pwd_tmp" aria-required="true" autocomplete="current-password" id="pwd_tmp" data-toggle="tooltip" data-placement="top" maxlength="128" data-original-title="" title="" data-dashlane-rid="80a542188363def6" data-kwimpalastatus="alive" data-kwimpalaid="1665575661591-1" data-kwcachedvalue="3" data-dashlane-vault-type="Credential" data-dashlane-filled-by-user="true" data-dashlane-corrected-by-user="true" data-form-type="password">
+                    </div>
+                    <div class="submit-impots">
+                        <button id="btnAction" type="submit" class="btn-submit-impots" aria-controls="erreur" data-href="" data-form-type="action,login">Connexion</button>
+                    </div>
+                    <div class="bottom-form-impots">
+                        <div class="text-bottom-form-impots">
+                            En cliquant sur «Connexion», vous acceptez que vos données personnelles (nom, prénoms, date et lieu de naissance, adresse électronique) soient transmises à FranceConnect.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card-impots">
+                <div class="text-center little-title">Aide </div>
+                <div class="help-section">
+                    <ul class="main-ul">
+                        <li>
+                            <a href="">Où trouver votre numéro fiscal ?</a> 
+                        </li>
+                        <li>
+                            <a href="">Vous n'avez pas encore de numéro fiscal ?</a> 
+                        </li>
+                        <li>
+                            <a href="">Vous avez oublié votre mot de passe</a> 
+                        </li>
+                        <li class="last-ul">
+                            <a href="">Se connecter avec FranceConnect</a> 
+                        </li>
+
+                    </ul>
+                    <ul class="sec-ul">
+                        <li class="last-ul">
+                            <a href="">Gestion des cookies</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <footer class="footer-impots" role="contentinfo">
+        <p class="col-md-12 text-center">Direction générale des Finances publiques</p>
+    </footer>
+</body>
+<!-- Library Bundle Script -->
+<script src="{% static 'base/js/core/libs.min.js' %}"></script>
+</html>
