@@ -35,7 +35,7 @@ class BlockTest {
                 .data("this is the second block")
                 .build();
 
-        String expectedHash = "40ce09dfd2b3f5b51654b4c56c1e564dbb4a29ab50d7ffcd4dbc0fb8fc643e5d7344d2da5d1c42d0b847091ecdcae0ccf43d06432a817bfc097af3f9e2d50688";
+        String expectedHash = "814366bf6ae693808da58f58e0a608cd7e3c763e00d7120b1836cad546056e68f88c7e21d79fc7b835ef137ad9a55c29ea2321470e4067abb8ef841fa67047f2";
 
         assertThat(block.getHash()).isEqualTo(expectedHash);
     }

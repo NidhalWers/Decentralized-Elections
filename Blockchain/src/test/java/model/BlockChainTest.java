@@ -1,6 +1,5 @@
 package model;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +17,7 @@ class BlockChainTest {
 
     @Test
     void testGetBlockChain() {
-       List list =  BlockChain.BLOCK_CHAIN.getBlockChain();
+       List list =  BlockChain.BLOCK_CHAIN.getBlocks();
 
        assertThat(list).isInstanceOf(List.class);
     }
@@ -31,46 +30,35 @@ class BlockChainTest {
                 .data("this is the second block")
                 .build());
 
-        assertThat(BlockChain.BLOCK_CHAIN.getBlockChain()).hasSize(1);
-        assertThat(BlockChain.BLOCK_CHAIN.getBlockChain().get(0).getData()).isEqualTo("this is the second block");
+        assertThat(BlockChain.BLOCK_CHAIN.getBlocks()).hasSize(2);
+        assertThat(BlockChain.BLOCK_CHAIN.getBlocks().get(1).getData()).isEqualTo("this is the second block");
     }
 
     @Test
     void testEmptyTheChain() {
         BlockChain.BLOCK_CHAIN.emptyTheChain();
 
-        assertThat(BlockChain.BLOCK_CHAIN.getBlockChain()).isEmpty();
+        assertThat(BlockChain.BLOCK_CHAIN.getBlocks()).hasSize(1);
+        assertThat(BlockChain.BLOCK_CHAIN.getLatestBlock().getData()).isEqualTo("Genesis block");
     }
 
     @Test
     void testIsValid() {
-        BlockChain.BLOCK_CHAIN.addBlock(Block.builder()
-                .previousHash("racine")
-                .timeStamp(LocalDateTime.of(2022,10,30,8,30,00))
-                .data("this is the first block")
-                .build());
-        BlockChain.BLOCK_CHAIN.addBlock(Block.builder()
-                .previousHash(BlockChain.BLOCK_CHAIN.getBlock(0).computeHash())
-                .timeStamp(LocalDateTime.of(2022,10,30,8,45,00))
-                .data("this is the second block")
-                .build());
+        BlockChain.BLOCK_CHAIN.addBlock(BlockChain.BLOCK_CHAIN.newBlock("this is the first block"));
+        BlockChain.BLOCK_CHAIN.addBlock(BlockChain.BLOCK_CHAIN.newBlock("this is the second block"));
 
-        assertThat(BlockChain.BLOCK_CHAIN.isValid()).isTrue();
+        assertThat(BlockChain.BLOCK_CHAIN.isBlockchainValid()).isTrue();
     }
 
     @Test
     void testIsValidInvalidPreviousBlock() {
-        BlockChain.BLOCK_CHAIN.addBlock(Block.builder()
-                .previousHash("racine")
-                .timeStamp(LocalDateTime.of(2022,10,30,8,30,00))
-                .data("this is the first block")
-                .build());
+        BlockChain.BLOCK_CHAIN.addBlock(BlockChain.BLOCK_CHAIN.newBlock("this is the first block"));
         BlockChain.BLOCK_CHAIN.addBlock(Block.builder()
                 .previousHash("hash-1")
                 .timeStamp(LocalDateTime.of(2022,10,30,8,45,00))
                 .data("this is the second block")
                 .build());
 
-        assertThat(BlockChain.BLOCK_CHAIN.isValid()).isFalse();
+        assertThat(BlockChain.BLOCK_CHAIN.isBlockchainValid()).isFalse();
     }
 }
