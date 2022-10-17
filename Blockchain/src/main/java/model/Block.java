@@ -30,7 +30,6 @@ public class Block {
 
     public int getIndex() {
         return index;
-    }
 
     public String getHash() {
         return hash;
@@ -81,14 +80,13 @@ public class Block {
         return computeHash().equals(this.hash);
     }
 
-
-
     public static Builder builder(){
         return new Builder();
     }
 
     public static class Builder{
         private int index;
+
         private String previousHash;
 
         private LocalDateTime timeStamp;
