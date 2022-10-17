@@ -1,0 +1,15 @@
+{% extends "base/base.html" %}
+
+{% block body %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'Connect/css/style.css' %}">
+<div class="container-login">
+    <a href="/connect/login/franceconnect"><button type="button" class="btn btn-primary" >
+        <div class="btn-fc">
+            <div><img src="{% static 'Connect/images/fc_avatar.png'%} " alt="France-Connect" class="img-fc"></div>
+            <div class="text-fc"> S'identifier avec <br> France connect</div>
+        </div>
+    </button>
+    </a>
+</div>
+{% endblock %}
