@@ -1,6 +1,7 @@
-package com.septgrandcorsaire.blockchain.model;
+package com.septgrandcorsaire.blockchain.domain;
 
-import com.septgrandcorsaire.blockchain.util.LoggerService;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.septgrandcorsaire.blockchain.infrastructure.util.LoggerService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,9 +12,6 @@ import java.util.List;
  * @since 0.0.1-SNAPSHOT
  */
 public class BlockChain {
-
-    public static final int MINING_DIFFICULTY = 4;
-    public static final BlockChain BLOCK_CHAIN = new BlockChain(MINING_DIFFICULTY);
 
     private LoggerService loggerService;
 
@@ -73,48 +71,20 @@ public class BlockChain {
                 .forEach(block -> System.out.println(block.toString() + "\n"));
     }
 
+    @JsonValue
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 1; i < blocks.size(); i++) {
+            builder.append(blocks.get(i).getData() + "\n");
+        }
+        return builder.toString();
+    }
+
     public boolean isFirstBlockValid() {
         Block firstBlock = blocks.get(0);
         return firstBlock.getIndex() == 0 &&
                 firstBlock.getPreviousHash() == null &&
                 firstBlock.isValid();
-    }
-
-    public boolean isBlockchainValid() {
-        if (!isFirstBlockValid()) {
-            return false;
-        }
-        boolean validityTest = true;
-        for (int i = 1; i < blocks.size(); i++) {
-            Block block = blocks.get(i);
-            Block previousBlock = blocks.get(i - 1);
-
-            validityTest = isValidAddedBlock(validityTest, block, previousBlock);
-        }
-        return validityTest;
-    }
-
-    private boolean isValidAddedBlock(boolean validityTest, Block block, Block previousBlock) {
-        if (!block.isValid()) {
-            loggerService.logInvalidBlockHash(block);
-            validityTest = false;
-        }
-        if (doesPreviousIndexNotMatch(block, previousBlock)) {
-            loggerService.logInvalidIndexes(block, previousBlock);
-            validityTest = false;
-        }
-        if (isPreviousHashNotEqualToPreviousBlocksHash(block, previousBlock)) {
-            loggerService.logInvalidPreviousHash(block, previousBlock);
-            validityTest = false;
-        }
-        return validityTest;
-    }
-
-    private static boolean doesPreviousIndexNotMatch(Block block, Block previousBlock) {
-        return block.getIndex() != previousBlock.getIndex() + 1;
-    }
-
-    private static boolean isPreviousHashNotEqualToPreviousBlocksHash(Block block, Block previousBlock) {
-        return !block.getPreviousHash().equals(previousBlock.getHash());
     }
 }

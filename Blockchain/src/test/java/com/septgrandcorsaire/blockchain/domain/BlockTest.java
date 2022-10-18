@@ -1,4 +1,4 @@
-package com.septgrandcorsaire.blockchain.model;
+package com.septgrandcorsaire.blockchain.domain;
 
 import org.junit.jupiter.api.Test;
 

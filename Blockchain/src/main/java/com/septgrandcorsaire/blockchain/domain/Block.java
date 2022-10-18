@@ -1,8 +1,8 @@
-package com.septgrandcorsaire.blockchain.model;
+package com.septgrandcorsaire.blockchain.domain;
 
 
-import com.septgrandcorsaire.blockchain.service.CryptographyService;
-import com.septgrandcorsaire.blockchain.util.Utils;
+import com.septgrandcorsaire.blockchain.infrastructure.service.CryptographyService;
+import com.septgrandcorsaire.blockchain.infrastructure.util.Utils;
 
 import java.time.LocalDateTime;
 

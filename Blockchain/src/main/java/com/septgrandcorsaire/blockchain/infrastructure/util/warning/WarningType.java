@@ -1,4 +1,4 @@
-package com.septgrandcorsaire.blockchain.util.warning;
+package com.septgrandcorsaire.blockchain.infrastructure.util.warning;
 
 /**
  * @author Nidhal TEYEB

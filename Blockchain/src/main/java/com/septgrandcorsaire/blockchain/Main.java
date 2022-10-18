@@ -1,6 +1,7 @@
 package com.septgrandcorsaire.blockchain;
 
-import com.septgrandcorsaire.blockchain.model.BlockChain;
+import com.septgrandcorsaire.blockchain.domain.BlockChain;
+import com.septgrandcorsaire.blockchain.infrastructure.BlockchainDomainService;
 
 /**
  * @author Nidhal TEYEB
@@ -8,14 +9,17 @@ import com.septgrandcorsaire.blockchain.model.BlockChain;
  */
 public class Main {
 
+    private static BlockchainDomainService blockchainDomainService;
+
     public static void main(String[] args) {
-        BlockChain.BLOCK_CHAIN.addBlock(BlockChain.BLOCK_CHAIN.newBlock("Premier Block"));
-        BlockChain.BLOCK_CHAIN.addBlock(BlockChain.BLOCK_CHAIN.newBlock("On test"));
-        BlockChain.BLOCK_CHAIN.addBlock(BlockChain.BLOCK_CHAIN.newBlock("Il faut de la data"));
-        BlockChain.BLOCK_CHAIN.addBlock(BlockChain.BLOCK_CHAIN.newBlock("M1APP-BDML"));
+        BlockChain blockChain = new BlockChain(4);
+        blockChain.addBlock(blockChain.newBlock("Premier Block"));
+        blockChain.addBlock(blockChain.newBlock("On test"));
+        blockChain.addBlock(blockChain.newBlock("Il faut de la data"));
+        blockChain.addBlock(blockChain.newBlock("M1APP-BDML"));
 
-        System.out.println("Is blockchain valid ? " + BlockChain.BLOCK_CHAIN.isBlockchainValid());
+        System.out.println("Is blockchain valid ? " + blockchainDomainService.isBlockchainValid(blockChain));
 
-        BlockChain.BLOCK_CHAIN.printBlockchain();
+        blockChain.printBlockchain();
     }
 }

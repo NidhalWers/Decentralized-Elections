@@ -1,4 +1,4 @@
-package com.septgrandcorsaire.blockchain.service;
+package com.septgrandcorsaire.blockchain.infrastructure.service;
 
 import org.junit.jupiter.api.Test;
 

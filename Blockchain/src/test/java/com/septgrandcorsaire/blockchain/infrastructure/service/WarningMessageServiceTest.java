@@ -1,8 +1,8 @@
-package com.septgrandcorsaire.blockchain.service;
+package com.septgrandcorsaire.blockchain.infrastructure.service;
 
-import com.septgrandcorsaire.blockchain.model.Block;
-import com.septgrandcorsaire.blockchain.model.BlockChain;
-import com.septgrandcorsaire.blockchain.util.warning.WarningMessageService;
+import com.septgrandcorsaire.blockchain.domain.Block;
+import com.septgrandcorsaire.blockchain.domain.BlockChain;
+import com.septgrandcorsaire.blockchain.infrastructure.util.warning.WarningMessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,10 +15,14 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 0.0.1-SNAPSHOT
  */
 class WarningMessageServiceTest {
+    private static final int MINING_DIFFICULTY = 4;
+
+    private BlockChain blockChainForTest = new BlockChain(MINING_DIFFICULTY);
+
 
     @BeforeEach
     void initTest() {
-        BlockChain.BLOCK_CHAIN.emptyTheChain();
+        blockChainForTest.emptyTheChain();
     }
 
     @Test
@@ -40,8 +44,8 @@ class WarningMessageServiceTest {
 
     @Test
     void testCreateInvalidPreviousHash() {
-        BlockChain.BLOCK_CHAIN.addBlock(BlockChain.BLOCK_CHAIN.newBlock("this is the first block"));
-        BlockChain.BLOCK_CHAIN.addBlock(Block.builder()
+        blockChainForTest.addBlock(blockChainForTest.newBlock("this is the first block"));
+        blockChainForTest.addBlock(Block.builder()
                 .index(2)
                 .previousHash("hash-1")
                 .timeStamp(LocalDateTime.of(2022, 10, 30, 8, 45, 00))
@@ -51,10 +55,10 @@ class WarningMessageServiceTest {
         WarningMessageService warningMessageService = new WarningMessageService();
         String expectedErrorMessage = "the block identified by #2, " +
                 "with the previous hash : 'hash-1', " +
-                "should have the previous hash : '" + BlockChain.BLOCK_CHAIN.getBlock(1).mineBlock(BlockChain.MINING_DIFFICULTY).getHash() + "' instead";
+                "should have the previous hash : '" + blockChainForTest.getBlock(1).mineBlock(MINING_DIFFICULTY).getHash() + "' instead";
         String actualErrorMessage = warningMessageService.createInvalidPreviousHashMessage(
-                BlockChain.BLOCK_CHAIN.getBlock(2),
-                BlockChain.BLOCK_CHAIN.getBlock(1)
+                blockChainForTest.getBlock(2),
+                blockChainForTest.getBlock(1)
         );
 
         assertThat(actualErrorMessage).isEqualTo(expectedErrorMessage);
@@ -62,8 +66,8 @@ class WarningMessageServiceTest {
 
     @Test
     void testCreateInvalidIndexesMessage() {
-        BlockChain.BLOCK_CHAIN.addBlock(BlockChain.BLOCK_CHAIN.newBlock("this is the first block"));
-        BlockChain.BLOCK_CHAIN.addBlock(Block.builder()
+        blockChainForTest.addBlock(blockChainForTest.newBlock("this is the first block"));
+        blockChainForTest.addBlock(Block.builder()
                 .index(3)
                 .previousHash("hash-1")
                 .timeStamp(LocalDateTime.of(2022, 10, 30, 8, 45, 00))
@@ -74,8 +78,8 @@ class WarningMessageServiceTest {
         String expectedErrorMessage = "the block identified by #3, " +
                 "is chain-linked to the block #1";
         String actualErrorMessage = warningMessageService.createInvalidIndexesMessage(
-                BlockChain.BLOCK_CHAIN.getBlock(2),
-                BlockChain.BLOCK_CHAIN.getBlock(1)
+                blockChainForTest.getBlock(2),
+                blockChainForTest.getBlock(1)
         );
 
         assertThat(actualErrorMessage).isEqualTo(expectedErrorMessage);

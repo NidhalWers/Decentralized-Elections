@@ -1,4 +1,4 @@
-package com.septgrandcorsaire.blockchain.util;
+package com.septgrandcorsaire.blockchain.infrastructure.util;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class UtilsTest {
     void testGetStringOfZeros() {
         final int numberOfZerosExpected = 5;
         final String expected = "00000";
-        String actual = Utils.getStringOfZeros(5);
+        String actual = Utils.getStringOfZeros(numberOfZerosExpected);
 
         assertThat(actual).isEqualTo(expected);
     }

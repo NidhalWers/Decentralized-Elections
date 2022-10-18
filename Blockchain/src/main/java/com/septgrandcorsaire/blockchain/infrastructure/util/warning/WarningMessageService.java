@@ -1,17 +1,15 @@
-package com.septgrandcorsaire.blockchain.util.warning;
+package com.septgrandcorsaire.blockchain.infrastructure.util.warning;
 
 
-import com.septgrandcorsaire.blockchain.model.Block;
-import org.springframework.stereotype.Service;
+import com.septgrandcorsaire.blockchain.domain.Block;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Nidhal TEYEB
  * @since 0.0.1-SNAPSHOT
  */
-@Service
+@Component
 public class WarningMessageService {
-    public WarningMessageService() {
-    }
 
     public String createInvalidBlockHashMessage(Block block) {
         return "the block identified by #" + block.getIndex() + ", " +

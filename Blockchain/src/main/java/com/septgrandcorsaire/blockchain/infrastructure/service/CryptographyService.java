@@ -1,4 +1,4 @@
-package com.septgrandcorsaire.blockchain.service;
+package com.septgrandcorsaire.blockchain.infrastructure.service;
 
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import org.bouncycastle.jcajce.provider.digest.SHA3;

@@ -1,11 +1,11 @@
-package com.septgrandcorsaire.blockchain.util;
+package com.septgrandcorsaire.blockchain.infrastructure.util;
 
 
 import com.septgrandcorsaire.blockchain.Application;
-import com.septgrandcorsaire.blockchain.model.Block;
-import com.septgrandcorsaire.blockchain.util.warning.WarningMessageService;
-import com.septgrandcorsaire.blockchain.util.warning.WarningType;
-import org.springframework.stereotype.Service;
+import com.septgrandcorsaire.blockchain.domain.Block;
+import com.septgrandcorsaire.blockchain.infrastructure.util.warning.WarningMessageService;
+import com.septgrandcorsaire.blockchain.infrastructure.util.warning.WarningType;
+import org.springframework.stereotype.Component;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,12 +14,12 @@ import java.util.logging.Logger;
  * @author Nidhal TEYEB
  * @since 0.0.1-SNAPSHOT
  */
-@Service
+@Component
 public class LoggerService {
 
     private static Logger logger = Application.LOGGER;
 
-    private WarningMessageService warningMessageService;
+    private WarningMessageService warningMessageService = new WarningMessageService();
 
     public void logInvalidBlockHash(Block block) {
         logWarning(WarningType.INVALID_BLOCK_HASH, warningMessageService.createInvalidBlockHashMessage(block));
