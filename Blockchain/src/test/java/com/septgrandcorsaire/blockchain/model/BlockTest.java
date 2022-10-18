@@ -1,5 +1,6 @@
-package model;
+package com.septgrandcorsaire.blockchain.model;
 
+import com.septgrandcorsaire.blockchain.model.Block;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -10,10 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class BlockTest {
 
     @Test
-    void testBuildBlock(){
+    void testBuildBlock() {
         Block block = Block.builder()
                 .previousHash("hash-1")
-                .timeStamp(LocalDateTime.of(2022,10,30,8,30,00))
+                .timeStamp(LocalDateTime.of(2022, 10, 30, 8, 30, 00))
                 .data("this is the second block")
                 .build();
 
@@ -31,7 +32,7 @@ class BlockTest {
     void testComputeHash() {
         Block block = Block.builder()
                 .previousHash("hash-1")
-                .timeStamp(LocalDateTime.of(2022,10,30,8,30,00))
+                .timeStamp(LocalDateTime.of(2022, 10, 30, 8, 30, 00))
                 .data("this is the second block")
                 .build();
 
@@ -44,7 +45,7 @@ class BlockTest {
     void testIsValid() {
         Block block = Block.builder()
                 .previousHash("hash-1")
-                .timeStamp(LocalDateTime.of(2022,10,30,8,30,00))
+                .timeStamp(LocalDateTime.of(2022, 10, 30, 8, 30, 00))
                 .data("this is the second block")
                 .build();
 

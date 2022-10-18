@@ -1,4 +1,4 @@
-package util.error;
+package com.septgrandcorsaire.blockchain.util.error;
 
 public enum WarningType {
 

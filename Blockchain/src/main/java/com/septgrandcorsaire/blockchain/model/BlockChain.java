@@ -1,7 +1,8 @@
-package model;
+package com.septgrandcorsaire.blockchain.model;
 
+import com.septgrandcorsaire.blockchain.model.Block;
+import com.septgrandcorsaire.blockchain.util.LoggerService;
 
-import util.LoggerService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,7 +11,6 @@ import java.util.List;
 public class BlockChain {
 
     public static final int MINING_DIFFICULTY = 4;
-    
     public static final BlockChain BLOCK_CHAIN = new BlockChain(MINING_DIFFICULTY);
 
     private final LoggerService loggerService = new LoggerService();

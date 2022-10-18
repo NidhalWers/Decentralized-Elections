@@ -1,9 +1,11 @@
-package util;
+package com.septgrandcorsaire.blockchain.util;
 
-import model.Block;
-import model.BlockChain;
-import util.error.ErrorMessageService;
-import util.error.WarningType;
+
+
+import com.septgrandcorsaire.blockchain.model.Block;
+import com.septgrandcorsaire.blockchain.model.BlockChain;
+import com.septgrandcorsaire.blockchain.util.error.ErrorMessageService;
+import com.septgrandcorsaire.blockchain.util.error.WarningType;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

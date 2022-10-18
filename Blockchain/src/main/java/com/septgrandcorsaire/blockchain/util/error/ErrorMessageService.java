@@ -1,6 +1,7 @@
-package util.error;
+package com.septgrandcorsaire.blockchain.util.error;
 
-import model.Block;
+
+import com.septgrandcorsaire.blockchain.model.Block;
 
 public class ErrorMessageService {
     public ErrorMessageService() {

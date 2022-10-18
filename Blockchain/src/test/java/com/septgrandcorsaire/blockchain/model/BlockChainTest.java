@@ -1,5 +1,7 @@
-package model;
+package com.septgrandcorsaire.blockchain.model;
 
+import com.septgrandcorsaire.blockchain.model.Block;
+import com.septgrandcorsaire.blockchain.model.BlockChain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,22 +13,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BlockChainTest {
 
     @BeforeEach
-    void initTest(){
+    void initTest() {
         BlockChain.BLOCK_CHAIN.emptyTheChain();
     }
 
     @Test
     void testGetBlockChain() {
-       List list =  BlockChain.BLOCK_CHAIN.getBlocks();
+        List list = BlockChain.BLOCK_CHAIN.getBlocks();
 
-       assertThat(list).isInstanceOf(List.class);
+        assertThat(list).isInstanceOf(List.class);
     }
 
     @Test
     void testAddBlock() {
-       BlockChain.BLOCK_CHAIN.addBlock(Block.builder()
+        BlockChain.BLOCK_CHAIN.addBlock(Block.builder()
                 .previousHash("hash-1")
-                .timeStamp(LocalDateTime.of(2022,10,30,8,30,00))
+                .timeStamp(LocalDateTime.of(2022, 10, 30, 8, 30, 00))
                 .data("this is the second block")
                 .build());
 
@@ -55,7 +57,7 @@ class BlockChainTest {
         BlockChain.BLOCK_CHAIN.addBlock(BlockChain.BLOCK_CHAIN.newBlock("this is the first block"));
         BlockChain.BLOCK_CHAIN.addBlock(Block.builder()
                 .previousHash("hash-1")
-                .timeStamp(LocalDateTime.of(2022,10,30,8,45,00))
+                .timeStamp(LocalDateTime.of(2022, 10, 30, 8, 45, 00))
                 .data("this is the second block")
                 .build());
 

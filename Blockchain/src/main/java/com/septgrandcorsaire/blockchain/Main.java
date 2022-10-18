@@ -1,5 +1,6 @@
-import model.Block;
-import model.BlockChain;
+package com.septgrandcorsaire.blockchain;
+
+import com.septgrandcorsaire.blockchain.model.BlockChain;
 
 public class Main {
 

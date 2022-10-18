@@ -1,4 +1,4 @@
-package util;
+package com.septgrandcorsaire.blockchain.util;
 
 public class Utils {
 

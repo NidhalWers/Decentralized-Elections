@@ -1,5 +1,6 @@
-package service;
+package com.septgrandcorsaire.blockchain.service;
 
+import com.septgrandcorsaire.blockchain.service.Cryptography;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

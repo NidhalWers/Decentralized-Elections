@@ -1,7 +1,8 @@
-package model;
+package com.septgrandcorsaire.blockchain.model;
 
-import service.Cryptography;
-import util.Utils;
+
+import com.septgrandcorsaire.blockchain.service.Cryptography;
+import com.septgrandcorsaire.blockchain.util.Utils;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +31,7 @@ public class Block {
 
     public int getIndex() {
         return index;
+    }
 
     public String getHash() {
         return hash;
@@ -80,13 +82,14 @@ public class Block {
         return computeHash().equals(this.hash);
     }
 
+
+
     public static Builder builder(){
         return new Builder();
     }
 
     public static class Builder{
         private int index;
-
         private String previousHash;
 
         private LocalDateTime timeStamp;
