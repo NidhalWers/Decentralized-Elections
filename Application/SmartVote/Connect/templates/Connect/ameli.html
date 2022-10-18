@@ -1,10 +1,44 @@
+<!DOCTYPE html>
 
-{% load static %}
-
+<html lang="fr">
 <head>
-    <link rel="stylesheet" href="{% static 'Connect/css/style.css' %}">
+
+
+
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    
+    {% load static %}
+    <!-- Library / Plugin Css Build -->
+    <link rel="stylesheet" href="{% static 'base/css/core/libs.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Connect/css/style.css' %}" ">
+    <!-- Hope Ui Design System Css -->
+    <link rel="stylesheet" href="{% static 'base/css/hope-ui.min.css' %}">
+
+    <title>Amelie.fr - France Connect</title>
+
+
+
+
+
+
+
+
+
+
 
 </head>
+
+
+<body data-new-gr-c-s-check-loaded="14.1084.0" data-gr-ext-installed></body>
+
+<div class="alert alert-bottom alert-danger alert-dismissible fade show " role="alert">
+    <span> Attention, ce site internet est à but expérimental, il ne s'agit en aucun cas d'un site officiel.</span>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
 
 <div class="container-fc">
     <div><img src="{% static 'Connect/images/fc_avatar.png'%} " alt="France-Connect" class="img-fc img-top"></div>
@@ -17,3 +51,54 @@
         </div>
     </div>
 </div>
+
+    <h1 class="divTitle">Je me connecte avec mon compte ameli</h1>
+
+
+
+
+
+
+
+    <form>
+        <div class="row">
+           <div class="col-lg-12">
+              <div class="form-group">
+                 <!-- <label for="email" class="form-label"></label> -->
+                 <input type="email" class="form-control" id="email" aria-describedby="email" placeholder="Numéro de sécurité sociale">
+
+                <div class="AideLogin">
+                     <a class="myClickableThingy" onclick="AideUnique('aideSaisieNir')">Où trouver mon numéro de sécurité sociale ?</a>
+                </div>
+
+              </div>
+              
+           </div>
+
+           
+
+
+           <div class="col-lg-12">
+              <div class="form-group">
+                 <!-- <label for="password" class="form-label">Mon code confidentiel</label> -->
+                 <input type="password" class="form-control" id="password" aria-describedby="password" placeholder="Code confidentiel">
+              </div>
+           </div>
+           
+        </div>
+        <div class="d-flex justify-content-center">
+           <button type="submit" class="btn btn-primary">Sign In</button>
+        </div>
+        
+     </form>
+
+
+
+
+
+</body>
+
+<script src="{% static 'base/js/core/libs.min.js' %}"></script>
+<script src="{% static 'Connect/js/ameli.js' %}"></script>
+
+</html>

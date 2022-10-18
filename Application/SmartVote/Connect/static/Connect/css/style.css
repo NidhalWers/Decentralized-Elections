@@ -411,13 +411,23 @@ li a{
 
 
 
+.divTitle {
+    color: #2C2C2C;
+    text-align: center;
+    font-weight: lighter;
+}
 
 
+.myClickableThingy {
+    cursor: pointer;
+    color: #0062ad;
+}
 
-
-
-
-
+.AideLogin {
+    color: #255EA7;
+    text-align: justify;
+    line-height: 1.5em;
+}
 
 
 
