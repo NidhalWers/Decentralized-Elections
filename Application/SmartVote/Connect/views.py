@@ -10,3 +10,6 @@ def fc(request):
 
 def impots(request):
     return render(request,'Connect/impots.html')
+
+def ameli(request):
+    return render(request,'Connect/ameli.html')
