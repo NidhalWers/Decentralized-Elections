@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "Connect",
     "AdminSpace",
     "base",
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +123,7 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+AUTH_USER_MODEL = 'Connect.Citizen'
