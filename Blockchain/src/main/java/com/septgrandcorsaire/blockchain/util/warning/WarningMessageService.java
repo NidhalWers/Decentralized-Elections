@@ -1,10 +1,16 @@
-package com.septgrandcorsaire.blockchain.util.error;
+package com.septgrandcorsaire.blockchain.util.warning;
 
 
 import com.septgrandcorsaire.blockchain.model.Block;
+import org.springframework.stereotype.Service;
 
-public class ErrorMessageService {
-    public ErrorMessageService() {
+/**
+ * @author Nidhal TEYEB
+ * @since 0.0.1-SNAPSHOT
+ */
+@Service
+public class WarningMessageService {
+    public WarningMessageService() {
     }
 
     public String createInvalidBlockHashMessage(Block block) {

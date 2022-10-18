@@ -2,7 +2,7 @@ package com.septgrandcorsaire.blockchain.service;
 
 import com.septgrandcorsaire.blockchain.model.Block;
 import com.septgrandcorsaire.blockchain.model.BlockChain;
-import com.septgrandcorsaire.blockchain.util.error.ErrorMessageService;
+import com.septgrandcorsaire.blockchain.util.warning.WarningMessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +10,11 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ErrorMessageServiceTest {
+/**
+ * @author Nidhal TEYEB
+ * @since 0.0.1-SNAPSHOT
+ */
+class WarningMessageServiceTest {
 
     @BeforeEach
     void initTest() {
@@ -25,11 +29,11 @@ class ErrorMessageServiceTest {
                 .data("this is the second block")
                 .build();
 
-        ErrorMessageService errorMessageService = new ErrorMessageService();
+        WarningMessageService warningMessageService = new WarningMessageService();
         String expectedErrorMessage = "the block identified by #0, " +
                 "with the previous hash : 'racine', " +
                 "should have the hash : '" + block.computeHash() + "' instead";
-        String actualErrorMessage = errorMessageService.createInvalidBlockHashMessage(block);
+        String actualErrorMessage = warningMessageService.createInvalidBlockHashMessage(block);
 
         assertThat(actualErrorMessage).isEqualTo(expectedErrorMessage);
     }
@@ -44,11 +48,11 @@ class ErrorMessageServiceTest {
                 .data("this is the second block")
                 .build());
 
-        ErrorMessageService errorMessageService = new ErrorMessageService();
+        WarningMessageService warningMessageService = new WarningMessageService();
         String expectedErrorMessage = "the block identified by #2, " +
                 "with the previous hash : 'hash-1', " +
                 "should have the previous hash : '" + BlockChain.BLOCK_CHAIN.getBlock(1).mineBlock(BlockChain.MINING_DIFFICULTY).getHash() + "' instead";
-        String actualErrorMessage = errorMessageService.createInvalidPreviousHashMessage(
+        String actualErrorMessage = warningMessageService.createInvalidPreviousHashMessage(
                 BlockChain.BLOCK_CHAIN.getBlock(2),
                 BlockChain.BLOCK_CHAIN.getBlock(1)
         );
@@ -66,10 +70,10 @@ class ErrorMessageServiceTest {
                 .data("this is the second block")
                 .build());
 
-        ErrorMessageService errorMessageService = new ErrorMessageService();
+        WarningMessageService warningMessageService = new WarningMessageService();
         String expectedErrorMessage = "the block identified by #3, " +
                 "is chain-linked to the block #1";
-        String actualErrorMessage = errorMessageService.createInvalidIndexesMessage(
+        String actualErrorMessage = warningMessageService.createInvalidIndexesMessage(
                 BlockChain.BLOCK_CHAIN.getBlock(2),
                 BlockChain.BLOCK_CHAIN.getBlock(1)
         );

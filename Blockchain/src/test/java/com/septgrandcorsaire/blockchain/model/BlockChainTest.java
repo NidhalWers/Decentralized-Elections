@@ -1,7 +1,5 @@
 package com.septgrandcorsaire.blockchain.model;
 
-import com.septgrandcorsaire.blockchain.model.Block;
-import com.septgrandcorsaire.blockchain.model.BlockChain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +8,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * @author Nidhal TEYEB
+ * @since 0.0.1-SNAPSHOT
+ */
 class BlockChainTest {
 
     @BeforeEach

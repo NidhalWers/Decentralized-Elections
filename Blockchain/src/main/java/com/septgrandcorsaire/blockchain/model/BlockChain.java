@@ -1,24 +1,27 @@
 package com.septgrandcorsaire.blockchain.model;
 
-import com.septgrandcorsaire.blockchain.model.Block;
 import com.septgrandcorsaire.blockchain.util.LoggerService;
-
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Nidhal TEYEB
+ * @since 0.0.1-SNAPSHOT
+ */
 public class BlockChain {
 
     public static final int MINING_DIFFICULTY = 4;
     public static final BlockChain BLOCK_CHAIN = new BlockChain(MINING_DIFFICULTY);
 
-    private final LoggerService loggerService = new LoggerService();
+    private LoggerService loggerService;
 
     private List<Block> blocks;
     private int difficulty;
 
     private static final String GENESIS_BLOCK_DATA = "Genesis block";
+
     public BlockChain(int difficulty) {
         this.blocks = new ArrayList<Block>();
         this.difficulty = difficulty;
@@ -36,15 +39,15 @@ public class BlockChain {
         return blocks;
     }
 
-    public Block getBlock(int i){
+    public Block getBlock(int i) {
         return blocks.get(i);
     }
 
-    public Block getLatestBlock(){
-        return blocks.get(blocks.size()-1);
+    public Block getLatestBlock() {
+        return blocks.get(blocks.size() - 1);
     }
 
-    public Block newBlock(String data){
+    public Block newBlock(String data) {
         return Block.builder()
                 .index(getLatestBlock().getIndex() + 1)
                 .previousHash(getLatestBlock().getHash())
@@ -53,36 +56,36 @@ public class BlockChain {
                 .build();
     }
 
-    public List<Block> addBlock(Block block){
-        if(block != null) {
+    public List<Block> addBlock(Block block) {
+        if (block != null) {
             block.mineBlock(difficulty);
             blocks.add(block);
         }
         return blocks;
     }
 
-    public void emptyTheChain(){
+    public void emptyTheChain() {
         blocks.subList(1, blocks.size()).clear();
     }
 
     public void printBlockchain() {
         blocks.stream()
-                .forEach(block -> System.out.println(block.toString()+"\n"));
+                .forEach(block -> System.out.println(block.toString() + "\n"));
     }
 
-    public boolean isFirstBlockValid(){
+    public boolean isFirstBlockValid() {
         Block firstBlock = blocks.get(0);
-        return firstBlock.getIndex()==0 &&
+        return firstBlock.getIndex() == 0 &&
                 firstBlock.getPreviousHash() == null &&
                 firstBlock.isValid();
     }
 
-    public boolean isBlockchainValid(){
-        if(! isFirstBlockValid()){
+    public boolean isBlockchainValid() {
+        if (!isFirstBlockValid()) {
             return false;
         }
         boolean validityTest = true;
-        for(int i = 1; i < blocks.size(); i++){
+        for (int i = 1; i < blocks.size(); i++) {
             Block block = blocks.get(i);
             Block previousBlock = blocks.get(i - 1);
 
@@ -92,15 +95,15 @@ public class BlockChain {
     }
 
     private boolean isValidAddedBlock(boolean validityTest, Block block, Block previousBlock) {
-        if(!block.isValid()){
+        if (!block.isValid()) {
             loggerService.logInvalidBlockHash(block);
             validityTest = false;
         }
-        if(doesPreviousIndexNotMatch(block, previousBlock)){
+        if (doesPreviousIndexNotMatch(block, previousBlock)) {
             loggerService.logInvalidIndexes(block, previousBlock);
             validityTest = false;
         }
-        if(isPreviousHashNotEqualToPreviousBlocksHash(block, previousBlock)) {
+        if (isPreviousHashNotEqualToPreviousBlocksHash(block, previousBlock)) {
             loggerService.logInvalidPreviousHash(block, previousBlock);
             validityTest = false;
         }

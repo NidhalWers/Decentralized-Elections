@@ -1,13 +1,15 @@
 package com.septgrandcorsaire.blockchain.model;
 
-import com.septgrandcorsaire.blockchain.model.Block;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author Nidhal TEYEB
+ * @since 0.0.1-SNAPSHOT
+ */
 class BlockTest {
 
     @Test

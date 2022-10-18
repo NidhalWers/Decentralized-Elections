@@ -1,11 +1,15 @@
 package com.septgrandcorsaire.blockchain.model;
 
 
-import com.septgrandcorsaire.blockchain.service.Cryptography;
+import com.septgrandcorsaire.blockchain.service.CryptographyService;
 import com.septgrandcorsaire.blockchain.util.Utils;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author Nidhal TEYEB
+ * @since 0.0.1-SNAPSHOT
+ */
 public class Block {
 
     private int index;
@@ -61,7 +65,7 @@ public class Block {
     }
 
     public String computeHash() {
-        return Cryptography.computeAlgorithmSha3(new StringBuilder()
+        return CryptographyService.computeAlgorithmSha3(new StringBuilder()
                 .append(index)
                 .append(previousHash)
                 .append(timeStamp.toString())
@@ -69,26 +73,25 @@ public class Block {
                 .append(nonce).toString());
     }
 
-    public Block mineBlock(int difficulty){
+    public Block mineBlock(int difficulty) {
         nonce = 0;
-        while(!getHash().substring(0,difficulty).equals(Utils.getStringOfZeros(difficulty))){
+        while (!getHash().substring(0, difficulty).equals(Utils.getStringOfZeros(difficulty))) {
             nonce++;
             hash = computeHash();
         }
         return this;
     }
 
-    public boolean isValid(){
+    public boolean isValid() {
         return computeHash().equals(this.hash);
     }
 
 
-
-    public static Builder builder(){
+    public static Builder builder() {
         return new Builder();
     }
 
-    public static class Builder{
+    public static class Builder {
         private int index;
         private String previousHash;
 
@@ -116,7 +119,7 @@ public class Block {
             return this;
         }
 
-        public Block build(){
+        public Block build() {
             return new Block(this);
         }
     }
