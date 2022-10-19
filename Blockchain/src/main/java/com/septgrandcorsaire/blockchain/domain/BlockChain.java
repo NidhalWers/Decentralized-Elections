@@ -33,6 +33,7 @@ public class BlockChain {
         blocks.add(genesisBlock);
     }
 
+    @JsonValue
     public List<Block> getBlocks() {
         return blocks;
     }
@@ -71,15 +72,16 @@ public class BlockChain {
                 .forEach(block -> System.out.println(block.toString() + "\n"));
     }
 
-    @JsonValue
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        for (int i = 1; i < blocks.size(); i++) {
+        for (int i = 0; i < blocks.size(); i++) {
             builder.append(blocks.get(i).getData() + "\n");
         }
         return builder.toString();
     }
+
 
     public boolean isFirstBlockValid() {
         Block firstBlock = blocks.get(0);

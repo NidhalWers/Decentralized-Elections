@@ -2,6 +2,7 @@ package com.septgrandcorsaire.blockchain.api;
 
 import com.septgrandcorsaire.blockchain.api.payload.ElectionPayload;
 import com.septgrandcorsaire.blockchain.application.ElectionApplicationService;
+import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +24,8 @@ public class BlockchainController {
     @PostMapping(value = "/smart-vote/api/v1/create-election",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public String createElection(@RequestBody ElectionPayload payload) {
-        return electionApplicationService.createBlockchainForElection(payload.toQuery())
-                .toString();
+    public BlockChain createElection(@RequestBody ElectionPayload payload) {
+        return electionApplicationService.createBlockchainForElection(payload.toQuery());
     }
 
 }
