@@ -39,18 +39,24 @@
         <div class="col-4">
             <div class="card-impots">
                 <div class="text-center little-title">Je me connecte avec mon compte impots.gouv.fr </div>
-                <div class="form-section-impots">
+                <form class="form-section-impots" method = "POST" action="{% url 'login_impots' %}">
+                    {% csrf_token %}
                     <div class="identifiant-impots">
                         <div class="text-impots">
                             Numéro fiscal
                         </div>
-                        <input class="form-control" name="spi_tmp" type="tel" aria-required="true" autocomplete="username" id="spi_tmp" placeholder="13 chiffres" data-original-title="13 chiffres" data-toggle="tooltip" data-placement="top" data-mask="int" data-max="13" data-feedbackok="1/" data-dashlane-rid="4d8be10a0b8ceeda" data-kwimpalastatus="alive" data-kwimpalaid="1665573937601-0" style="color: green;" data-kwcachedvalue="3030596490103" data-dashlane-vault-type="Credential" data-dashlane-filled-by-user="true" data-dashlane-corrected-by-user="true" data-form-type="id_document,tax,username">    
+                        <input class="form-control" name="fiscal_number" type="tel" aria-required="true" autocomplete="fiscal_number" id="fiscal_number" placeholder="13 chiffres" data-original-title="13 chiffres" data-toggle="tooltip" data-placement="top" data-mask="int" data-max="13" data-feedbackok="1/" data-dashlane-rid="4d8be10a0b8ceeda" data-kwimpalastatus="alive" data-kwimpalaid="1665573937601-0" style="color: green;" data-kwcachedvalue="3030596490103" data-dashlane-vault-type="Credential" data-dashlane-filled-by-user="true" data-dashlane-corrected-by-user="true" data-form-type="id_document,tax,username">    
                     </div>
                     <div class="identifiant-impots">
                         <div class="text-impots">
                             Mot de passe
                         </div>
-                        <input class="form-control" type="password" name="pwd_tmp" aria-required="true" autocomplete="current-password" id="pwd_tmp" data-toggle="tooltip" data-placement="top" maxlength="128" data-original-title="" title="" data-dashlane-rid="80a542188363def6" data-kwimpalastatus="alive" data-kwimpalaid="1665575661591-1" data-kwcachedvalue="3" data-dashlane-vault-type="Credential" data-dashlane-filled-by-user="true" data-dashlane-corrected-by-user="true" data-form-type="password">
+                        <input class="form-control" type="password" name="password1" aria-required="true" autocomplete="current-password" id="password" data-toggle="tooltip" data-placement="top" maxlength="128" data-original-title="" title="" data-dashlane-rid="80a542188363def6" data-kwimpalastatus="alive" data-kwimpalaid="1665575661591-1" data-kwcachedvalue="3" data-dashlane-vault-type="Credential" data-dashlane-filled-by-user="true" data-dashlane-corrected-by-user="true" data-form-type="password">
+                    </div>
+                    <div>
+                    {% if status == 0 %}
+                        <p class="text-danger">{{ error }}</p>
+                    {% endif %}
                     </div>
                     <div class="submit-impots">
                         <button id="btnAction" type="submit" class="btn-submit-impots" aria-controls="erreur" data-href="" data-form-type="action,login">Connexion</button>
@@ -60,7 +66,7 @@
                             En cliquant sur «Connexion», vous acceptez que vos données personnelles (nom, prénoms, date et lieu de naissance, adresse électronique) soient transmises à FranceConnect.
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
         <div class="col-4">

@@ -127,3 +127,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 AUTH_USER_MODEL = 'Connect.Citizen'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'Connect.backends.AuthBackend',
+]

@@ -5,8 +5,13 @@ from .models import Citizen
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 from import_export.admin import ExportMixin
+from django.contrib.auth.hashers import make_password
 
 class CitizenRessource(resources.ModelResource):
+    def before_import_row(self,row, **kwargs):
+           value = row['password']
+           row['password'] = make_password(value)
+           
     class Meta:
         model = Citizen
         skip_unchanged = True
