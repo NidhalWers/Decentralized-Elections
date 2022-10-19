@@ -19,12 +19,13 @@ class AuthBackend(ModelBackend):
     def authenticate(self, request, **kwargs):
         try:
             user = Citizen.objects.get(
-                fiscal_number=kwargs['fiscal_number']
+                fiscal_number=kwargs['id_connect']
             )
-        except:
+        except Citizen.DoesNotExist:
+            # return None
             try:
                 user = Citizen.objects.get(
-                sick_security_number=kwargs['sick_security_number']
+                sick_security_number=kwargs['id_connect']
             )
             except Citizen.DoesNotExist:
                 return None

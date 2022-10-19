@@ -40,13 +40,9 @@ def ameli_html(request):
 
 def login_impots(request):
     if request.method == 'POST':
-        fiscal_number = request.POST['fiscal_number']
+        id_connect = request.POST['fiscal_number']
         password = request.POST['password1']
-        user = Citizen.objects.get(
-                fiscal_number=fiscal_number
-            )
-        print(user.check_password(password))
-        user = authenticate(fiscal_number=fiscal_number, password=password)
+        user = authenticate(id_connect=id_connect, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
