@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class WarningMessageServiceTest {
     private static final int MINING_DIFFICULTY = 4;
 
-    private BlockChain blockChainForTest = new BlockChain(MINING_DIFFICULTY);
+    private BlockChain blockChainForTest = new BlockChain("WarningMessageServiceTest", MINING_DIFFICULTY);
 
 
     @BeforeEach

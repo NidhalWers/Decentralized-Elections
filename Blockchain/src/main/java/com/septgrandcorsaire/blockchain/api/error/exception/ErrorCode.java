@@ -3,7 +3,10 @@ package com.septgrandcorsaire.blockchain.api.error.exception;
 public enum ErrorCode {
     INVALID_PARAMETER("INVALID_PARAMETER", "Parameter '%s' is invalid."),
 
-    REQUIRED_PARAMETER("REQUIRED_PARAMETER", "Parameter '%s' is required.");
+    REQUIRED_PARAMETER("REQUIRED_PARAMETER", "Parameter '%s' is required."),
+
+    NOT_FOUND_ELECTION("NOT_FOUND_ELECTION", "Election '%s' does not exist");
+
     private String value;
 
     private String defaultMessage;

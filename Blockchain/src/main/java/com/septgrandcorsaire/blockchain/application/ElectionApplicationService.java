@@ -28,4 +28,10 @@ public class ElectionApplicationService {
         return electionDomainService.createBlockchainForElection(query);
     }
 
+    public BlockChain getElectionData(String electionName) {
+        if (electionName.isBlank()) {
+            throw new IllegalArgumentException("must provide a valid election name");
+        }
+        return electionDomainService.getBlockchainForElection(electionName);
+    }
 }

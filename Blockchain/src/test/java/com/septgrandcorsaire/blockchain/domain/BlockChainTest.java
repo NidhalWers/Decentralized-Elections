@@ -14,11 +14,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 0.0.1-SNAPSHOT
  */
 class BlockChainTest {
-    
+
     @Value("${mining.difficulty}")
     private static int MINING_DIFFICULTY;
 
-    private BlockChain blockChainForTest = new BlockChain(MINING_DIFFICULTY);
+    private BlockChain blockChainForTest = new BlockChain("BlockChainTest", MINING_DIFFICULTY);
 
     @BeforeEach
     void initTest() {

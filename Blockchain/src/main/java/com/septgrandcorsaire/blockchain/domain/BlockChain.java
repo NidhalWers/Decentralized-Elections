@@ -1,8 +1,5 @@
 package com.septgrandcorsaire.blockchain.domain;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.septgrandcorsaire.blockchain.infrastructure.util.LoggerService;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +10,16 @@ import java.util.List;
  */
 public class BlockChain {
 
-    private LoggerService loggerService;
+    private String name;
 
     private List<Block> blocks;
     private int difficulty;
 
     private static final String GENESIS_BLOCK_DATA = "Genesis block";
 
-    public BlockChain(int difficulty) {
+    public BlockChain(String name, int difficulty) {
         this.blocks = new ArrayList<Block>();
+        this.name = name;
         this.difficulty = difficulty;
         Block genesisBlock = Block.builder()
                 .index(0)
@@ -33,7 +31,10 @@ public class BlockChain {
         blocks.add(genesisBlock);
     }
 
-    @JsonValue
+    public String getName() {
+        return name;
+    }
+
     public List<Block> getBlocks() {
         return blocks;
     }

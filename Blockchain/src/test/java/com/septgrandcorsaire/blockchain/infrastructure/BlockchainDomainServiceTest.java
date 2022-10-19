@@ -21,7 +21,7 @@ class BlockchainDomainServiceTest {
 
     public BlockchainDomainServiceTest() {
         this.blockchainDomainService = new BlockchainDomainService();
-        blockChainForTest = new BlockChain(MINING_DIFFICULTY);
+        blockChainForTest = new BlockChain("BlockchainDomainServiceTest", MINING_DIFFICULTY);
     }
 
     @BeforeEach

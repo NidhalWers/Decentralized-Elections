@@ -12,7 +12,7 @@ public class Main {
     private static BlockchainDomainService blockchainDomainService;
 
     public static void main(String[] args) {
-        BlockChain blockChain = new BlockChain(4);
+        BlockChain blockChain = new BlockChain("Test", 4);
         blockChain.addBlock(blockChain.newBlock("Premier Block"));
         blockChain.addBlock(blockChain.newBlock("On test"));
         blockChain.addBlock(blockChain.newBlock("Il faut de la data"));
