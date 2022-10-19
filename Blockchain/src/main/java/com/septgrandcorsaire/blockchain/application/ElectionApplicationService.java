@@ -19,7 +19,7 @@ public class ElectionApplicationService {
 
     public BlockChain createBlockchainForElection(final ElectionQuery query) {
         if (query.getCandidates().isEmpty()) {
-            throw new IllegalArgumentException("must provide a list of candidates");
+            throw new IllegalArgumentException("must provide a not empty list of candidates");
         }
         if (query.getElectionName().isBlank()) {
             throw new IllegalArgumentException("must provide a valid election name");

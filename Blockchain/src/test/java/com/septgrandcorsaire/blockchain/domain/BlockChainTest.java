@@ -2,6 +2,7 @@ package com.septgrandcorsaire.blockchain.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,9 +14,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 0.0.1-SNAPSHOT
  */
 class BlockChainTest {
-
-    //todo find a way to not duplicate this line
-    private static final int MINING_DIFFICULTY = 4;
+    
+    @Value("${mining.difficulty}")
+    private static int MINING_DIFFICULTY;
 
     private BlockChain blockChainForTest = new BlockChain(MINING_DIFFICULTY);
 

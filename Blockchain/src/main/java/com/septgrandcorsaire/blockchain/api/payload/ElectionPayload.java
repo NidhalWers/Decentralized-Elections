@@ -1,5 +1,7 @@
 package com.septgrandcorsaire.blockchain.api.payload;
 
+import com.septgrandcorsaire.blockchain.api.error.exception.ErrorCode;
+import com.septgrandcorsaire.blockchain.api.error.exception.IllegalPayloadArgumentException;
 import com.septgrandcorsaire.blockchain.application.ElectionQuery;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,16 +41,16 @@ public class ElectionPayload {
 
     private void validatePayload() {
         if (electionName == null || electionName.isBlank()) {
-            throw new IllegalArgumentException("election"); //todo create my own exception
+            throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "election_name"));
         }
         if (startingDate == null || startingDate.isBlank()) {
-            throw new IllegalArgumentException("startingDate");
+            throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "starting_date"));
         }
         if (closingDate == null || closingDate.isBlank()) {
-            throw new IllegalArgumentException("closingDate");
+            throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "closing_date"));
         }
         if (candidates == null || candidates.isEmpty()) {
-            throw new IllegalArgumentException("candidates");
+            throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "candidates"));
         }
 
     }

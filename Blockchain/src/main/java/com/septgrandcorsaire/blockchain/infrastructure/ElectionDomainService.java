@@ -2,6 +2,8 @@ package com.septgrandcorsaire.blockchain.infrastructure;
 
 import com.septgrandcorsaire.blockchain.application.ElectionQuery;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
+import com.septgrandcorsaire.blockchain.infrastructure.dao.BlockchainDAO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,19 +13,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class ElectionDomainService {
 
-    private static final int MINING_DIFFICULTY = 4;
+    @Value("${mining.difficulty}")
+    private static int MINING_DIFFICULTY;
 
     public BlockChain createBlockchainForElection(final ElectionQuery query) {
-        verifyRequestValidity(query);
+        verifyRequestValidity(query.getElectionName());
         final BlockChain blockChain = new BlockChain(MINING_DIFFICULTY);
         blockChain.addBlock(blockChain.newBlock(query.toJson()));
-        //todo add the blockChain to a map of Blockchains in a DAO (infrastructure class)
+        BlockchainDAO.INSTANCE.addBlockchain(query.getElectionName(), blockChain);
         return blockChain;
     }
 
-    private void verifyRequestValidity(final ElectionQuery query) {
-        if (false) { //todo with a list of election names (map keys)
-            throw new IllegalArgumentException("the election '" + query.getElectionName() + "' already exists");
+    private void verifyRequestValidity(final String electionName) {
+        if (BlockchainDAO.INSTANCE.electionAlreadyExistsWithThisName(electionName)) {
+            throw new IllegalArgumentException("the election '" + electionName + "' already exists");
         }
     }
 }

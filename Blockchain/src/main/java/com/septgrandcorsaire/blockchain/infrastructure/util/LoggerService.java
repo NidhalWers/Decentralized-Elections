@@ -5,10 +5,9 @@ import com.septgrandcorsaire.blockchain.Application;
 import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.infrastructure.util.warning.WarningMessageService;
 import com.septgrandcorsaire.blockchain.infrastructure.util.warning.WarningType;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Nidhal TEYEB
@@ -34,7 +33,7 @@ public class LoggerService {
     }
 
     private void logWarning(WarningType warningType, String message) {
-        logger.log(Level.WARNING, warningType.name() + " " + message);
+        logger.warn(warningType.name() + " " + message);
     }
 
 

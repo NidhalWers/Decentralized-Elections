@@ -4,6 +4,7 @@ import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +12,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class BlockchainDomainServiceTest {
 
-    private static final int MINING_DIFFICULTY = 4;
+    @Value("${mining.difficulty}")
+    private static int MINING_DIFFICULTY = 4;
 
     private final BlockchainDomainService blockchainDomainService;
 
