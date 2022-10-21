@@ -6,9 +6,9 @@ name: dev CI/CD
 on:
   push:
     branches:
-      - 'B/features#**'
-      - 'B/bug#**'
-      - 'B/modification#**'
+      - 'B/Features#**'
+      - 'B/Bug#**'
+      - 'B/Modification#**'
   pull_request:
     branches:
       - master
