@@ -20,7 +20,7 @@ public class Block {
 
     private LocalDateTime timeStamp;
 
-    private String data;
+    private Data data;
 
     private int nonce;
 
@@ -49,7 +49,7 @@ public class Block {
         return timeStamp;
     }
 
-    public String getData() {
+    public Data getData() {
         return data;
     }
 
@@ -69,7 +69,7 @@ public class Block {
                 .append(index)
                 .append(previousHash)
                 .append(timeStamp.toString())
-                .append(data)
+                .append(data.toString())
                 .append(nonce).toString());
     }
 
@@ -97,7 +97,7 @@ public class Block {
 
         private LocalDateTime timeStamp;
 
-        private String data;
+        private Data data;
 
         public Builder index(int index) {
             this.index = index;
@@ -114,8 +114,13 @@ public class Block {
             return this;
         }
 
-        public Builder data(String data) {
+        public Builder data(Data data) {
             this.data = data;
+            return this;
+        }
+
+        public Builder data(String data) {
+            this.data = StringData.of(data);
             return this;
         }
 

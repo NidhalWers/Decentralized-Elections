@@ -15,20 +15,10 @@ public class BlockChain {
     private List<Block> blocks;
     private int difficulty;
 
-    private static final String GENESIS_BLOCK_DATA = "Genesis block";
-
     public BlockChain(String name, int difficulty) {
         this.blocks = new ArrayList<Block>();
         this.name = name;
         this.difficulty = difficulty;
-        Block genesisBlock = Block.builder()
-                .index(0)
-                .timeStamp(LocalDateTime.now())
-                .previousHash(null)
-                .data(GENESIS_BLOCK_DATA)
-                .build();
-        genesisBlock.mineBlock(difficulty);
-        blocks.add(genesisBlock);
     }
 
     public String getName() {
@@ -47,13 +37,25 @@ public class BlockChain {
         return blocks.get(blocks.size() - 1);
     }
 
-    public Block newBlock(String data) {
+    public Block getInitializationData() {
+        return blocks.get(0);
+    }
+
+    public Block newBlock(Data data, int index, String latestHash) {
         return Block.builder()
-                .index(getLatestBlock().getIndex() + 1)
-                .previousHash(getLatestBlock().getHash())
+                .index(index)
+                .previousHash(latestHash)
                 .timeStamp(LocalDateTime.now())
                 .data(data)
                 .build();
+    }
+
+    public Block newBlock(Data data) {
+        return newBlock(data, getLatestBlock().getIndex() + 1, getLatestBlock().getHash());
+    }
+
+    public Block newBlock(String data) {
+        return newBlock(StringData.of(data));
     }
 
     public List<Block> addBlock(Block block) {

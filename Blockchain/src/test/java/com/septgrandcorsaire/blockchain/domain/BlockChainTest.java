@@ -1,5 +1,6 @@
 package com.septgrandcorsaire.blockchain.domain;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,18 @@ class BlockChainTest {
     @Value("${mining.difficulty}")
     private static int MINING_DIFFICULTY;
 
-    private BlockChain blockChainForTest = new BlockChain("BlockChainTest", MINING_DIFFICULTY);
+    private static BlockChain blockChainForTest = new BlockChain("BlockChainTest", MINING_DIFFICULTY);
+
+    @BeforeAll
+    static void initBlockchain() {
+        Block genesisBlock = Block.builder()
+                .index(0)
+                .timeStamp(LocalDateTime.now())
+                .previousHash(null)
+                .data("Genesis block")
+                .build();
+        blockChainForTest.addBlock(genesisBlock);
+    }
 
     @BeforeEach
     void initTest() {
@@ -41,7 +53,8 @@ class BlockChainTest {
                 .build());
 
         assertThat(blockChainForTest.getBlocks()).hasSize(2);
-        assertThat(blockChainForTest.getBlocks().get(1).getData()).isEqualTo("this is the second block");
+        assertThat(blockChainForTest.getBlocks().get(1).getData()).isInstanceOf(StringData.class);
+        assertThat(((StringData) blockChainForTest.getBlocks().get(1).getData()).getValue()).isEqualTo("this is the second block");
     }
 
     @Test
@@ -49,6 +62,7 @@ class BlockChainTest {
         blockChainForTest.emptyTheChain();
 
         assertThat(blockChainForTest.getBlocks()).hasSize(1);
-        assertThat(blockChainForTest.getLatestBlock().getData()).isEqualTo("Genesis block");
+        assertThat(blockChainForTest.getLatestBlock().getData()).isInstanceOf(StringData.class);
+        assertThat(((StringData) blockChainForTest.getLatestBlock().getData()).getValue()).isEqualTo("Genesis block");
     }
 }

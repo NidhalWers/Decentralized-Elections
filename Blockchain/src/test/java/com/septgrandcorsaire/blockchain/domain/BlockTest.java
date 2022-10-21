@@ -27,7 +27,8 @@ class BlockTest {
         assertThat(block.getTimeStamp().getHour()).isEqualTo(8);
         assertThat(block.getTimeStamp().getMinute()).isEqualTo(30);
         assertThat(block.getTimeStamp().getSecond()).isEqualTo(0);
-        assertThat(block.getData()).isEqualTo("this is the second block");
+        assertThat(block.getData()).isInstanceOf(StringData.class);
+        assertThat(((StringData) block.getData()).getValue()).isEqualTo("this is the second block");
     }
 
     @Test
@@ -38,7 +39,7 @@ class BlockTest {
                 .data("this is the second block")
                 .build();
 
-        String expectedHash = "814366bf6ae693808da58f58e0a608cd7e3c763e00d7120b1836cad546056e68f88c7e21d79fc7b835ef137ad9a55c29ea2321470e4067abb8ef841fa67047f2";
+        String expectedHash = "da923f6dc9cc82474efcdd9e46a4d5fb5167212dfda31038d7d36e37262802fd76d62172a2b9c37299083315e31cee94e63f6e5d6860f49e6cc49c3aebd92404";
 
         assertThat(block.getHash()).isEqualTo(expectedHash);
     }

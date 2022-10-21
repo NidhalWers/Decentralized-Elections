@@ -2,6 +2,7 @@ package com.septgrandcorsaire.blockchain.infrastructure;
 
 import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,11 +18,23 @@ class BlockchainDomainServiceTest {
 
     private final BlockchainDomainService blockchainDomainService;
 
-    private BlockChain blockChainForTest;
+    private static BlockChain blockChainForTest;
 
     public BlockchainDomainServiceTest() {
         this.blockchainDomainService = new BlockchainDomainService();
+    }
+
+    @BeforeAll
+    static void initBlockchain() {
         blockChainForTest = new BlockChain("BlockchainDomainServiceTest", MINING_DIFFICULTY);
+
+        Block genesisBlock = Block.builder()
+                .index(0)
+                .timeStamp(LocalDateTime.now())
+                .previousHash(null)
+                .data("Genesis block")
+                .build();
+        blockChainForTest.addBlock(genesisBlock);
     }
 
     @BeforeEach

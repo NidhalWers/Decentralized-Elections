@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author Nidhal TEYEB
@@ -12,13 +11,10 @@ import java.util.List;
  */
 @Value
 @Builder
-public class ElectionQuery {
-
-    private List<String> candidates;
-
-    private LocalDateTime startingDate;
-
-    private LocalDateTime closingDate;
-
+public class VoteQuery {
     private String electionName;
+
+    private String candidateName;
+
+    private LocalDateTime votingDate;
 }

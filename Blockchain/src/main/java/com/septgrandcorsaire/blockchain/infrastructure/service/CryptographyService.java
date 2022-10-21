@@ -3,13 +3,11 @@ package com.septgrandcorsaire.blockchain.infrastructure.service;
 import org.bouncycastle.jcajce.provider.digest.SHA256;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
-import org.springframework.stereotype.Service;
 
 /**
  * @author Nidhal TEYEB
  * @since 0.0.1-SNAPSHOT
  */
-@Service
 public class CryptographyService {
 
     public static String computeAlgorithmSha256(String input) {

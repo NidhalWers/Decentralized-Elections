@@ -3,6 +3,7 @@ package com.septgrandcorsaire.blockchain.infrastructure.service;
 import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import com.septgrandcorsaire.blockchain.infrastructure.util.warning.WarningMessageService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +18,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 class WarningMessageServiceTest {
     private static final int MINING_DIFFICULTY = 4;
 
-    private BlockChain blockChainForTest = new BlockChain("WarningMessageServiceTest", MINING_DIFFICULTY);
+    private static BlockChain blockChainForTest = new BlockChain("WarningMessageServiceTest", MINING_DIFFICULTY);
 
+
+    @BeforeAll
+    static void initBlockchain() {
+        Block genesisBlock = Block.builder()
+                .index(0)
+                .timeStamp(LocalDateTime.now())
+                .previousHash(null)
+                .data("Genesis block")
+                .build();
+        blockChainForTest.addBlock(genesisBlock);
+    }
 
     @BeforeEach
     void initTest() {
