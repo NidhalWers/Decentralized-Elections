@@ -415,6 +415,7 @@ li a{
     color: #2C2C2C;
     text-align: center;
     font-weight: lighter;
+    margin-top: 3%
 }
 
 
@@ -431,16 +432,36 @@ li a{
 
 
 
+form {
+    display: block;
+    margin-top: 0em;
+}
+
+
+main {
+    display: block;
+    
+}
 
 
 
+#divLogin {
+    width: 260px;
+    margin: auto;
+    margin-top: 7%
+}
 
 
+.motdepasse{
+    margin-top: 20%
 
+}
 
+#test{
+    margin-top: 20%
+}
 
+#aide{
+background-color: rgba(178, 178, 178, 0.1);
 
-
-
-
-
+}
