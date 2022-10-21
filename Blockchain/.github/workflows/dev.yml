@@ -30,8 +30,6 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: position to Blockchain project
-        run: cd Blockchain
       - name: unit tests
         run: ./mvnw -B clean test
       - name: integration tests
