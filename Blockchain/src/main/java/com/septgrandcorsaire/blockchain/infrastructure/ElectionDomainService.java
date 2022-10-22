@@ -51,9 +51,16 @@ public class ElectionDomainService {
     public Block voteInElection(VoteQuery query) {
         BlockChain blockChain = BlockchainDAO.INSTANCE.getBlockchain(query.getElectionName());
         verifyExistingElection(blockChain, query.getElectionName());
-        //if (blockChain.getInitializationData().getData()) //todo candidate name
+        if (!verifyNamePartOfTheCandidates(blockChain.getInitializationData(), query.getCandidateName())) {
+            throw new IllegalArgumentException("the name '" + query.getCandidateName() + "' is not part of the " + query.getElectionName() + "'s candidates");
+        }
         Block newVoteBlock = blockChain.newBlock(VotingData.fromVoteQuery(query));
         blockChain.addBlock(newVoteBlock);
         return newVoteBlock;
+    }
+
+    private boolean verifyNamePartOfTheCandidates(Block initializationBlock, String name) {
+        ElectionInitializationData electionInitializationData = (ElectionInitializationData) initializationBlock.getData();
+        return electionInitializationData.getCandidates().contains(name);
     }
 }
