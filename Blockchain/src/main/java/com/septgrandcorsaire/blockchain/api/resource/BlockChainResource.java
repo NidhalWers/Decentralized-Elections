@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
  */
 public class BlockChainResource {
 
-    private final String name;
+    private final String electionName;
 
     private final boolean isBlockchainValid;
 
     private final List<BlockResource> blocks;
 
-    private BlockChainResource(final String name, final boolean isBlockchainValid, final List<BlockResource> blocks) {
-        this.name = name;
+    private BlockChainResource(final String electionName, final boolean isBlockchainValid, final List<BlockResource> blocks) {
+        this.electionName = electionName;
         this.isBlockchainValid = isBlockchainValid;
         this.blocks = blocks;
     }
@@ -28,8 +28,8 @@ public class BlockChainResource {
         return new BlockChainResource(blockChain.getName(), new BlockchainDomainService().isBlockchainValid(blockChain), blockChain.getBlocks().stream().map(block -> BlockResource.of(block)).collect(Collectors.toList()));
     }
 
-    public String getName() {
-        return name;
+    public String getElectionName() {
+        return electionName;
     }
 
     public boolean isBlockchainValid() {
