@@ -115,7 +115,7 @@ Aller sur la classe [Application](Blockchain/src/main/java/com/septgrandcorsaire
 
 Cliquez sur le bouton pour run
 
-_ajouter l'image_
+![run_projet_intelliJ](https://user-images.githubusercontent.com/32906777/197355177-b7fea5be-03d3-4a70-9a3a-0e69481aed8f.png)
 
 **En utilisant VS Code**
 
@@ -123,7 +123,8 @@ Installer l'extension [Spring Boot Dashboard](https://marketplace.visualstudio.c
 
 Aller sur l'onglet ```Spring Boot Dashboard``` et lancer l'application
 
-_ajouter l'image_
+![run_projet_vscode](https://user-images.githubusercontent.com/32906777/197355308-82d0dda7-9895-4e6a-9ab0-3b31b3429ddb.png)
+
 
 ### Interagir avec la blockchain en utilisant Postman
 
