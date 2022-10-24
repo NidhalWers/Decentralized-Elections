@@ -398,3 +398,70 @@ li a{
     font-size: 14px;
     color: #141414;;
 }
+
+
+
+
+
+
+
+
+
+/* ------------ PARTIE AMELIE ------------ */
+
+
+
+.divTitle {
+    color: #2C2C2C;
+    text-align: center;
+    font-weight: lighter;
+    margin-top: 3%
+}
+
+
+.myClickableThingy {
+    cursor: pointer;
+    color: #0062ad;
+}
+
+.AideLogin {
+    color: #255EA7;
+    text-align: justify;
+    line-height: 1.5em;
+}
+
+
+
+form {
+    display: block;
+    margin-top: 0em;
+}
+
+
+main {
+    display: block;
+    
+}
+
+
+
+#divLogin {
+    width: 260px;
+    margin: auto;
+    margin-top: 7%
+}
+
+
+.motdepasse{
+    margin-top: 20%
+
+}
+
+#test{
+    margin-top: 20%
+}
+
+#aide{
+background-color: rgba(178, 178, 178, 0.1);
+
+}
