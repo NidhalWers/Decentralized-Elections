@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * @author Nidhal TEYEB
  * @since 0.0.1-SNAPSHOT
  */
-public class BlockChainResource {
+public class BlockChainResource implements ElectionResource {
 
     private final String electionName;
 

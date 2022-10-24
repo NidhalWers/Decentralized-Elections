@@ -6,13 +6,14 @@ import com.septgrandcorsaire.blockchain.api.error.exception.ElectionNotStartedEx
 import com.septgrandcorsaire.blockchain.api.error.exception.ErrorCode;
 import com.septgrandcorsaire.blockchain.application.ElectionQuery;
 import com.septgrandcorsaire.blockchain.application.VoteQuery;
-import com.septgrandcorsaire.blockchain.domain.Block;
-import com.septgrandcorsaire.blockchain.domain.BlockChain;
-import com.septgrandcorsaire.blockchain.domain.ElectionInitializationData;
-import com.septgrandcorsaire.blockchain.domain.VotingData;
+import com.septgrandcorsaire.blockchain.domain.*;
 import com.septgrandcorsaire.blockchain.infrastructure.dao.BlockchainDAO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Nidhal TEYEB
@@ -27,7 +28,26 @@ public class ElectionDomainService {
     public BlockChain getBlockchainForElection(final String electionName) {
         BlockChain blockChain = BlockchainDAO.INSTANCE.getBlockchain(electionName);
         verifyExistingElection(blockChain, electionName);
+        handleFinishedElection(blockChain);
         return blockChain;
+    }
+
+    private void handleFinishedElection(BlockChain blockChain) {
+        ElectionInitializationData electionInitializationData = blockChain.getInitializationData();
+        if (LocalDateTime.now().isAfter(electionInitializationData.getClosingDate())) {
+            ElectionAlreadyFinishedException exception = new ElectionAlreadyFinishedException(String.format(ErrorCode.ELECTION_ALREADY_FINISHED.getDefaultMessage(), electionInitializationData.getElectionName(), electionInitializationData.getClosingDate()));
+            exception.setElectionResult(ElectionResult.builder()
+                    .startingDate(electionInitializationData.getStartingDate())
+                    .closingDate(electionInitializationData.getClosingDate())
+                    .candidatesResults(blockChain.getVotingBlock().stream()
+                            .map(Block::getData)
+                            .map(data -> ((VotingData) data))
+                            .map(VotingData::getCandidateName)
+                            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting())))
+                    .build()
+            );
+            throw exception;
+        }
     }
 
     private void verifyExistingElection(BlockChain blockChain, String query) {
@@ -61,21 +81,20 @@ public class ElectionDomainService {
         return newVoteBlock;
     }
 
-    private void verifyThatTheVoteIsTakenAfterTheElectionHasBegun(VoteQuery query, Block block) {
-        if (query.getVotingDate().isBefore(((ElectionInitializationData) block.getData()).getStartingDate())) {
-            throw new ElectionNotStartedException(String.format(ErrorCode.ELECTION_NOT_STARTED.getDefaultMessage(), query.getElectionName(), ((ElectionInitializationData) block.getData()).getStartingDate()));
+    private void verifyThatTheVoteIsTakenAfterTheElectionHasBegun(VoteQuery query, ElectionInitializationData electionInitializationData) {
+        if (query.getVotingDate().isBefore(electionInitializationData.getStartingDate())) {
+            throw new ElectionNotStartedException(String.format(ErrorCode.ELECTION_NOT_STARTED.getDefaultMessage(), query.getElectionName(), electionInitializationData.getStartingDate()));
         }
     }
 
-    private void verifyThatTheVoteIsTakenBeforeTheElectionIsOver(VoteQuery query, Block block) {
-        if (query.getVotingDate().isAfter(((ElectionInitializationData) block.getData()).getClosingDate())) {
-            throw new ElectionAlreadyFinishedException(String.format(ErrorCode.ELECTION_ALREADY_FINISHED.getDefaultMessage(), query.getElectionName(), ((ElectionInitializationData) block.getData()).getClosingDate()));
+    private void verifyThatTheVoteIsTakenBeforeTheElectionIsOver(VoteQuery query, ElectionInitializationData electionInitializationData) {
+        if (query.getVotingDate().isAfter(electionInitializationData.getClosingDate())) {
+            throw new ElectionAlreadyFinishedException(String.format(ErrorCode.ELECTION_ALREADY_FINISHED.getDefaultMessage(), query.getElectionName(), electionInitializationData.getClosingDate()));
         }
     }
 
 
-    private void verifyNamePartOfTheCandidates(Block initializationBlock, VoteQuery query) {
-        ElectionInitializationData electionInitializationData = (ElectionInitializationData) initializationBlock.getData();
+    private void verifyNamePartOfTheCandidates(ElectionInitializationData electionInitializationData, VoteQuery query) {
         if (!electionInitializationData.getCandidates().contains(query.getCandidateName())) {
             throw new IllegalArgumentException("the name '" + query.getCandidateName() + "' is not part of the " + query.getElectionName() + "'s candidates");
         }
