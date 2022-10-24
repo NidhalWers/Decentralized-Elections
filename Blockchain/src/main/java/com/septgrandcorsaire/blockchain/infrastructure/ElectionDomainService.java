@@ -1,6 +1,8 @@
 package com.septgrandcorsaire.blockchain.infrastructure;
 
+import com.septgrandcorsaire.blockchain.api.error.exception.ElectionAlreadyFinishedException;
 import com.septgrandcorsaire.blockchain.api.error.exception.ElectionNotFoundException;
+import com.septgrandcorsaire.blockchain.api.error.exception.ElectionNotStartedException;
 import com.septgrandcorsaire.blockchain.api.error.exception.ErrorCode;
 import com.septgrandcorsaire.blockchain.application.ElectionQuery;
 import com.septgrandcorsaire.blockchain.application.VoteQuery;
@@ -28,7 +30,7 @@ public class ElectionDomainService {
         return blockChain;
     }
 
-    private static void verifyExistingElection(BlockChain blockChain, String query) {
+    private void verifyExistingElection(BlockChain blockChain, String query) {
         if (blockChain == null) {
             throw new ElectionNotFoundException(String.format(ErrorCode.NOT_FOUND_ELECTION.getDefaultMessage(), query));
         }
@@ -51,16 +53,31 @@ public class ElectionDomainService {
     public Block voteInElection(VoteQuery query) {
         BlockChain blockChain = BlockchainDAO.INSTANCE.getBlockchain(query.getElectionName());
         verifyExistingElection(blockChain, query.getElectionName());
-        if (!verifyNamePartOfTheCandidates(blockChain.getInitializationData(), query.getCandidateName())) {
-            throw new IllegalArgumentException("the name '" + query.getCandidateName() + "' is not part of the " + query.getElectionName() + "'s candidates");
-        }
+        verifyThatTheVoteIsTakenAfterTheElectionHasBegun(query, blockChain.getInitializationData());
+        verifyThatTheVoteIsTakenBeforeTheElectionIsOver(query, blockChain.getInitializationData());
+        verifyNamePartOfTheCandidates(blockChain.getInitializationData(), query);
         Block newVoteBlock = blockChain.newBlock(VotingData.fromVoteQuery(query));
         blockChain.addBlock(newVoteBlock);
         return newVoteBlock;
     }
 
-    private boolean verifyNamePartOfTheCandidates(Block initializationBlock, String name) {
+    private void verifyThatTheVoteIsTakenAfterTheElectionHasBegun(VoteQuery query, Block block) {
+        if (query.getVotingDate().isBefore(((ElectionInitializationData) block.getData()).getStartingDate())) {
+            throw new ElectionNotStartedException(String.format(ErrorCode.ELECTION_NOT_STARTED.getDefaultMessage(), query.getElectionName(), ((ElectionInitializationData) block.getData()).getStartingDate()));
+        }
+    }
+
+    private void verifyThatTheVoteIsTakenBeforeTheElectionIsOver(VoteQuery query, Block block) {
+        if (query.getVotingDate().isAfter(((ElectionInitializationData) block.getData()).getClosingDate())) {
+            throw new ElectionAlreadyFinishedException(String.format(ErrorCode.ELECTION_ALREADY_FINISHED.getDefaultMessage(), query.getElectionName(), ((ElectionInitializationData) block.getData()).getClosingDate()));
+        }
+    }
+
+
+    private void verifyNamePartOfTheCandidates(Block initializationBlock, VoteQuery query) {
         ElectionInitializationData electionInitializationData = (ElectionInitializationData) initializationBlock.getData();
-        return electionInitializationData.getCandidates().contains(name);
+        if (!electionInitializationData.getCandidates().contains(query.getCandidateName())) {
+            throw new IllegalArgumentException("the name '" + query.getCandidateName() + "' is not part of the " + query.getElectionName() + "'s candidates");
+        }
     }
 }
