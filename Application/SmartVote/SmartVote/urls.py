@@ -21,4 +21,5 @@ urlpatterns = [
     path('connect/', include('Connect.urls')),
     path('adminspace/', include('AdminSpace.urls')),
     path('base/', include('base.urls')),
+    path('', include('Vote.urls')),
 ]

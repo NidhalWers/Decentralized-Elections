@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "Connect",
     "AdminSpace",
     "base",
+    "Vote",
     'import_export',
 ]
 
@@ -101,8 +102,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
-LOGOUT_REDIRECT_URL = '/connect/login'
-LOGIN_REDIRECT_URL = '/connect/login'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
