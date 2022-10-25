@@ -2,7 +2,7 @@ package com.septgrandcorsaire.blockchain.application;
 
 import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
-import com.septgrandcorsaire.blockchain.infrastructure.ElectionDomainService;
+import com.septgrandcorsaire.blockchain.infrastructure.adapter.ElectionDomainService;
 import org.springframework.stereotype.Service;
 
 /**

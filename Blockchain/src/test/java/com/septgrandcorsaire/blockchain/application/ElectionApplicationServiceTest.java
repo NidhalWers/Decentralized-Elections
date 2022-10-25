@@ -4,7 +4,7 @@ import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import com.septgrandcorsaire.blockchain.domain.ElectionInitializationData;
 import com.septgrandcorsaire.blockchain.domain.VotingData;
-import com.septgrandcorsaire.blockchain.infrastructure.ElectionDomainService;
+import com.septgrandcorsaire.blockchain.infrastructure.adapter.ElectionDomainService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

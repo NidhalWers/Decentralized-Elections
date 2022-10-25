@@ -1,7 +1,7 @@
 package com.septgrandcorsaire.blockchain.api.resource;
 
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
-import com.septgrandcorsaire.blockchain.infrastructure.BlockchainDomainService;
+import com.septgrandcorsaire.blockchain.infrastructure.adapter.BlockchainDomainService;
 
 import java.util.List;
 import java.util.stream.Collectors;

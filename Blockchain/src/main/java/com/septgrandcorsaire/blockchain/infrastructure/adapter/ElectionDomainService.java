@@ -1,4 +1,4 @@
-package com.septgrandcorsaire.blockchain.infrastructure;
+package com.septgrandcorsaire.blockchain.infrastructure.adapter;
 
 import com.septgrandcorsaire.blockchain.api.error.exception.ElectionAlreadyFinishedException;
 import com.septgrandcorsaire.blockchain.api.error.exception.ElectionNotFoundException;
