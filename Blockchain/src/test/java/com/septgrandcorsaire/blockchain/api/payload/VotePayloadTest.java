@@ -73,4 +73,21 @@ class VotePayloadTest {
 
         assertThat(exception.getMessage()).isEqualTo("Parameter 'voting_time' is required.");
     }
+
+    @Test
+    void toQueryBadFormatVotingTime() {
+        VotePayload payload = VotePayload.builder()
+                .electionName("test")
+                .candidateName("one")
+                .votingTime("2022/10/24T10:00:00")
+                .build();
+
+        IllegalPayloadArgumentException exception = assertThrows(IllegalPayloadArgumentException.class, () -> {
+            payload.toQuery();
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("The 'voting_time' parameter should be in [YY-MM-DD'T'HH:mm::ss] format");
+    }
+
+
 }

@@ -100,4 +100,36 @@ class ElectionPayloadTest {
 
         assertThat(exception.getMessage()).isEqualTo("Parameter 'candidates' is required.");
     }
+
+    @Test
+    void toQueryBadFormatStartingTime() {
+        ElectionPayload payload = ElectionPayload.builder()
+                .candidates(List.of("one", "two"))
+                .startingDate("2022/10/24T10:00:00")
+                .closingDate("2022-10-25T21:00")
+                .electionName("test")
+                .build();
+
+        IllegalPayloadArgumentException exception = assertThrows(IllegalPayloadArgumentException.class, () -> {
+            payload.toQuery();
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("The 'starting_date' parameter should be in [YY-MM-DD'T'HH:mm::ss] format");
+    }
+
+    @Test
+    void toQueryBadFormatClosingTime() {
+        ElectionPayload payload = ElectionPayload.builder()
+                .candidates(List.of("one", "two"))
+                .startingDate("2022-10-24T10:00:00")
+                .closingDate("2022/10/25T21:00")
+                .electionName("test")
+                .build();
+
+        IllegalPayloadArgumentException exception = assertThrows(IllegalPayloadArgumentException.class, () -> {
+            payload.toQuery();
+        });
+
+        assertThat(exception.getMessage()).isEqualTo("The 'closing_date' parameter should be in [YY-MM-DD'T'HH:mm::ss] format");
+    }
 }

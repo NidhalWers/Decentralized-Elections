@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.septgrandcorsaire.blockchain.infrastructure.util.DateTimeParser.parseDateTime;
+
 /**
  * @author Nidhal TEYEB
  * @since 0.0.1-SNAPSHOT
@@ -33,12 +35,20 @@ public class ElectionPayload {
         validatePayload();
         return ElectionQuery.builder()
                 .candidates(this.candidates)
-                .startingDate(LocalDateTime.parse(this.startingDate))
-                .closingDate(LocalDateTime.parse(this.closingDate))
+                .startingDate(parseStartingDate())
+                .closingDate(parseClosingDate())
                 .electionName(this.electionName)
                 .build();
     }
 
+    private LocalDateTime parseStartingDate() {
+        return parseDateTime(this.startingDate, "starting_date");
+    }
+
+    private LocalDateTime parseClosingDate() {
+        return parseDateTime(this.closingDate, "closing_date");
+    }
+    
     private void validatePayload() {
         if (electionName == null || electionName.isBlank()) {
             throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "election_name"));

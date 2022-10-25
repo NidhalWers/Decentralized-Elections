@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import static com.septgrandcorsaire.blockchain.infrastructure.util.DateTimeParser.parseDateTime;
+
 /**
  * @author Nidhal TEYEB
  * @since 0.0.1-SNAPSHOT
@@ -30,8 +32,12 @@ public class VotePayload {
         return VoteQuery.builder()
                 .electionName(electionName)
                 .candidateName(candidateName)
-                .votingDate(LocalDateTime.parse(votingTime))
+                .votingDate(parseVotingDate())
                 .build();
+    }
+
+    private LocalDateTime parseVotingDate() {
+        return parseDateTime(this.votingTime, "voting_time");
     }
 
     private void validatePayload() {
