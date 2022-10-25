@@ -9,10 +9,13 @@ from Connect.models import Citizen
 # Create your views here.
 
 def login_html(request):
-    return render(request,'Connect/login.html')
+    return render(request,'Connect/login.html',context={'status':1})
 
 def fc_html(request):
-    return render(request,'Connect/fc.html')
+    if not request.user.is_authenticated:
+        return render(request,'Connect/fc.html')
+    else :
+        return render(request,'Connect/login.html',context={'status':1})
 
 def impots_html(request):
     return render(request,'Connect/impots.html')
@@ -52,6 +55,9 @@ def login_impots(request):
         else:
             return render (request,'connect/impots.html', context={'status':0,'error':'Mot de passe ou identifiant incorrect'})
     else:
-        return render(request,'connect/impots.html', context={'status':1})
+        if request.user.is_authenticated:
+            return render(request,'connect/login.html',context={'status':1})
+        else:
+            return render(request,'connect/impots.html', context={'status':1})
 
 # API

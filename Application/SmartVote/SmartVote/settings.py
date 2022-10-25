@@ -101,6 +101,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
+LOGOUT_REDIRECT_URL = '/connect/login'
+LOGIN_REDIRECT_URL = '/connect/login'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
