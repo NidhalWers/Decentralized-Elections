@@ -7,7 +7,7 @@ import com.septgrandcorsaire.blockchain.api.error.exception.ErrorCode;
 import com.septgrandcorsaire.blockchain.application.ElectionQuery;
 import com.septgrandcorsaire.blockchain.application.VoteQuery;
 import com.septgrandcorsaire.blockchain.domain.*;
-import com.septgrandcorsaire.blockchain.infrastructure.dao.BlockchainDAO;
+import com.septgrandcorsaire.blockchain.infrastructure.dao.BlockchainRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class ElectionDomainService {
     private static int MINING_DIFFICULTY;
 
     public BlockChain getBlockchainForElection(final String electionName) {
-        BlockChain blockChain = BlockchainDAO.INSTANCE.getBlockchain(electionName);
+        BlockChain blockChain = BlockchainRepository.INSTANCE.getBlockchain(electionName);
         verifyExistingElection(blockChain, electionName);
         handleFinishedElection(blockChain);
         return blockChain;
@@ -60,18 +60,18 @@ public class ElectionDomainService {
         verifyCreateElectionRequestValidity(query.getElectionName());
         final BlockChain blockChain = new BlockChain(query.getElectionName(), MINING_DIFFICULTY);
         blockChain.addBlock(blockChain.newBlock(ElectionInitializationData.fromElectionQuery(query), 0, null));
-        BlockchainDAO.INSTANCE.addBlockchain(query.getElectionName(), blockChain);
+        BlockchainRepository.INSTANCE.addBlockchain(query.getElectionName(), blockChain);
         return blockChain;
     }
 
     private void verifyCreateElectionRequestValidity(final String electionName) {
-        if (BlockchainDAO.INSTANCE.electionAlreadyExistsWithThisName(electionName)) {
+        if (BlockchainRepository.INSTANCE.electionAlreadyExistsWithThisName(electionName)) {
             throw new IllegalArgumentException("the election '" + electionName + "' already exists");
         }
     }
 
     public Block voteInElection(VoteQuery query) {
-        BlockChain blockChain = BlockchainDAO.INSTANCE.getBlockchain(query.getElectionName());
+        BlockChain blockChain = BlockchainRepository.INSTANCE.getBlockchain(query.getElectionName());
         verifyExistingElection(blockChain, query.getElectionName());
         verifyThatTheVoteIsTakenAfterTheElectionHasBegun(query, blockChain.getInitializationData());
         verifyThatTheVoteIsTakenBeforeTheElectionIsOver(query, blockChain.getInitializationData());
@@ -79,6 +79,10 @@ public class ElectionDomainService {
         Block newVoteBlock = blockChain.newBlock(VotingData.fromVoteQuery(query));
         blockChain.addBlock(newVoteBlock);
         return newVoteBlock;
+    }
+
+    public void deleteAllElections() {
+        BlockchainRepository.INSTANCE.clearRepository();
     }
 
     private void verifyThatTheVoteIsTakenAfterTheElectionHasBegun(VoteQuery query, ElectionInitializationData electionInitializationData) {

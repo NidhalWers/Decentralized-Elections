@@ -5,14 +5,18 @@ import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockchainDAO {
+public class BlockchainRepository {
 
-    public static BlockchainDAO INSTANCE = new BlockchainDAO();
+    public static BlockchainRepository INSTANCE = new BlockchainRepository();
 
     private Map<String, BlockChain> nameBlockchainMap = new HashMap<>();
 
     public void addBlockchain(String electionName, BlockChain blockChain) {
         nameBlockchainMap.put(electionName, blockChain);
+    }
+
+    public void clearRepository() {
+        nameBlockchainMap.clear();
     }
 
     public BlockChain getBlockchain(String electionName) {

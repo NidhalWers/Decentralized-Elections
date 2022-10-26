@@ -9,7 +9,7 @@ import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import com.septgrandcorsaire.blockchain.domain.ElectionInitializationData;
 import com.septgrandcorsaire.blockchain.domain.VotingData;
-import com.septgrandcorsaire.blockchain.infrastructure.dao.BlockchainDAO;
+import com.septgrandcorsaire.blockchain.infrastructure.dao.BlockchainRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +34,7 @@ class ElectionDomainServiceTest {
                 .electionName("test")
                 .build();
         blockchain1.addBlock(blockchain1.newBlock(ElectionInitializationData.fromElectionQuery(query), 0, null));
-        BlockchainDAO.INSTANCE.addBlockchain("test", blockchain1);
+        BlockchainRepository.INSTANCE.addBlockchain("test", blockchain1);
     }
 
     @Test
