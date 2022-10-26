@@ -1,2 +1,5 @@
-
+/.idea/
+/Blockchain/blockchain.iml
+/Blockchain/target/
 *.pyc
+
