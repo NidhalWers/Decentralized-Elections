@@ -4,13 +4,13 @@ package com.septgrandcorsaire.blockchain.api.error.exception;
  * @author Nidhal TEYEB
  * @since 0.0.1-SNAPSHOT
  */
-public class ElectionNotFoundException extends RuntimeException {
+public class ElectionNotStartedException extends RuntimeException {
 
     private ErrorCode code;
 
-    public ElectionNotFoundException(String s) {
-        super(s);
-        this.code = ErrorCode.NOT_FOUND_ELECTION;
+    public ElectionNotStartedException(String message) {
+        super(message);
+        this.code = ErrorCode.ELECTION_NOT_STARTED;
     }
 
     public ErrorCode getCode() {

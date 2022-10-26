@@ -1,9 +1,12 @@
 package com.septgrandcorsaire.blockchain.api;
 
+import com.septgrandcorsaire.blockchain.api.error.exception.ElectionAlreadyFinishedException;
 import com.septgrandcorsaire.blockchain.api.payload.ElectionPayload;
 import com.septgrandcorsaire.blockchain.api.payload.VotePayload;
 import com.septgrandcorsaire.blockchain.api.resource.BlockChainResource;
 import com.septgrandcorsaire.blockchain.api.resource.BlockResource;
+import com.septgrandcorsaire.blockchain.api.resource.ElectionResource;
+import com.septgrandcorsaire.blockchain.api.resource.ElectionResultResource;
 import com.septgrandcorsaire.blockchain.application.ElectionApplicationService;
 import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
@@ -32,8 +35,13 @@ public class BlockchainController {
     }
 
     @GetMapping(value = "/smart-vote/api/v1/get-election/{election_name}")
-    public BlockChainResource getElection(@PathVariable("election_name") String input) {
-        BlockChain result = electionApplicationService.getElectionData(input);
+    public ElectionResource getElection(@PathVariable("election_name") String input) {
+        BlockChain result;
+        try {
+            result = electionApplicationService.getElectionData(input);
+        } catch (ElectionAlreadyFinishedException exception) {
+            return ElectionResultResource.of(exception.getElectionResult());
+        }
         return BlockChainResource.of(result);
     }
 

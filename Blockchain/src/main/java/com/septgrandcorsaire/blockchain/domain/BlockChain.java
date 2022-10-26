@@ -29,6 +29,10 @@ public class BlockChain {
         return blocks;
     }
 
+    public List<Block> getVotingBlock() {
+        return blocks.subList(1, blocks.size());
+    }
+
     public Block getBlock(int i) {
         return blocks.get(i);
     }
@@ -37,8 +41,8 @@ public class BlockChain {
         return blocks.get(blocks.size() - 1);
     }
 
-    public Block getInitializationData() {
-        return blocks.get(0);
+    public ElectionInitializationData getInitializationData() {
+        return (ElectionInitializationData) blocks.get(0).getData();
     }
 
     public Block newBlock(Data data, int index, String latestHash) {

@@ -1,4 +1,4 @@
-package com.septgrandcorsaire.blockchain.infrastructure;
+package com.septgrandcorsaire.blockchain.infrastructure.adapter;
 
 import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
@@ -13,7 +13,7 @@ public class BlockchainDomainService {
     public BlockchainDomainService() {
         this.loggerService = new LoggerService();
     }
-    
+
     public boolean isBlockchainValid(BlockChain blockChain) {
         if (!blockChain.isFirstBlockValid()) {
             return false;
