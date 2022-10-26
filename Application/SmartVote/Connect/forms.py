@@ -7,6 +7,22 @@ class NewUserForm(UserCreationForm):
         model = User
         fields = ("fiscal_number","password1")
 
+    
+
+    def save(self, commit=True):
+        user = super(NewUserForm, self).save(commit=False)
+        if commit:
+            user.save()
+        return user
+
+
+class NewUserFormAmeli(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("sick_security_number","password1")
+
+    
+
     def save(self, commit=True):
         user = super(NewUserForm, self).save(commit=False)
         if commit:
