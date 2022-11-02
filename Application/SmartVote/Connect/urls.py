@@ -7,6 +7,6 @@ from Connect import views
 urlpatterns = [
     path('login/franceconnect', views.fc_html, name='fc'),
     path('login/franceconnect/impotsgouvfr', views.login_impots, name='login_impots'),
-    path('login/franceconnect/fcamelifr', views.ameli_html, name='ameli'),
+    path('login/franceconnect/fcamelifr', views.login_ameli, name='login_ameli'),
     path('logout/', auth_views.LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
 ]
