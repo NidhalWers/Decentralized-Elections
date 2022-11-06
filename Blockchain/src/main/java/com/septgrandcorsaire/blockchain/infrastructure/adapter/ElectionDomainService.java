@@ -1,9 +1,6 @@
 package com.septgrandcorsaire.blockchain.infrastructure.adapter;
 
-import com.septgrandcorsaire.blockchain.api.error.exception.ElectionAlreadyFinishedException;
-import com.septgrandcorsaire.blockchain.api.error.exception.ElectionNotFoundException;
-import com.septgrandcorsaire.blockchain.api.error.exception.ElectionNotStartedException;
-import com.septgrandcorsaire.blockchain.api.error.exception.ErrorCode;
+import com.septgrandcorsaire.blockchain.api.error.exception.*;
 import com.septgrandcorsaire.blockchain.application.ElectionQuery;
 import com.septgrandcorsaire.blockchain.application.VoteQuery;
 import com.septgrandcorsaire.blockchain.domain.*;
@@ -75,10 +72,22 @@ public class ElectionDomainService {
         verifyExistingElection(blockChain, query.getElectionName());
         verifyThatTheVoteIsTakenAfterTheElectionHasBegun(query, blockChain.getInitializationData());
         verifyThatTheVoteIsTakenBeforeTheElectionIsOver(query, blockChain.getInitializationData());
+        query = verifyThatBlankVotesAreAllowed(query, blockChain.getInitializationData());
         verifyNamePartOfTheCandidates(blockChain.getInitializationData(), query);
         Block newVoteBlock = blockChain.newBlock(VotingData.fromVoteQuery(query));
         blockChain.addBlock(newVoteBlock);
         return newVoteBlock;
+    }
+
+    private VoteQuery verifyThatBlankVotesAreAllowed(VoteQuery query, ElectionInitializationData initializationData) {
+        if (query.getCandidateName() == null || query.getCandidateName().isBlank()) {
+            if (initializationData.getCandidates().contains("blank_votes")) {
+                return query.setCandidateName("blank_votes");
+            } else {
+                throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "candidate_name"));
+            }
+        }
+        return query;
     }
 
     public void deleteAllElections() {
