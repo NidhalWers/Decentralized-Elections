@@ -3,6 +3,7 @@ package com.septgrandcorsaire.blockchain.infrastructure.adapter;
 import com.septgrandcorsaire.blockchain.api.error.exception.ElectionAlreadyFinishedException;
 import com.septgrandcorsaire.blockchain.api.error.exception.ElectionNotFoundException;
 import com.septgrandcorsaire.blockchain.api.error.exception.ElectionNotStartedException;
+import com.septgrandcorsaire.blockchain.api.error.exception.VoterHasAlreadyVotedException;
 import com.septgrandcorsaire.blockchain.application.ElectionQuery;
 import com.septgrandcorsaire.blockchain.application.VoteQuery;
 import com.septgrandcorsaire.blockchain.domain.Block;
@@ -10,7 +11,8 @@ import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import com.septgrandcorsaire.blockchain.domain.ElectionInitializationData;
 import com.septgrandcorsaire.blockchain.domain.VotingData;
 import com.septgrandcorsaire.blockchain.infrastructure.dao.BlockchainRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -24,8 +26,8 @@ class ElectionDomainServiceTest {
     private final ElectionDomainService domainService = new ElectionDomainService();
     private static final LocalDateTime endingTestTime = LocalDateTime.now().plusDays(1).withHour(10).withMinute(0).withSecond(0).withNano(0);
 
-    @BeforeAll
-    static void init() {
+    @BeforeEach
+    void init() {
         BlockChain blockchain1 = new BlockChain("test", 4);
         final ElectionQuery query = ElectionQuery.builder()
                 .candidates(List.of("one", "two"))
@@ -36,6 +38,17 @@ class ElectionDomainServiceTest {
         blockchain1.addBlock(blockchain1.newBlock(ElectionInitializationData.fromElectionQuery(query), 0, null));
         BlockchainRepository.INSTANCE.addBlockchain("test", blockchain1);
     }
+
+    @AfterEach
+    void tearDown() {
+        domainService.deleteAllElections();
+    }
+
+    /********************************************************************************************
+     *
+     *              Test of the get blockchain service
+     *
+     *********************************************************************************************/
 
     @Test
     void testGetBlockchainForElection() {
@@ -48,6 +61,12 @@ class ElectionDomainServiceTest {
 
     }
 
+
+    /********************************************************************************************
+     *
+     *              Test of the create blockchain service
+     *
+     *********************************************************************************************/
     @Test
     void testCreateBlockchainForElection() {
         final ElectionQuery query = ElectionQuery.builder()
@@ -74,12 +93,20 @@ class ElectionDomainServiceTest {
         assertThat(blockChain.getInitializationData().getClosingDate().getMinute()).isEqualTo(0);
     }
 
+
+    /********************************************************************************************
+     *
+     *              Test of the vote service
+     *
+     *********************************************************************************************/
+
     @Test
     void testVoteInElection() {
         VoteQuery query = VoteQuery.builder()
                 .electionName("test")
                 .candidateName("one")
                 .votingDate(LocalDateTime.of(2022, 10, 24, 12, 0, 0))
+                .voterId("voter1")
                 .build();
 
         Block actualResult = domainService.voteInElection(query);
@@ -98,6 +125,7 @@ class ElectionDomainServiceTest {
                 .electionName("FalseElection")
                 .candidateName("one")
                 .votingDate(LocalDateTime.of(2022, 10, 24, 12, 0, 0))
+                .voterId("voter1")
                 .build();
 
         ElectionNotFoundException exception = assertThrows(ElectionNotFoundException.class, () -> {
@@ -113,6 +141,7 @@ class ElectionDomainServiceTest {
                 .electionName("test")
                 .candidateName("one")
                 .votingDate(LocalDateTime.of(2022, 10, 23, 12, 0, 0))
+                .voterId("voter1")
                 .build();
 
         ElectionNotStartedException exception = assertThrows(ElectionNotStartedException.class, () -> {
@@ -128,6 +157,7 @@ class ElectionDomainServiceTest {
                 .electionName("test")
                 .candidateName("one")
                 .votingDate(LocalDateTime.now().plusDays(1).plusHours(5))
+                .voterId("voter1")
                 .build();
 
         ElectionAlreadyFinishedException exception = assertThrows(ElectionAlreadyFinishedException.class, () -> {
@@ -143,6 +173,7 @@ class ElectionDomainServiceTest {
                 .electionName("test")
                 .candidateName("NOT_EXISTING")
                 .votingDate(LocalDateTime.now())
+                .voterId("voter1")
                 .build();
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -150,5 +181,32 @@ class ElectionDomainServiceTest {
         });
 
         assertThat(exception.getMessage()).isEqualTo("the name 'NOT_EXISTING' is not part of the test's candidates");
+    }
+
+    @Test
+    void testVoteInElectionHasAlreadyVoted() {
+        VoteQuery query = VoteQuery.builder()
+                .electionName("test")
+                .candidateName("one")
+                .votingDate(LocalDateTime.of(2022, 10, 24, 12, 0, 0))
+                .voterId("voter1")
+                .build();
+
+        Block actualResult = domainService.voteInElection(query);
+
+        VoterHasAlreadyVotedException exception = assertThrows(VoterHasAlreadyVotedException.class, () -> {
+            domainService.voteInElection(query);
+        });
+
+        /*
+        assertThat(actualResult).isNotNull();
+        assertThat(actualResult.getData()).isInstanceOf(VotingData.class);
+        VotingData data = (VotingData) actualResult.getData();
+        assertThat(data.getElectionName()).isEqualTo("test");
+        assertThat(data.getCandidateName()).isEqualTo("one");
+        assertThat(data.getVotingDate()).isAfterOrEqualTo(LocalDateTime.of(2022, 10, 24, 12, 0, 0));
+        */
+
+        assertThat(exception.getMessage()).isEqualTo("voter1 has already voted for the election named 'test'");
     }
 }

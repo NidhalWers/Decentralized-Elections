@@ -3,6 +3,7 @@ package com.septgrandcorsaire.blockchain.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Nidhal TEYEB
@@ -30,7 +31,15 @@ public class BlockChain {
     }
 
     public List<Block> getVotingBlock() {
-        return blocks.subList(1, blocks.size());
+        return blocks.stream()
+                .filter(block -> block.getData() instanceof VotingData)
+                .collect(Collectors.toList());
+    }
+
+    public List<Block> getVoterBlock() {
+        return blocks.stream()
+                .filter(block -> block.getData() instanceof VoterData)
+                .collect(Collectors.toList());
     }
 
     public Block getBlock(int i) {
