@@ -27,8 +27,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,6 +58,16 @@ public class BlockchainControllerIT {
                 .build();
 
         domainService.createBlockchainForElection(queryFirstElection);
+
+        ElectionQuery querySecondElection = ElectionQuery.builder()
+                .electionName("blank_vote_election")
+                .startingDate(startingTestDateTime)
+                .closingDate(endingTestDateTime)
+                .candidates(List.of("Henry", "Julius", "Mohammed"))
+                .blankVotesCounted(true)
+                .build();
+
+        domainService.createBlockchainForElection(querySecondElection);
     }
 
     @AfterEach
@@ -588,7 +597,7 @@ public class BlockchainControllerIT {
     }
 
     @Test
-    @DisplayName("Given a payload without the candidate name," +
+    @DisplayName("Given a payload without the candidate name and with blank vote not allowed," +
             "When voting in election," +
             "Then throw an exception")
     void testVoteNoCandidateName() throws Exception {
@@ -608,6 +617,34 @@ public class BlockchainControllerIT {
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(ErrorCode.REQUIRED_PARAMETER.getValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Parameter 'candidate_name' is required."))
+        ;
+    }
+
+    @Test
+    @DisplayName("Given a payload without the candidate name and with blank vote allowed," +
+            "When voting in election," +
+            "Then throw an exception")
+    void testVoteNoCandidateNameWithBlankVotes() throws Exception {
+        VotePayload payload = VotePayload.builder()
+                .electionName("blank_vote_election")
+                .candidateName("")
+                .votingTime("2022-10-24T17:00")
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper()
+                .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        String jsonPayload = mapper.writeValueAsString(payload);
+
+        mockMvc.perform(post(VOTE_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(jsonPayload))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.hash").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.previous_hash").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.election_name").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.candidate_name", is("blank_votes")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.voting_date").hasJsonPath())
         ;
     }
 

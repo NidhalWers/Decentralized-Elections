@@ -44,9 +44,10 @@ public class VotePayload {
         if (electionName == null || electionName.isBlank()) {
             throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "election_name"));
         }
+        /*
         if (candidateName == null || candidateName.isBlank()) {
             throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "candidate_name"));
-        }
+        }*/
         if (votingTime == null || votingTime.isBlank()) {
             throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "voting_time"));
         }

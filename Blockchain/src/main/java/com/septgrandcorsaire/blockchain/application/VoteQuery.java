@@ -17,4 +17,12 @@ public class VoteQuery {
     private String candidateName;
 
     private LocalDateTime votingDate;
+
+    public VoteQuery setCandidateName(String input) {
+        return VoteQuery.builder()
+                .electionName(electionName)
+                .candidateName(input)
+                .votingDate(votingDate)
+                .build();
+    }
 }
