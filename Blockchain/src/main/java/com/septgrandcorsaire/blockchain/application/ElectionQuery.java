@@ -21,4 +21,6 @@ public class ElectionQuery {
     private LocalDateTime closingDate;
 
     private String electionName;
+
+    private boolean blankVotesCounted;
 }

@@ -31,6 +31,8 @@ public class ElectionPayload {
 
     private String electionName;
 
+    private String countBlankVotes;
+
     public ElectionQuery toQuery() {
         validatePayload();
         return ElectionQuery.builder()
@@ -38,6 +40,7 @@ public class ElectionPayload {
                 .startingDate(parseStartingDate())
                 .closingDate(parseClosingDate())
                 .electionName(this.electionName)
+                .blankVotesCounted(Boolean.parseBoolean(countBlankVotes))
                 .build();
     }
 
@@ -48,7 +51,7 @@ public class ElectionPayload {
     private LocalDateTime parseClosingDate() {
         return parseDateTime(this.closingDate, "closing_date");
     }
-    
+
     private void validatePayload() {
         if (electionName == null || electionName.isBlank()) {
             throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "election_name"));
@@ -61,6 +64,11 @@ public class ElectionPayload {
         }
         if (candidates == null || candidates.isEmpty()) {
             throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "candidates"));
+        }
+        if (countBlankVotes != null) {
+            if (!countBlankVotes.isBlank() && !("true".equals(countBlankVotes.toLowerCase()) || "false".equals(countBlankVotes.toLowerCase()))) {
+                throw new IllegalPayloadArgumentException(ErrorCode.INVALID_BOOLEAN_FORMAT, String.format(ErrorCode.INVALID_BOOLEAN_FORMAT.getDefaultMessage(), "count_blank_votes"));
+            }
         }
 
     }

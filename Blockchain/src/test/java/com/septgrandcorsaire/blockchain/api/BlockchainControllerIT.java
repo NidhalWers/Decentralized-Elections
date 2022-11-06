@@ -27,6 +27,8 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -111,11 +113,189 @@ public class BlockchainControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates.size()").value(3))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.starting_date").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.closing_date").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.election_name").isString())
         ;
     }
+
+    @Test
+    @DisplayName("Given valid payload with 'false' blank vote count," +
+            "When creating election," +
+            "Then return the a complete blockchain resource")
+    void testCreateElectionWithoutBlankVote() throws Exception {
+        ElectionPayload payload = ElectionPayload.builder()
+                .electionName("french_2024_president")
+                .startingDate("2022-10-24T10:00")
+                .closingDate("2022-10-24T21:00")
+                .candidates(List.of("Othman", "Ali", "Talha"))
+                .countBlankVotes("false")
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper()
+                .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        String jsonPayload = mapper.writeValueAsString(payload);
+
+        mockMvc.perform(post(CREATE_ELECTION_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonPayload))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.election_name").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blockchain_valid").isBoolean())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].hash").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates", hasSize(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.starting_date").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.closing_date").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.election_name").isString())
+        ;
+    }
+
+    @Test
+    @DisplayName("Given valid payload with 'FALSE' blank vote count," +
+            "When creating election," +
+            "Then return the a complete blockchain resource")
+    void testCreateElectionWithoutBlankVoteUpperCaseParameter() throws Exception {
+        ElectionPayload payload = ElectionPayload.builder()
+                .electionName("french_2024_president")
+                .startingDate("2022-10-24T10:00")
+                .closingDate("2022-10-24T21:00")
+                .candidates(List.of("Othman", "Ali", "Talha"))
+                .countBlankVotes("FALSE")
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper()
+                .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        String jsonPayload = mapper.writeValueAsString(payload);
+
+        mockMvc.perform(post(CREATE_ELECTION_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonPayload))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.election_name").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blockchain_valid").isBoolean())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].hash").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates", hasSize(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.starting_date").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.closing_date").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.election_name").isString())
+        ;
+    }
+
+    @Test
+    @DisplayName("Given valid payload with 'true' blank vote count," +
+            "When creating election," +
+            "Then return the a complete blockchain resource")
+    void testCreateElectionWithBlankVote() throws Exception {
+        ElectionPayload payload = ElectionPayload.builder()
+                .electionName("french_2024_president")
+                .startingDate("2022-10-24T10:00")
+                .closingDate("2022-10-24T21:00")
+                .candidates(List.of("Othman", "Ali", "Talha"))
+                .countBlankVotes("true")
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper()
+                .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        String jsonPayload = mapper.writeValueAsString(payload);
+
+        mockMvc.perform(post(CREATE_ELECTION_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonPayload))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.election_name").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blockchain_valid").isBoolean())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].hash").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates", hasSize(4)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates", hasItem("blank_votes")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.starting_date").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.closing_date").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.election_name").isString())
+        ;
+    }
+
+    @Test
+    @DisplayName("Given valid payload with 'TRUE' blank vote count," +
+            "When creating election," +
+            "Then return the a complete blockchain resource")
+    void testCreateElectionWithBlankVoteUpperCase() throws Exception {
+        ElectionPayload payload = ElectionPayload.builder()
+                .electionName("french_2024_president")
+                .startingDate("2022-10-24T10:00")
+                .closingDate("2022-10-24T21:00")
+                .candidates(List.of("Othman", "Ali", "Talha"))
+                .countBlankVotes("TRUE")
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper()
+                .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        String jsonPayload = mapper.writeValueAsString(payload);
+
+        mockMvc.perform(post(CREATE_ELECTION_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonPayload))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.election_name").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blockchain_valid").isBoolean())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].hash").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates", hasSize(4)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.candidates", hasItem("blank_votes")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.starting_date").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.closing_date").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.blocks[0].data.election_name").isString())
+        ;
+    }
+
+    @Test
+    @DisplayName("Given payload with invalid blank vote count," +
+            "When creating election," +
+            "Then throw exception")
+    void testCreateElectionWithInvalidBlankVoteParameter() throws Exception {
+        ElectionPayload payload = ElectionPayload.builder()
+                .electionName("french_2024_president")
+                .startingDate("2022-10-24T10:00")
+                .closingDate("2022-10-24T21:00")
+                .candidates(List.of("Othman", "Ali", "Talha"))
+                .countBlankVotes("toto")
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper()
+                .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        String jsonPayload = mapper.writeValueAsString(payload);
+
+        mockMvc.perform(post(CREATE_ELECTION_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(jsonPayload))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(ErrorCode.INVALID_BOOLEAN_FORMAT.getValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Parameter 'count_blank_votes' is not in a boolean format : should be true or false"))
+        ;
+    }
+
 
     @Test
     @DisplayName("Given payload without election name," +

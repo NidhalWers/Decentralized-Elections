@@ -22,6 +22,7 @@ public class ElectionInitializationData implements Data {
     private String electionName;
 
     public static ElectionInitializationData fromElectionQuery(ElectionQuery query) {
+        if (query.isBlankVotesCounted()) query.getCandidates().add("blank_votes");
         return new ElectionInitializationData(
                 query.getCandidates(),
                 query.getStartingDate(),
