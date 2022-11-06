@@ -13,7 +13,9 @@ public enum ErrorCode {
 
     ELECTION_ALREADY_FINISHED("ELECTION_ALREADY_FINISHED", "Election '%s' is already finished since %s"),
 
-    BAD_DATE_FORMAT("BAD_DATE_FORMAT", "The '%s' parameter should be in [YY-MM-DD'T'HH:mm::ss] format");
+    BAD_DATE_FORMAT("BAD_DATE_FORMAT", "The '%s' parameter should be in [YY-MM-DD'T'HH:mm::ss] format"),
+
+    HAS_ALREADY_VOTED("HAS_ALREADY_VOTED", "%s has already voted for the election named '%s'");
 
     private String value;
 

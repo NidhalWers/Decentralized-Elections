@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -74,9 +75,24 @@ public class ElectionDomainService {
         verifyThatTheVoteIsTakenBeforeTheElectionIsOver(query, blockChain.getInitializationData());
         query = verifyThatBlankVotesAreAllowed(query, blockChain.getInitializationData());
         verifyNamePartOfTheCandidates(blockChain.getInitializationData(), query);
+        verifyVoterHasNotAlreadyVoted(blockChain.getVoterBlock(), query);
+        //add voting block
         Block newVoteBlock = blockChain.newBlock(VotingData.fromVoteQuery(query));
         blockChain.addBlock(newVoteBlock);
+        //add voter block
+        Block newVoterBlock = blockChain.newBlock(VoterData.fromVoteQuery(query));
+        blockChain.addBlock(newVoterBlock);
         return newVoteBlock;
+    }
+
+    private void verifyVoterHasNotAlreadyVoted(List<Block> votingBlock, VoteQuery query) {
+        List<String> voterWithThisId = votingBlock.stream()
+                .map(block -> ((VoterData) block.getData()).getVoterId())
+                .filter(voter -> voter.equals(query.getVoterId()))
+                .collect(Collectors.toList());
+        if (!voterWithThisId.isEmpty()) {
+            throw new VoterHasAlreadyVotedException(String.format(ErrorCode.HAS_ALREADY_VOTED.getDefaultMessage(), query.getVoterId(), query.getElectionName()));
+        }
     }
 
     private VoteQuery verifyThatBlankVotesAreAllowed(VoteQuery query, ElectionInitializationData initializationData) {

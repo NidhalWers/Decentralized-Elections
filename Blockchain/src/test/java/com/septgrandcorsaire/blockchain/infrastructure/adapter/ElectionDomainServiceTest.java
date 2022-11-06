@@ -151,4 +151,6 @@ class ElectionDomainServiceTest {
 
         assertThat(exception.getMessage()).isEqualTo("the name 'NOT_EXISTING' is not part of the test's candidates");
     }
+
+    //todo add test has already voted
 }

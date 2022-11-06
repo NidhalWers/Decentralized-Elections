@@ -553,6 +553,7 @@ public class BlockchainControllerIT {
                 .electionName("first_election")
                 .candidateName("Julius")
                 .votingTime("2022-10-24T17:00")
+                .voterId("fake_person1_id")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper()
@@ -581,6 +582,7 @@ public class BlockchainControllerIT {
                 .electionName("")
                 .candidateName("Julius")
                 .votingTime("2022-10-24T17:00")
+                .voterId("fake_person1_id")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper()
@@ -597,6 +599,32 @@ public class BlockchainControllerIT {
     }
 
     @Test
+    @DisplayName("Given a payload without the voter id," +
+            "When voting in election," +
+            "Then throw an exception")
+    void testVoteNoVoterId() throws Exception {
+        VotePayload payload = VotePayload.builder()
+                .electionName("first_election")
+                .candidateName("Julius")
+                .votingTime("2022-10-24T17:00")
+                .voterId("")
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper()
+                .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        String jsonPayload = mapper.writeValueAsString(payload);
+
+        mockMvc.perform(post(VOTE_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(jsonPayload))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(ErrorCode.REQUIRED_PARAMETER.getValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Parameter 'voter_id' is required."))
+        ;
+    }
+
+
+    @Test
     @DisplayName("Given a payload without the candidate name and with blank vote not allowed," +
             "When voting in election," +
             "Then throw an exception")
@@ -605,6 +633,7 @@ public class BlockchainControllerIT {
                 .electionName("first_election")
                 .candidateName("")
                 .votingTime("2022-10-24T17:00")
+                .voterId("fake_person1_id")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper()
@@ -629,6 +658,7 @@ public class BlockchainControllerIT {
                 .electionName("blank_vote_election")
                 .candidateName("")
                 .votingTime("2022-10-24T17:00")
+                .voterId("fake_person1_id")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper()
@@ -657,6 +687,7 @@ public class BlockchainControllerIT {
                 .electionName("first_election")
                 .candidateName("Julius")
                 .votingTime("")
+                .voterId("fake_person1_id")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper()
@@ -681,6 +712,7 @@ public class BlockchainControllerIT {
                 .electionName("first_election")
                 .candidateName("Julius")
                 .votingTime("2022/10/24T17:00")
+                .voterId("fake_person1_id")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper()
@@ -706,6 +738,7 @@ public class BlockchainControllerIT {
                 .electionName("second_election")
                 .candidateName("Julius")
                 .votingTime("2022-10-24T17:00")
+                .voterId("fake_person1_id")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper()
@@ -730,6 +763,7 @@ public class BlockchainControllerIT {
                 .electionName("first_election")
                 .candidateName("Julius")
                 .votingTime(startingTestDateTime.minusHours(5).toString())
+                .voterId("fake_person1_id")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper()
@@ -754,6 +788,7 @@ public class BlockchainControllerIT {
                 .electionName("first_election")
                 .candidateName("Julius")
                 .votingTime(endingTestDateTime.plusHours(7).toString())
+                .voterId("fake_person1_id")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper()
@@ -778,6 +813,7 @@ public class BlockchainControllerIT {
                 .electionName("first_election")
                 .candidateName("Farouq")
                 .votingTime("2022-10-24T17:00")
+                .voterId("fake_person1_id")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper()
@@ -792,4 +828,6 @@ public class BlockchainControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("the name 'Farouq' is not part of the first_election's candidates"))
         ;
     }
+
+    //todo test voter has already voted
 }

@@ -175,7 +175,7 @@ class ElectionApplicationServiceTest {
         assertThat(actualData.getVotingDate().getDayOfMonth()).isEqualTo(24);
         assertThat(actualData.getVotingDate().getHour()).isEqualTo(12);
         assertThat(actualData.getVotingDate().getMinute()).isEqualTo(30);
-
-
     }
+
+    //todo test has already voted
 }
