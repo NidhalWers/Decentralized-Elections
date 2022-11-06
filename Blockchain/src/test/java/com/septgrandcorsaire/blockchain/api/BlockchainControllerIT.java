@@ -829,5 +829,44 @@ public class BlockchainControllerIT {
         ;
     }
 
-    //todo test voter has already voted
+    @Test
+    @DisplayName("Given a complete payload, with a voter who has already voted," +
+            "When voting in election," +
+            "Then throw an exception")
+    void testVoteInElectionHasAlreadyVoted() throws Exception {
+        VotePayload payload = VotePayload.builder()
+                .electionName("first_election")
+                .candidateName("Julius")
+                .votingTime("2022-10-24T17:00")
+                .voterId("voter1")
+                .build();
+
+        VotePayload payload2 = VotePayload.builder()
+                .electionName("first_election")
+                .candidateName("Julius")
+                .votingTime("2022-10-24T18:00")
+                .voterId("voter1")
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper()
+                .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        String jsonPayload = mapper.writeValueAsString(payload);
+        String jsonPayload2 = mapper.writeValueAsString(payload2);
+
+        mockMvc.perform(post(VOTE_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(jsonPayload))
+                .andExpect(status().isOk())
+        ;
+
+        mockMvc.perform(post(VOTE_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(jsonPayload2))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(ErrorCode.HAS_ALREADY_VOTED.getValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("voter1 has already voted for the election named 'first_election'"))
+        ;
+
+
+    }
 }

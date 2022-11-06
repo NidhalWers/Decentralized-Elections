@@ -26,6 +26,11 @@ class ElectionApplicationServiceTest {
         this.applicationService = new ElectionApplicationService(mockDomainService);
     }
 
+    /********************************************************************************************
+     *
+     *              Test of the create election service
+     *
+     *********************************************************************************************/
     @Test
     void testCreateBlockchainForElection() {
         final ElectionQuery query = ElectionQuery.builder()
@@ -98,6 +103,12 @@ class ElectionApplicationServiceTest {
         assertThat(exception.getMessage()).isEqualTo("must provide a valid election name");
     }
 
+    /********************************************************************************************
+     *
+     *              Test of the get election service
+     *
+     *********************************************************************************************/
+
     @Test
     void testGetElectionData() {
         String inputRequest = "first_test";
@@ -137,13 +148,18 @@ class ElectionApplicationServiceTest {
         assertThat(exception.getMessage()).isEqualTo("must provide a valid election name");
     }
 
-
+    /********************************************************************************************
+     *
+     *              Test of the vote service
+     *
+     *********************************************************************************************/
     @Test
     void testVoteInElection() {
         final VoteQuery query = VoteQuery.builder()
                 .electionName("first_test")
                 .candidateName("one")
                 .votingDate(LocalDateTime.of(2022, 10, 24, 12, 30))
+                .voterId("voter1")
                 .build();
 
         final Block blockForMockResponse = Block.builder()
@@ -177,5 +193,4 @@ class ElectionApplicationServiceTest {
         assertThat(actualData.getVotingDate().getMinute()).isEqualTo(30);
     }
 
-    //todo test has already voted
 }
