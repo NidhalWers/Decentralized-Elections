@@ -84,7 +84,13 @@
             <artifactId>commons-lang3</artifactId>
             <version>${common.lang3.version}</version>
         </dependency>
-    </dependencies>
+
+		<dependency>
+			<groupId>se.emirbuc.randomsentence</groupId>
+			<artifactId>random-sentence-generator</artifactId>
+			<version>0.0.7</version>
+		</dependency>
+	</dependencies>
 
 
 	<build>

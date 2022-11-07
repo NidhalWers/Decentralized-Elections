@@ -18,14 +18,17 @@ public class BlockChainResource implements ElectionResource {
 
     private final List<BlockResource> blocks;
 
-    private BlockChainResource(final String electionName, final boolean isBlockchainValid, final List<BlockResource> blocks) {
+    private final String apiKey;
+
+    private BlockChainResource(final String electionName, final boolean isBlockchainValid, final List<BlockResource> blocks, String apiKey) {
         this.electionName = electionName;
         this.isBlockchainValid = isBlockchainValid;
         this.blocks = blocks;
+        this.apiKey = apiKey;
     }
 
-    public static BlockChainResource of(BlockChain blockChain) {
-        return new BlockChainResource(blockChain.getName(), new BlockchainDomainService().isBlockchainValid(blockChain), blockChain.getBlocks().stream().map(block -> BlockResource.of(block)).collect(Collectors.toList()));
+    public static BlockChainResource of(BlockChain blockChain, String apiKey) {
+        return new BlockChainResource(blockChain.getName(), new BlockchainDomainService().isBlockchainValid(blockChain), blockChain.getBlocks().stream().map(block -> BlockResource.of(block)).collect(Collectors.toList()), apiKey);
     }
 
     public String getElectionName() {
@@ -38,5 +41,9 @@ public class BlockChainResource implements ElectionResource {
 
     public List<BlockResource> getBlocks() {
         return blocks;
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 }

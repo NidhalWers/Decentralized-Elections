@@ -5,6 +5,7 @@ import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import com.septgrandcorsaire.blockchain.domain.ElectionInitializationData;
 import com.septgrandcorsaire.blockchain.domain.VotingData;
 import com.septgrandcorsaire.blockchain.infrastructure.adapter.ElectionDomainService;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageBlockchainCreated;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -59,9 +60,9 @@ class ElectionApplicationServiceTest {
                         && request.getClosingDate().getDayOfMonth() == 25
                         && request.getClosingDate().getHour() == 10
                         && request.getClosingDate().getMinute() == 0
-        ))).thenReturn(blockChainForMock);
+        ))).thenReturn(MessageBlockchainCreated.of(blockChainForMock, "an-api-key"));
 
-        final BlockChain actualResult = applicationService.createBlockchainForElection(query);
+        final BlockChain actualResult = applicationService.createBlockchainForElection(query).blockChain; //todo revoir api key
 
         assertThat(actualResult).isNotNull();
         assertThat(actualResult.getName()).isEqualTo("first_test");
