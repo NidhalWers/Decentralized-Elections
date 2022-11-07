@@ -76,7 +76,7 @@ class ElectionDomainServiceTest {
                 .electionName("first_test")
                 .build();
 
-        final BlockChain blockChain = domainService.createBlockchainForElection(query);
+        final BlockChain blockChain = domainService.createBlockchainForElection(query).blockChain;
 
         assertThat(blockChain).isNotNull();
         assertThat(blockChain.getName()).isEqualTo("first_test");

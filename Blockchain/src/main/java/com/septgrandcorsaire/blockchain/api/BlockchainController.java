@@ -10,6 +10,7 @@ import com.septgrandcorsaire.blockchain.api.resource.ElectionResultResource;
 import com.septgrandcorsaire.blockchain.application.ElectionApplicationService;
 import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageBlockchainCreated;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +31,8 @@ public class BlockchainController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public BlockChainResource createElection(@RequestBody ElectionPayload payload) {
-        BlockChain result = electionApplicationService.createBlockchainForElection(payload.toQuery());
-        return BlockChainResource.of(result);
+        MessageBlockchainCreated result = electionApplicationService.createBlockchainForElection(payload.toQuery());
+        return BlockChainResource.of(result.blockChain, result.apiKey);
     }
 
     @GetMapping(value = "/smart-vote/api/v1/get-election/{election_name}")
@@ -42,7 +43,7 @@ public class BlockchainController {
         } catch (ElectionAlreadyFinishedException exception) {
             return ElectionResultResource.of(exception.getElectionResult());
         }
-        return BlockChainResource.of(result);
+        return BlockChainResource.of(result, null);
     }
 
     @PostMapping(value = "/smart-vote/api/v1/vote",

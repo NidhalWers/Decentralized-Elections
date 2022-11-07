@@ -4,7 +4,10 @@ import com.septgrandcorsaire.blockchain.api.error.exception.*;
 import com.septgrandcorsaire.blockchain.application.ElectionQuery;
 import com.septgrandcorsaire.blockchain.application.VoteQuery;
 import com.septgrandcorsaire.blockchain.domain.*;
+import com.septgrandcorsaire.blockchain.infrastructure.dao.ApiKeyRepository;
 import com.septgrandcorsaire.blockchain.infrastructure.dao.BlockchainRepository;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageBlockchainCreated;
+import com.septgrandcorsaire.blockchain.infrastructure.service.ApiKeyGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -54,12 +57,17 @@ public class ElectionDomainService {
         }
     }
 
-    public BlockChain createBlockchainForElection(final ElectionQuery query) {
+    public MessageBlockchainCreated createBlockchainForElection(final ElectionQuery query) {
         verifyCreateElectionRequestValidity(query.getElectionName());
+
         final BlockChain blockChain = new BlockChain(query.getElectionName(), MINING_DIFFICULTY);
         blockChain.addBlock(blockChain.newBlock(ElectionInitializationData.fromElectionQuery(query), 0, null));
         BlockchainRepository.INSTANCE.addBlockchain(query.getElectionName(), blockChain);
-        return blockChain;
+
+        final String apiKey = ApiKeyGenerator.generateKey();
+        ApiKeyRepository.INSTANCE.addKey(blockChain.getName(), apiKey);
+
+        return MessageBlockchainCreated.of(blockChain, apiKey);
     }
 
     private void verifyCreateElectionRequestValidity(final String electionName) {
@@ -108,6 +116,7 @@ public class ElectionDomainService {
 
     public void deleteAllElections() {
         BlockchainRepository.INSTANCE.clearRepository();
+        ApiKeyRepository.INSTANCE.clearRepository();
     }
 
     private void verifyThatTheVoteIsTakenAfterTheElectionHasBegun(VoteQuery query, ElectionInitializationData electionInitializationData) {
