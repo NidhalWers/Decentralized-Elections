@@ -31,7 +31,7 @@ public class ElectionApplicationService {
     }
 
     public BlockChain getElectionData(String inputRequest) {
-        if (inputRequest.isBlank()) {
+        if (inputRequest == null || inputRequest.isBlank()) {
             throw new IllegalArgumentException("must provide a valid election name");
         }
         return electionDomainService.getBlockchainForElection(inputRequest);

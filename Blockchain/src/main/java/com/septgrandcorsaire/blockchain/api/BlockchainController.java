@@ -46,6 +46,11 @@ public class BlockchainController {
         return BlockChainResource.of(result, null);
     }
 
+    @GetMapping(value = "/smart-vote/api/v1/get-sandbox/")
+    public ElectionResource getSandboxElection() {
+        return getElection("sandbox");
+    }
+
     @PostMapping(value = "/smart-vote/api/v1/vote",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

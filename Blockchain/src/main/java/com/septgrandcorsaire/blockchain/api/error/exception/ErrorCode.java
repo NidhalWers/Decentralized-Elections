@@ -15,7 +15,9 @@ public enum ErrorCode {
 
     BAD_DATE_FORMAT("BAD_DATE_FORMAT", "The '%s' parameter should be in [YY-MM-DD'T'HH:mm::ss] format"),
 
-    HAS_ALREADY_VOTED("HAS_ALREADY_VOTED", "%s has already voted for the election named '%s'");
+    HAS_ALREADY_VOTED("HAS_ALREADY_VOTED", "%s has already voted for the election named '%s'"),
+
+    INVALID_API_KEY("INVALID_API_KEY", "This API Key cannot be used for the '%s' election. Any attempt at fraud will be fought back !");
 
     private String value;
 
