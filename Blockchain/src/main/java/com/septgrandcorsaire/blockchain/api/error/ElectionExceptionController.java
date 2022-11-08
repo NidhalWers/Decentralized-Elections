@@ -33,19 +33,25 @@ public class ElectionExceptionController {
     }
 
     @ExceptionHandler(value = ElectionAlreadyFinishedException.class)
-    public ResponseEntity<ErrorResource> electionNotFoundHandler(ElectionAlreadyFinishedException exception) {
+    public ResponseEntity<ErrorResource> electionAlreadyFinishedHandler(ElectionAlreadyFinishedException exception) {
         LOGGER.error(String.format("%s %s Stacktrace : %s", exception.getMessage(), exception.getCause(), ExceptionUtils.getStackTrace(exception)));
         return new ResponseEntity<>(new ErrorResource(exception.getCode().getValue(), exception.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(value = ElectionNotStartedException.class)
-    public ResponseEntity<ErrorResource> electionNotFoundHandler(ElectionNotStartedException exception) {
+    public ResponseEntity<ErrorResource> electionNotStartedHandler(ElectionNotStartedException exception) {
         LOGGER.error(String.format("%s %s Stacktrace : %s", exception.getMessage(), exception.getCause(), ExceptionUtils.getStackTrace(exception)));
         return new ResponseEntity<>(new ErrorResource(exception.getCode().getValue(), exception.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(value = VoterHasAlreadyVotedException.class)
-    public ResponseEntity<ErrorResource> electionNotFoundHandler(VoterHasAlreadyVotedException exception) {
+    public ResponseEntity<ErrorResource> voterHasAlreadyVotedHandler(VoterHasAlreadyVotedException exception) {
+        LOGGER.error(String.format("%s %s Stacktrace : %s", exception.getMessage(), exception.getCause(), ExceptionUtils.getStackTrace(exception)));
+        return new ResponseEntity<>(new ErrorResource(exception.getCode().getValue(), exception.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(value = InvalidApiKeyException.class)
+    public ResponseEntity<ErrorResource> invalidApiKeyHandler(InvalidApiKeyException exception) {
         LOGGER.error(String.format("%s %s Stacktrace : %s", exception.getMessage(), exception.getCause(), ExceptionUtils.getStackTrace(exception)));
         return new ResponseEntity<>(new ErrorResource(exception.getCode().getValue(), exception.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
     }
