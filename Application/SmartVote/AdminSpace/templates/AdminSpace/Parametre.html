@@ -1,0 +1,683 @@
+{% extends "base/base.html" %}
+
+{% load static %}
+
+{% block body %}
+
+<link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css"/>
+<script src="assets/plugins/global/plugins.bundle.js"></script>
+
+<div>
+    <div class="row">
+        <div class="col-sm-12 col-lg-12">
+            <div class="card">
+
+                <div class="card-header d-flex justify-content-between">
+                    <div class="header-title">
+                        <h4 class="card-title">
+                            Création de votre éléction
+
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <form id="form-wizard1" class="mt-3 text-center">
+                        <ul id="top-tab-list" class="p-0 row list-inline">
+
+                            <li class="mb-2 col-lg-3 col-md-6 text-start active" id="account">
+                                <a href="javascript:void();">
+                                    <div class="iq-icon me-3">
+                                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z">
+
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <span class="dark-wizard">Identité</span>
+                                </a>
+                            </li>
+
+
+
+
+
+
+
+
+                            
+
+
+
+
+                            <li class="mb-2 col-lg-3 col-md-6 text-start" id="personal">
+                                <a href="javascript:void();">
+                                    <div class="iq-icon me-3">
+                                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z">
+                                            </path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z">
+
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <span class="dark-wizard">Période</span>
+                                </a>
+                            </li>
+
+                            <li class="mb-2 col-lg-3 col-md-6 text-start" id="payment">
+                                <a href="javascript:void();">
+                                    <div class="iq-icon me-3">
+                                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <span class="dark-wizard">Candidats</span>
+                                </a>
+                            </li>
+
+
+                            <li class="mb-2 col-lg-3 col-md-6 text-start" id="confirm">
+                                <a href="javascript:void();">
+                                    <div class="iq-icon me-3">
+                                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <span class="dark-wizard">Récapitulative</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <fieldset style="display: block;">
+                        <div class="form-card text-start">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="steps">Etape 1/4</h2>
+                                </div>
+                            
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Email: *</label>
+                                        <input type="email" class="form-control" name="email" placeholder="Admin Email">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Nom de votre élection: *</label>
+                                        <input type="text" class="form-control" placeholder="Titre de votre éleciton">
+                                    </div>
+                                </div>
+                                    <div class="form-group">
+                                        <label for="exampleFormControlTextarea1">Déscription de votre élection (optionnel)</label>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Déscription de votre élection"></textarea>
+                                    </div>
+                            </div>
+                        </div>
+                        <button type="button" name="next" class="btn btn-primary next action-button float-end" value="Next">Suivant</button>
+                        </fieldset>
+
+
+
+
+
+                        <fieldset style="display: none;">
+                            <div class="form-card text-start">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <h2 class="steps">Etape 2/4</h2>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="exampleInputdatetime">Date de départ</label>
+                                                <input type="datetime-local" class="form-control" id="exampleInputdatetime" value="2022-11-07T13:45:00">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="exampleInputdatetime">Date de fin</label>
+                                                <input type="datetime-local" class="form-control" id="exampleInputdatetime" value="2022-11-07T13:45:00">
+                                            </div>
+                                        </div>     
+                                </div>
+                            </div>                
+                            <button type="button" name="next" class="btn btn-primary next action-button float-end" value="Next">Suivant</button>
+                            <button type="button" name="previous" class="btn btn-dark previous action-button-previous float-end me-1" value="Previous">Retour</button>
+                        </fieldset>
+
+
+                        <fieldset style="display: none;">
+                            <div class="form-card text-start">
+                            <div class="row">
+                                <div class="col-7">
+                                    <h2 class="steps">Etape 3/4</h3>
+                                </div>
+
+                            </div>
+
+
+
+                            <div>
+                                <a href="#" class=" text-center btn btn-primary btn-icon mt-lg-0 mt-md-0 mt-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <i class="btn-inner">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                        </svg>
+                                    </i>
+                                    <span>Ajouter un candidat</span>
+                                </a>
+
+                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" style="display: none;" aria-hidden="true">
+                                    
+                                    <div class="modal-dialog">
+
+                                        <div class="modal-content">
+
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="staticBackdropLabel">Ajoutez un(e) nouveau(elle) candidat(e)</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label class="form-label">Nom du candidat</label>
+                                                    <input type="text" class="form-control" placeholder="Nom du candidat">
+                                                </div>
+                                                <div class="text-start">
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ajouter</button>
+                                                    <button type="button" class="btn btn-danger">Annuler</button>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                
+                                </div>
+
+
+
+                            </div>
+
+
+
+
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Candidats</th>
+                                        <th class="text-center">Programme</th>
+                                        <th class="text-center">Active</th>
+                                        <th class="text-center">Edit</th>
+                                        
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="">
+                                        <td class="text-center">Alpha</td>
+        
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-soft-primary" data-toggle="PDF" data-copy-target="#svg-container-72" data-bs-toggle="tooltip" data-bs-placement="top" title="PDF">
+                                                Download PDF
+                                        
+                                        
+                                            <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M14.7364 2.76175H8.0844C6.0044 2.75375 4.3004 4.41075 4.2504 6.49075V17.2277C4.2054 19.3297 5.8734 21.0697 7.9744 21.1147C8.0114 21.1147 8.0484 21.1157 8.0844 21.1147H16.0724C18.1624 21.0407 19.8144 19.3187 19.8024 17.2277V8.03775L14.7364 2.76175Z"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M14.4746 2.75V5.659C14.4746 7.079 15.6236 8.23 17.0436 8.234H19.7976" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M11.6406 9.90869V15.9497" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                        </td>
+        
+        
+                                        <td class="text-center">
+                                            <input class="form-check-input" type="checkbox">
+                                        </td>
+                                       
+                                        <td class="text-center">
+                                            
+                                                <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                                                            <path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                                <a class="btn btn-sm btn-icon text-danger "  data-bs-toggle="tooltip" title="Delete the row" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                                                            <path d="M19.3248 9.46826C19.3248 9.46826 18.7818 16.2033 18.4668 19.0403C18.3168 20.3953 17.4798 21.1893 16.1088 21.2143C13.4998 21.2613 10.8878 21.2643 8.27979 21.2093C6.96079 21.1823 6.13779 20.3783 5.99079 19.0473C5.67379 16.1853 5.13379 9.46826 5.13379 9.46826" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M20.708 6.23975H3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                            
+                                        </td>
+        
+        
+                                    </tr>
+                                    <tr class="">
+                                        <td class="text-center">Beta
+        
+        
+        
+                                            
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-soft-primary" data-toggle="PDF" data-copy-target="#svg-container-72" data-bs-toggle="tooltip" data-bs-placement="top" title="PDF">
+                                                Download PDF
+                                        
+                                        
+                                            <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M14.7364 2.76175H8.0844C6.0044 2.75375 4.3004 4.41075 4.2504 6.49075V17.2277C4.2054 19.3297 5.8734 21.0697 7.9744 21.1147C8.0114 21.1147 8.0484 21.1157 8.0844 21.1147H16.0724C18.1624 21.0407 19.8144 19.3187 19.8024 17.2277V8.03775L14.7364 2.76175Z"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M14.4746 2.75V5.659C14.4746 7.079 15.6236 8.23 17.0436 8.234H19.7976" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M11.6406 9.90869V15.9497" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                        </td>
+                                        
+        
+                                        <td class="text-center">
+                                            <input class="form-check-input" type="checkbox">
+                                        </td>
+                                        
+                                        <td class="text-center">
+                                            
+                                                <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                                                            <path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                                <a class="btn btn-sm btn-icon text-danger "  data-bs-toggle="tooltip" title="Delete the row" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                                                            <path d="M19.3248 9.46826C19.3248 9.46826 18.7818 16.2033 18.4668 19.0403C18.3168 20.3953 17.4798 21.1893 16.1088 21.2143C13.4998 21.2613 10.8878 21.2643 8.27979 21.2093C6.96079 21.1823 6.13779 20.3783 5.99079 19.0473C5.67379 16.1853 5.13379 9.46826 5.13379 9.46826" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M20.708 6.23975H3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                            
+                                        </td>
+        
+        
+                                    </tr>
+                                    <tr class="">
+                                        <td class="text-center">Gamma
+        
+                                            
+        
+                                            
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-soft-primary" data-toggle="PDF" data-copy-target="#svg-container-72" data-bs-toggle="tooltip" data-bs-placement="top" title="PDF">
+                                                Download PDF
+                                        
+                                        
+                                            <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M14.7364 2.76175H8.0844C6.0044 2.75375 4.3004 4.41075 4.2504 6.49075V17.2277C4.2054 19.3297 5.8734 21.0697 7.9744 21.1147C8.0114 21.1147 8.0484 21.1157 8.0844 21.1147H16.0724C18.1624 21.0407 19.8144 19.3187 19.8024 17.2277V8.03775L14.7364 2.76175Z"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M14.4746 2.75V5.659C14.4746 7.079 15.6236 8.23 17.0436 8.234H19.7976" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M11.6406 9.90869V15.9497" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                        </td>
+                                        
+        
+                                        <td class="text-center">
+                                            <input class="form-check-input" type="checkbox">
+                                        </td>
+                                        
+                                        <td class="text-center">
+                                            
+                                                <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                                                            <path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                                <a class="btn btn-sm btn-icon text-danger "  data-bs-toggle="tooltip" title="Delete the row" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                                                            <path d="M19.3248 9.46826C19.3248 9.46826 18.7818 16.2033 18.4668 19.0403C18.3168 20.3953 17.4798 21.1893 16.1088 21.2143C13.4998 21.2613 10.8878 21.2643 8.27979 21.2093C6.96079 21.1823 6.13779 20.3783 5.99079 19.0473C5.67379 16.1853 5.13379 9.46826 5.13379 9.46826" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M20.708 6.23975H3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                            
+                                        </td>
+        
+                                    </tr>
+                                    <tr class="">
+                                        <td class="text-center">Epsilon
+        
+                                        
+        
+                                            
+                                        </td>
+        
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-soft-primary" data-toggle="PDF" data-copy-target="#svg-container-72" data-bs-toggle="tooltip" data-bs-placement="top" title="PDF">
+                                                Download PDF
+                                        
+                                        
+                                            <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M14.7364 2.76175H8.0844C6.0044 2.75375 4.3004 4.41075 4.2504 6.49075V17.2277C4.2054 19.3297 5.8734 21.0697 7.9744 21.1147C8.0114 21.1147 8.0484 21.1157 8.0844 21.1147H16.0724C18.1624 21.0407 19.8144 19.3187 19.8024 17.2277V8.03775L14.7364 2.76175Z"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M14.4746 2.75V5.659C14.4746 7.079 15.6236 8.23 17.0436 8.234H19.7976" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M11.6406 9.90869V15.9497" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                        </td>
+        
+                                        <td class="text-center">
+                                            <input class="form-check-input" type="checkbox" checked>
+                                        </td>
+                                        
+                                        <td class="text-center">
+                                            
+                                                <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                                                            <path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                                <a class="btn btn-sm btn-icon text-danger "  data-bs-toggle="tooltip" title="Delete the row" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                                                            <path d="M19.3248 9.46826C19.3248 9.46826 18.7818 16.2033 18.4668 19.0403C18.3168 20.3953 17.4798 21.1893 16.1088 21.2143C13.4998 21.2613 10.8878 21.2643 8.27979 21.2093C6.96079 21.1823 6.13779 20.3783 5.99079 19.0473C5.67379 16.1853 5.13379 9.46826 5.13379 9.46826" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M20.708 6.23975H3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                            
+                                        </td>
+        
+                                    </tr>
+                                    <tr class="">
+                                        <td class="text-center">Landa
+        
+                                           
+        
+                                            
+                                        </td>
+        
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-soft-primary" data-toggle="PDF" data-copy-target="#svg-container-72" data-bs-toggle="tooltip" data-bs-placement="top" title="PDF">
+                                                Download PDF
+                                        
+                                        
+                                            <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M14.7364 2.76175H8.0844C6.0044 2.75375 4.3004 4.41075 4.2504 6.49075V17.2277C4.2054 19.3297 5.8734 21.0697 7.9744 21.1147C8.0114 21.1147 8.0484 21.1157 8.0844 21.1147H16.0724C18.1624 21.0407 19.8144 19.3187 19.8024 17.2277V8.03775L14.7364 2.76175Z"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M14.4746 2.75V5.659C14.4746 7.079 15.6236 8.23 17.0436 8.234H19.7976" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M11.6406 9.90869V15.9497" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                        </td>
+        
+                                        <td class="text-center">
+                                            <input class="form-check-input" type="checkbox" checked>
+                                        </td>
+        
+                                        <td class="text-center">
+                                            
+                                                <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                                                            <path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                                <a class="btn btn-sm btn-icon text-danger"  data-bs-toggle="tooltip" title="Delete the row" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                                                            <path d="M19.3248 9.46826C19.3248 9.46826 18.7818 16.2033 18.4668 19.0403C18.3168 20.3953 17.4798 21.1893 16.1088 21.2143C13.4998 21.2613 10.8878 21.2643 8.27979 21.2093C6.96079 21.1823 6.13779 20.3783 5.99079 19.0473C5.67379 16.1853 5.13379 9.46826 5.13379 9.46826" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M20.708 6.23975H3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                            
+                                        </td>
+                                        
+                                    </tr>
+                                    <tr class="">
+                                        <td class="text-center">Zelda
+                                            
+                                                
+                                            
+                                            
+                                            
+                                        </td>
+        
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-soft-primary" data-toggle="PDF" data-copy-target="#svg-container-72" data-bs-toggle="tooltip" data-bs-placement="top" title="PDF">
+                                                Download PDF
+                                        
+                                        
+                                            <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                    d="M14.7364 2.76175H8.0844C6.0044 2.75375 4.3004 4.41075 4.2504 6.49075V17.2277C4.2054 19.3297 5.8734 21.0697 7.9744 21.1147C8.0114 21.1147 8.0484 21.1157 8.0844 21.1147H16.0724C18.1624 21.0407 19.8144 19.3187 19.8024 17.2277V8.03775L14.7364 2.76175Z"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M14.4746 2.75V5.659C14.4746 7.079 15.6236 8.23 17.0436 8.234H19.7976" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M11.6406 9.90869V15.9497" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642" stroke="currentColor" stroke-width="1.5"
+                                                    stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                        </td>
+        
+                                        <td class="text-center">
+                                            <input class="form-check-input" type="checkbox" >
+                                        </td>
+        
+                                        <td class="text-center">
+                                            
+                                                <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                                                            <path d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M15.1655 4.60254L19.7315 9.16854" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                                <a class="btn btn-sm btn-icon text-danger "  data-bs-toggle="tooltip" title="Delete the row" href="#">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                                                            <path d="M19.3248 9.46826C19.3248 9.46826 18.7818 16.2033 18.4668 19.0403C18.3168 20.3953 17.4798 21.1893 16.1088 21.2143C13.4998 21.2613 10.8878 21.2643 8.27979 21.2093C6.96079 21.1823 6.13779 20.3783 5.99079 19.0473C5.67379 16.1853 5.13379 9.46826 5.13379 9.46826" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M20.708 6.23975H3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                            
+                                        </td>
+                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <button type="button" name="next" class="btn btn-primary next action-button float-end" value="Next">Suivant</button>
+                        <button type="button" name="previous" class="btn btn-dark previous action-button-previous float-end me-1" value="Previous">Retour</button>
+                        </fieldset>
+
+
+                        <fieldset style="display: none;">
+                        
+                            <div class="form-card text-start">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <h2 class="steps">Etape 4/4</h3>
+                                    </div>
+    
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12 mt-4">
+                                        <div class="table-responsive-lg">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center" scope="col">Admin</th>
+                                                        <th class="text-center" scope="col">Titre élection</th>
+                                                        <th class="text-center" scope="col">Date début éleciton</th>
+                                                        <th class="text-center" scope="col">Date fin éleciton</th>
+                                                        <th class="text-center" scope="col">Nom des candidats</th>
+                                                        
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <h6 class="mb-0">Admin</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6 class="mb-0">Titre</h6>
+                                                        </td > 
+                                                        <td class="text-center">
+                                                            <h6 class="mb-0">Début</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6 class="mb-0">Fin</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6 class="mb-0">
+                                                                <ul class="list-group">
+                                                                    <ol>Alpha</ol>
+                                                                    <ol>Beta</ol>
+                                                                    <ol>Gamma</ol>
+                                                                    <ol>Epsilon</ol>
+                                                                    <ol>Landa</ol>
+                                                                    <ol>Zelda</ol>
+                                                                </ul>
+                                                            </h6>
+                                                        </td>
+                                                    </tr>
+
+                                                
+
+
+                                                    
+
+                                                </tbody>
+
+
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+                        <button type="button" name="next" class="btn btn-success next action-button float-end" value="Next">Validé</button>
+                        <button type="button" name="previous" class="btn btn-dark previous action-button-previous float-end me-1" value="Previous">Retour</button>
+                        </fieldset>
+
+
+
+
+
+
+
+
+                    </form>
+                </div>
+
+
+
+
+
+            </div>
+
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+</div>
+
+{% endblock %}

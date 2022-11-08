@@ -21,3 +21,6 @@ def epsilon(request):
 
 def zelda(request):
     return render(request,'AdminSpace/Zelda.html')
+
+def parametre(request):
+    return render(request,'AdminSpace/Parametre.html')
