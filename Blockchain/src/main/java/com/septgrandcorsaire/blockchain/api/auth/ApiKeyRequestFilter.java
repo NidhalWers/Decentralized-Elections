@@ -34,15 +34,29 @@ public class ApiKeyRequestFilter extends GenericFilterBean {
         MyRequestWrapper myRequestWrapper = new MyRequestWrapper(currentRequest);
         String path = currentRequest.getRequestURI();
 
-        if (!path.startsWith("/smart-vote/api/v1/vote")) {
+        String key = currentRequest.getHeader("Key") == null ? "" : currentRequest.getHeader("Key");
+
+        if (path.equals("/smart-vote/api/v1/get-sandbox/")) {
+            boolean isExactApiKey = this.apiKeyRepository.isApiKeyCorrespondingToElection(key, "sandbox");
+            handleApiKeyAccuracy(servletResponse, chain, myRequestWrapper, isExactApiKey);
+            return;
+        }
+        if (!path.startsWith("/smart-vote/api/v1/vote")) { //todo equals ?
             chain.doFilter(myRequestWrapper, servletResponse);
             return;
         }
 
-        String key = currentRequest.getHeader("Key") == null ? "" : currentRequest.getHeader("Key");
         String electionName = getElectionNameFromBody(myRequestWrapper.getReader().lines().reduce("", String::concat));
 
         boolean isExactApiKey = this.apiKeyRepository.isApiKeyCorrespondingToElection(key, electionName);
+        handleApiKeyAccuracy(servletResponse, chain, myRequestWrapper, isExactApiKey);
+    }
+
+    private static void handleApiKeyAccuracy(
+            ServletResponse servletResponse,
+            FilterChain chain,
+            MyRequestWrapper myRequestWrapper,
+            boolean isExactApiKey) throws IOException, ServletException {
         if (isExactApiKey) {
             chain.doFilter(myRequestWrapper, servletResponse);
         } else {
@@ -52,9 +66,8 @@ public class ApiKeyRequestFilter extends GenericFilterBean {
             resp.reset();
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             servletResponse.setContentLength(error.length());
-            servletResponse.getWriter().write(error);
+            servletResponse.getWriter().write(error); //todo throw exception
         }
-
     }
 
     private String getElectionNameFromBody(String body) {

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class ElectionDomainService {
 
     @Value("${mining.difficulty}")
-    private static int MINING_DIFFICULTY;
+    private int MINING_DIFFICULTY;
 
     public BlockChain getBlockchainForElection(final String electionName) {
         BlockChain blockChain = BlockchainRepository.INSTANCE.getBlockchain(electionName);

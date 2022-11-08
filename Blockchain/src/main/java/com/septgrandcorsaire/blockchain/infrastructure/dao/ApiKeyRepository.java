@@ -24,6 +24,8 @@ public class ApiKeyRepository {
     }
 
     public boolean isApiKeyCorrespondingToElection(String inputKey, String electionName) {
+        String expectedKey = apiKeyRepository.get(electionName);
+        if (expectedKey == null) return false;
         return apiKeyRepository.get(electionName).equals(inputKey);
     }
 
