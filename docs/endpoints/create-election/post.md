@@ -36,7 +36,7 @@
 
 ---
 
-**Code** : 200 OK
+**Code** : `200 OK`
 
 **Body content** :
 ```json
@@ -67,8 +67,43 @@
 
 ---
 
-**Condition**
+**Condition** : le paramètre `starting_date` n'est pas spécifié
 
-**Code**
+**Code** : `400 Bad Request`
 
 **Body content** : 
+```json
+{
+    "code": "REQUIRED_PARAMETER",
+    "message": "Parameter 'starting_date' is required."
+}
+```
+
+---
+
+**Condition** : le paramètre `election_name` n'est pas spécifié
+
+**Code** : `400 Bad Request`
+
+**Body content** : 
+```json
+{
+    "code": "REQUIRED_PARAMETER",
+    "message": "Parameter 'election_name' is required."
+}
+```
+
+---
+
+**Condition** : Une election existe déjà avec le même nom
+
+**Code** : `400 Bad Request`
+
+**Body content** :
+```json
+{
+  "code": "INVALID_PARAMETER",
+  "message": "the election 'first_test' already exists"
+}
+```
+
