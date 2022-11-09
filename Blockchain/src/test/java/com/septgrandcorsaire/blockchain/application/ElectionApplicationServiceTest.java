@@ -62,7 +62,7 @@ class ElectionApplicationServiceTest {
                         && request.getClosingDate().getMinute() == 0
         ))).thenReturn(MessageBlockchainCreated.of(blockChainForMock, "an-api-key"));
 
-        final BlockChain actualResult = applicationService.createBlockchainForElection(query).blockChain; //todo revoir api key
+        final BlockChain actualResult = applicationService.createBlockchainForElection(query).blockChain; //todo test la présence d'une api key
 
         assertThat(actualResult).isNotNull();
         assertThat(actualResult.getName()).isEqualTo("first_test");

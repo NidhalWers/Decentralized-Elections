@@ -56,7 +56,8 @@ public class ApiKeyRequestFilter extends GenericFilterBean {
         try {
             isExactApiKey = this.apiKeyRepository.isApiKeyCorrespondingToElection(key, electionName);
         } catch (ElectionNotFoundException e) {
-            returnErrorMessage(servletResponse, e.getMessage());
+            returnNotFoundMessage(servletResponse, e.getMessage());
+            return;
         }
         handleApiKeyAccuracy(servletResponse, chain, myRequestWrapper, isExactApiKey, electionName);
     }
@@ -69,21 +70,32 @@ public class ApiKeyRequestFilter extends GenericFilterBean {
         if (isExactApiKey) {
             chain.doFilter(myRequestWrapper, servletResponse);
         } else {
-            returnErrorMessage(servletResponse, electionName);
+            returnInvalidApiKey(servletResponse, electionName);
             //throw new InvalidApiKeyException(String.format(ErrorCode.INVALID_PARAMETER.getDefaultMessage(), electionName));
         }
     }
 
-    private static void returnErrorMessage(ServletResponse servletResponse, String electionName) throws IOException {
-        HttpServletResponse resp = (HttpServletResponse) servletResponse;
+    private static void returnNotFoundMessage(ServletResponse servletResponse, String message) throws IOException {
+        ErrorResource errorResource = new ErrorResource(ErrorCode.NOT_FOUND_ELECTION.getValue(), message);
+        String jsonError = JsonService.toJson(errorResource);
+
+        returnErrorMessage(servletResponse, jsonError, HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    private static void returnInvalidApiKey(ServletResponse servletResponse, String electionName) throws IOException {
         String errorMessage = String.format(ErrorCode.INVALID_API_KEY.getDefaultMessage(), electionName);
         ErrorResource errorResource = new ErrorResource(ErrorCode.INVALID_API_KEY.getValue(), errorMessage);
         String jsonError = JsonService.toJson(errorResource);
 
+        returnErrorMessage(servletResponse, jsonError, HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
+    private static void returnErrorMessage(ServletResponse servletResponse, String error, int code) throws IOException {
+        HttpServletResponse resp = (HttpServletResponse) servletResponse;
         resp.reset();
-        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        servletResponse.setContentLength(jsonError.length());
-        servletResponse.getWriter().write(jsonError); //todo throw exception
+        resp.setStatus(code);
+        servletResponse.setContentLength(error.length());
+        servletResponse.getWriter().write(error);
     }
 
     private String getElectionNameFromBody(String body) {
