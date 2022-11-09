@@ -15,6 +15,7 @@ class VotePayloadTest {
                 .electionName("test")
                 .candidateName("one")
                 .votingTime("2022-10-24T10:00:00")
+                .voterId("fake_person1_id")
                 .build();
 
         VoteQuery actualQuery = payload.toQuery();
@@ -35,6 +36,7 @@ class VotePayloadTest {
                 .electionName("")
                 .candidateName("one")
                 .votingTime("2022-10-24T10:00:00")
+                .voterId("fake_person1_id")
                 .build();
 
         IllegalPayloadArgumentException exception = assertThrows(IllegalPayloadArgumentException.class, () -> {
@@ -45,18 +47,19 @@ class VotePayloadTest {
     }
 
     @Test
-    void toQueryNoCandidateName() {
+    void toQueryNoVoterId() {
         VotePayload payload = VotePayload.builder()
                 .electionName("test")
                 .candidateName("")
                 .votingTime("2022-10-24T10:00:00")
+                .voterId("")
                 .build();
 
         IllegalPayloadArgumentException exception = assertThrows(IllegalPayloadArgumentException.class, () -> {
             payload.toQuery();
         });
 
-        assertThat(exception.getMessage()).isEqualTo("Parameter 'candidate_name' is required.");
+        assertThat(exception.getMessage()).isEqualTo("Parameter 'voter_id' is required.");
     }
 
     @Test
@@ -65,6 +68,7 @@ class VotePayloadTest {
                 .electionName("test")
                 .candidateName("one")
                 .votingTime("")
+                .voterId("fake_person1_id")
                 .build();
 
         IllegalPayloadArgumentException exception = assertThrows(IllegalPayloadArgumentException.class, () -> {
@@ -80,6 +84,7 @@ class VotePayloadTest {
                 .electionName("test")
                 .candidateName("one")
                 .votingTime("2022/10/24T10:00:00")
+                .voterId("fake_person1_id")
                 .build();
 
         IllegalPayloadArgumentException exception = assertThrows(IllegalPayloadArgumentException.class, () -> {

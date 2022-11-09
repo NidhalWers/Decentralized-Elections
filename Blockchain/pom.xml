@@ -73,6 +73,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
@@ -84,7 +90,13 @@
             <artifactId>commons-lang3</artifactId>
             <version>${common.lang3.version}</version>
         </dependency>
-    </dependencies>
+
+		<dependency>
+			<groupId>se.emirbuc.randomsentence</groupId>
+			<artifactId>random-sentence-generator</artifactId>
+			<version>0.0.7</version>
+		</dependency>
+	</dependencies>
 
 
 	<build>

@@ -5,6 +5,7 @@ import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import com.septgrandcorsaire.blockchain.domain.ElectionInitializationData;
 import com.septgrandcorsaire.blockchain.domain.VotingData;
 import com.septgrandcorsaire.blockchain.infrastructure.adapter.ElectionDomainService;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageBlockchainCreated;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -26,6 +27,11 @@ class ElectionApplicationServiceTest {
         this.applicationService = new ElectionApplicationService(mockDomainService);
     }
 
+    /********************************************************************************************
+     *
+     *              Test of the create election service
+     *
+     *********************************************************************************************/
     @Test
     void testCreateBlockchainForElection() {
         final ElectionQuery query = ElectionQuery.builder()
@@ -54,9 +60,9 @@ class ElectionApplicationServiceTest {
                         && request.getClosingDate().getDayOfMonth() == 25
                         && request.getClosingDate().getHour() == 10
                         && request.getClosingDate().getMinute() == 0
-        ))).thenReturn(blockChainForMock);
+        ))).thenReturn(MessageBlockchainCreated.of(blockChainForMock, "an-api-key"));
 
-        final BlockChain actualResult = applicationService.createBlockchainForElection(query);
+        final BlockChain actualResult = applicationService.createBlockchainForElection(query).blockChain; //todo test la présence d'une api key
 
         assertThat(actualResult).isNotNull();
         assertThat(actualResult.getName()).isEqualTo("first_test");
@@ -98,6 +104,12 @@ class ElectionApplicationServiceTest {
         assertThat(exception.getMessage()).isEqualTo("must provide a valid election name");
     }
 
+    /********************************************************************************************
+     *
+     *              Test of the get election service
+     *
+     *********************************************************************************************/
+
     @Test
     void testGetElectionData() {
         String inputRequest = "first_test";
@@ -137,13 +149,18 @@ class ElectionApplicationServiceTest {
         assertThat(exception.getMessage()).isEqualTo("must provide a valid election name");
     }
 
-
+    /********************************************************************************************
+     *
+     *              Test of the vote service
+     *
+     *********************************************************************************************/
     @Test
     void testVoteInElection() {
         final VoteQuery query = VoteQuery.builder()
                 .electionName("first_test")
                 .candidateName("one")
                 .votingDate(LocalDateTime.of(2022, 10, 24, 12, 30))
+                .voterId("voter1")
                 .build();
 
         final Block blockForMockResponse = Block.builder()
@@ -175,7 +192,6 @@ class ElectionApplicationServiceTest {
         assertThat(actualData.getVotingDate().getDayOfMonth()).isEqualTo(24);
         assertThat(actualData.getVotingDate().getHour()).isEqualTo(12);
         assertThat(actualData.getVotingDate().getMinute()).isEqualTo(30);
-
-
     }
+
 }

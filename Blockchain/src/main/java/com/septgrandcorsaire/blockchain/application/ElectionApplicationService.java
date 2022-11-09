@@ -3,6 +3,7 @@ package com.septgrandcorsaire.blockchain.application;
 import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import com.septgrandcorsaire.blockchain.infrastructure.adapter.ElectionDomainService;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageBlockchainCreated;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,7 +19,7 @@ public class ElectionApplicationService {
         this.electionDomainService = electionDomainService;
     }
 
-    public BlockChain createBlockchainForElection(final ElectionQuery query) {
+    public MessageBlockchainCreated createBlockchainForElection(final ElectionQuery query) {
         if (query.getCandidates().isEmpty()) {
             throw new IllegalArgumentException("must provide a not empty list of candidates");
         }
@@ -30,7 +31,7 @@ public class ElectionApplicationService {
     }
 
     public BlockChain getElectionData(String inputRequest) {
-        if (inputRequest.isBlank()) {
+        if (inputRequest == null || inputRequest.isBlank()) {
             throw new IllegalArgumentException("must provide a valid election name");
         }
         return electionDomainService.getBlockchainForElection(inputRequest);
