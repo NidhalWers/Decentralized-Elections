@@ -83,6 +83,20 @@ ou bien aucune `Api Key` n'est envoyée
 
 ---
 
+**Condition** : Le vote est effectué sur une élection inexistante
+
+**Code** : `404 Not Found`
+
+**Body content** :
+```json
+{
+  "code": "NOT_FOUND_ELECTION",
+  "message": "Election 'false' does not exist"
+}
+```
+
+---
+
 **Condition** : Le vote est effectué avant le début de l'élection
 
 **Code** : `405 Method Not Allowed`

@@ -79,7 +79,7 @@ public class Application {
                     .voterId("voter_" + i)
                     .build());
         }
-        LOGGER.info("Sandbox election successfully created in " + ((System.nanoTime() - startTimeOfTheMethod) / 1000000) + " ms");//todo compute time
+        LOGGER.info("Sandbox election successfully created in " + ((System.nanoTime() - startTimeOfTheMethod) / 1000000) + " ms");
     }
 
 }
