@@ -10,6 +10,8 @@
 
 ---
 
+**Condition** : L'élection n'est pas terminée
+
 **Code** : 200 OK
 
 **Body content** :
@@ -43,14 +45,52 @@
 }
 ```
 
+---
+
+**Condition** : L'élection n'est pas terminée
+
+**Code** : 200 OK
+
+**Body content** :
+
+```json
+{
+  "starting_date": "2022-11-01T10:00:00",
+  "closing_date": "2022-11-01T21:00:00",
+  "candidates_results": {
+    "Candidate_1": 17,
+    "Candidate_2": 18
+  }
+}
+```
 
 
 ## Error Responses
 
 ---
 
-**Condition**
+**Condition** : L'élection recherchée n'existe pas
 
-**Code**
+**Code** : `404 Not Found`
 
 **Body content** : 
+```json
+{
+    "code": "NOT_FOUND_ELECTION",
+    "message": "Election 'false-name' does not exist"
+}
+```
+
+---
+
+**Condition** : Le nom de l'élection n'est pas spécifié
+
+**Code** : `400 Bad Request`
+
+**Body content** :
+```json
+{
+  "code": "INVALID_PARAMETER",
+  "message": "must provide a valid election name"
+}
+```
