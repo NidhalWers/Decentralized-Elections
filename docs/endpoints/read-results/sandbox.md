@@ -30,7 +30,7 @@
 
 ---
 
-**Condition** : Aucune Api Key n'est utilisée, ou bien une fausse
+**Condition** : Aucune `Api Key` n'est utilisée, ou bien une fausse
 
 **Code** : `401 Unauthorized`
 

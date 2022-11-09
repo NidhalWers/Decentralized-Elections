@@ -40,8 +40,71 @@
 
 ---
 
-**Condition**
+**Condition** : L'`Api Key` ne peut être utilisée pour cette élection,<br>
+ou bien aucune `Api Key` n'est envoyée
 
-**Code**
+**Code** : `401 Unauthorized`
 
 **Body content** : 
+```json
+{
+  "code": "INVALID_API_KEY",
+  "message": "This API Key cannot be used for the 'first_test' election. Any attempt at fraud will be fought back !"
+}
+```
+
+---
+
+**Condition** : Ce votant a déjà voté pour cette élection
+
+**Code** : `405 Method Not Allowed`
+
+**Body content** :
+```json
+{
+  "code": "HAS_ALREADY_VOTED",
+  "message": "voter3 has already voted for the election named 'first_test'"
+}
+```
+
+---
+
+**Condition** : Le vote n'indique pas un candidat faisant réellement partie de l'élection
+
+**Code** : `400 bad Request`
+
+**Body content** :
+```json
+{
+  "code": "INVALID_PARAMETER",
+  "message": "the name 'false_candidate' is not part of the first_test's candidates"
+}
+```
+
+---
+
+**Condition** : Le vote est effectué avant le début de l'élection
+
+**Code** : `405 Method Not Allowed`
+
+**Body content** :
+```json
+{
+  "code": "ELECTION_NOT_STARTED",
+  "message": "Election 'first_test' has not started yet, wait until 2022-10-24T08:30"
+}
+```
+
+---
+
+**Condition** : Le vote est effectué après la fin de l'élection
+
+**Code** : `405 Method Not Allowed`
+
+**Body content** :
+```json
+{
+  "code": "ELECTION_ALREADY_FINISHED",
+  "message": "Election 'first_test' is already finished since 2022-10-24T17:16"
+}
+```
