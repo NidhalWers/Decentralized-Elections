@@ -30,8 +30,14 @@
 
 ---
 
-**Condition**
+**Condition** : Aucune Api Key n'est utilisée, ou bien une fausse
 
-**Code**
+**Code** : `401 Unauthorized`
 
 **Body content** : 
+```json
+{
+    "code": "INVALID_API_KEY",
+    "message": "This API Key cannot be used for the 'sandbox' election. Any attempt at fraud will be fought back !"
+}
+```
