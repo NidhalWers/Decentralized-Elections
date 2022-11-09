@@ -5,105 +5,15 @@
 La blockchain est créée en Java.
 Nous fournissons une Api Rest avec plusieurs endpoint permettant d'intéragir avec la Blockchain et de gérer son élection.
 
-### liste des endpoints
+### Liste des endpoints
 
----
+[Endpoint pour créer l'élection](docs/endpoints/create-election/post.md) : `POST /smart-vote/api/v1/create-election`
 
-**Endpoint pour créer l'élection**
-  * méthode HTTP : POST
-  * url : http://localhost:8080/smart-vote/api/v1/create-election
-  * request body format :
-```json
-{
-    "candidates" : [ "one", "two"],
-    "starting_date" : "2022-10-19T08:30:00",
-    "closing_date" : "2022-10-20T08:30:00",
-    "election_name" : "value"
-}
-```
- * response type : JSON
- * response format
-```json
-{
-    "election_name": "value",
-    "blocks": [
-        {
-            "hash": "3a443a445d36acfad71cc15453b11267fd8b9218ded2244597203237cdf82180b61092bc963c64ab6d67d552c331c8c62947d56040182facc3d548242119fce1",
-            "data": {
-                "candidates": [
-                    "one",
-                    "two"
-                ],
-                "starting_date": "2022-10-19T08:30:00",
-                "closing_date": "2022-10-20T08:30:00",
-                "election_name": "value"
-            }
-        }
-    ],
-    "blockchain_valid": true
-}
-```
----
+[Endpoint pour récupérer les données de l'élection](docs/endpoints/read-results/get.md): `GET /smart-vote/api/v1/get-election/{election_name}`
 
-**Endpoint pour récupérer les données de l'élection**
-* méthode HTTP : GET
-* url : http://localhost:8080/smart-vote/api/v1/get-election/{election_name}
-* response type : JSON
-* response format
-```json
-{
-   "election_name": "value",
-   "blocks": [
-      {
-         "hash": "062abc9ff91eadeb5d75ef76e166d1ffdcba8d560e311e9698d86838d487f18e5f0fc6d386dc504c96f4ab87ccc7acad16a8b0957cfe52bbfa1ab6c6f4db6ebc",
-         "data": {
-            "candidates": [
-               "one",
-               "two"
-            ],
-            "starting_date": "2022-10-19T08:30:00",
-            "closing_date": "2022-10-20T08:30:00",
-            "election_name": "value"
-         }
-      },
-      {
-         "hash": "09e37554f4afa241919bd1a96a6e60091139e724c10226b1109f3799d3e06d1225b3ac034af15813a467de61806ee399a180d9af53a796e0f1c0e575f274883c",
-         "previous_hash": "062abc9ff91eadeb5d75ef76e166d1ffdcba8d560e311e9698d86838d487f18e5f0fc6d386dc504c96f4ab87ccc7acad16a8b0957cfe52bbfa1ab6c6f4db6ebc",
-         "data": {
-            "election_name": "value",
-            "candidate_name": "one",
-            "voting_date": "2022-10-22T12:30:00"
-         }
-      }
-   ],
-   "blockchain_valid": true
-}
-```
----
-**Endpoint pour enregistrer un vote dans la blockchain**
-* méthode HTTP : POST
-* url : http://localhost:8080/smart-vote/api/v1/vote
-* request body format :
-```json
-{
-   "election_name" : "value",
-   "candidate_name" : "one",
-   "voting_time" : "2022-10-22T12:30:00"
-}
-```
-* response type : JSON
-* response format
-```json
-{
-   "hash": "09e37554f4afa241919bd1a96a6e60091139e724c10226b1109f3799d3e06d1225b3ac034af15813a467de61806ee399a180d9af53a796e0f1c0e575f274883c",
-   "previous_hash": "062abc9ff91eadeb5d75ef76e166d1ffdcba8d560e311e9698d86838d487f18e5f0fc6d386dc504c96f4ab87ccc7acad16a8b0957cfe52bbfa1ab6c6f4db6ebc",
-   "data": {
-      "election_name": "value",
-      "candidate_name": "one",
-      "voting_date": "2022-10-22T12:30:00"
-   }
-}
-```
+[Endpoint pour enregistrer un vote dans la blockchain](docs/endpoints/vote/post.md) : `POST /smart-vote/api/v1/vote`
+
+[Endpoint pour récupérer les données sandbox](docs/endpoints/read-results/sandbox.md) : `POST /smart-vote/api/v1/get-sandbox/`
 
 ---
 
