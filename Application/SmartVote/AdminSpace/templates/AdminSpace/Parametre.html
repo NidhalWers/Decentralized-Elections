@@ -4,6 +4,8 @@
 
 {% block body %}
 
+{% csrf_token %}
+
 <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
 <script src="assets/plugins/global/plugins.bundle.js"></script>
 
@@ -225,42 +227,43 @@
                                                         aria-label="Close"></button>
                                                 </div>
 
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label class="form-label">Nom du candidat</label>
-                                                        <input type="text" class="form-control"
-                                                            placeholder="Nom du candidat" v-model="candidateName">
-                                                        <br>
-                                                        <label class="form-label">Affiliation du candidat</label>
-                                                        <input type="text" class="form-control"
-                                                            placeholder="Affiliation du candidat" v-model="candidateDescription">
-                                                        <hr>
-                                                        <label class="form-label" for="customFile">Image liée au
-                                                            candidat</label>
-                                                        <input type="file" class="form-control" accept="image/png, image/jpeg" id="customFile" v-model="candidateImage">
-                                                        <br>
-                                                        <label class="form-label" for="customFile">Programme du
-                                                            candidat</label>
-                                                        <input type="file" accept=".pdf" class="form-control" id="customFile" v-model="candidateProgram">
-                                                        <!-- <label class="form-label" for="customFile">Image liée au
-                                                            candidat</label>
-                                                        <input type="text" class="form-control" id="customFile" v-model="candidateImage">
-                                                        <br>
-                                                        <label class="form-label" for="customFile">Programme du
-                                                            candidat</label>
-                                                        <input type="text" class="form-control" id="customFile" v-model="candidateProgram"> -->
-                                                        <p>[[candidateProgram]]</p>
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label class="form-label">Nom du candidat</label>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Nom du candidat" v-model="candidateName" name="candidateName">
+                                                            <br>
+                                                            <label class="form-label">Affiliation du candidat</label>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="Affiliation du candidat" v-model="candidateDescription" name="candidateDescription">
+                                                            <hr>
+                                                            <label class="form-label" for="customFile">Image liée au
+                                                                candidat</label>
+                                                            <input type="file" class="form-control" accept="image/png, image/jpeg" id="customFile" ref="image" v-on:change="handleImageUpload()" name="candidateImage">
+                                                            <br>
+                                                            <label class="form-label" for="customFile">Programme du
+                                                                candidat</label>
+                                                            <input type="file" accept=".pdf" class="form-control" id="customFile" ref="program"  v-on:change="handleProgramUpload()" name="candidateProgram">
+                                                            <!-- <label class="form-label" for="customFile">Image liée au
+                                                                candidat</label>
+                                                            <input type="text" class="form-control" id="customFile" v-model="candidateImage">
+                                                            <br>
+                                                            <label class="form-label" for="customFile">Programme du
+                                                                candidat</label>
+                                                            <input type="text" class="form-control" id="customFile" v-model="candidateProgram"> -->
+                                                            <p>[[candidateProgram]]</p>
 
+                                                        </div>
+                                                        <div class="text-start">
+                                                            <!-- <button type="submit" class="btn btn-primary"
+                                                                data-bs-dismiss="modal">Ajouter</button> -->
+                                                            <button type="button" class="btn btn-primary"
+                                                                data-bs-dismiss="modal" v-on:click="addCandidate()">Ajouter</button>
+                                                            <button type="button" class="btn btn-danger"
+                                                                data-bs-dismiss="modal" aria-label="Close">Annuler</button>
+
+                                                        </div>
                                                     </div>
-                                                    <div class="text-start">
-                                                        <button type="button" class="btn btn-primary"
-                                                            data-bs-dismiss="modal" v-on:click="addCandidate()">Ajouter</button>
-                                                        <button type="button" class="btn btn-danger"
-                                                            data-bs-dismiss="modal" aria-label="Close">Annuler</button>
-
-                                                    </div>
-                                                </div>
-
                                             </div>
 
                                         </div>
@@ -482,6 +485,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
 <!-- axios:js -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
 <script>
     var parametre = new Vue({
         delimiters: ['[[', ']]'],
@@ -493,23 +497,39 @@
                 candidates: [],
                 candidateName:"",
                 candidateDescription:"",
-                candidateImage:"",
-                candidateProgram:"",
+                candidateImage:null,
+                candidateProgram:null,
             }
         },
         async mounted() {
             await this.getCandidate()
         },
-        async updated() {
+        async mounted() {
             await this.getCandidate()
         },
         methods: {
+            handleImageUpload:function(){
+                this.candidateImage = this.$refs.image.files[0];
+            },
+            handleProgramUpload:function(){
+                this.candidateProgram = this.$refs.program.files[0];
+            },
             addCandidate: async function () {
-                axios.post('/adminspace/api/candidates', {
-                    CandidateName : this.candidateName,
-                    CandidateDescription : this.candidateDescription,
-                    CandidateImage : this.candidateImage,
-                    CandidateProgram : this.candidateProgram,
+                let formData = new FormData();
+                formData.append('CandidateName', this.candidateName);
+                formData.append('CandidateDescription', this.candidateDescription);
+                if (this.candidateImage != null) {
+                    formData.append('CandidateImage', this.candidateImage);
+                }
+                if (this.candidateProgram != null) {
+                    formData.append('CandidateProgram', this.candidateProgram);
+                }
+ 
+                await axios.post('/adminspace/api/addCandidates', formData,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    }
                 })
                 .then(function (response) {
                     console.log(response);
@@ -518,9 +538,15 @@
                     console.log(error);
                 });
 
+                this.getCandidate()
+                this.candidateProgram = null
+                this.candidateImage = null
+                this.candidateDescription = ""
+                this.candidateName = ""
+
             },
             getCandidate: async function () {
-                await axios
+                axios
                     .get('/adminspace/api/candidates')
                     .then(response => (this.candidates = response.data))
             },

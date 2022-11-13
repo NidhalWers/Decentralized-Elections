@@ -6,6 +6,7 @@ from rest_framework.parsers import JSONParser
 from django.views.decorators.csrf import csrf_exempt
 # API definition for task
 from .serializers import CandidateSerializer
+from rest_framework.decorators import api_view
 
 # Create your views here.
 def administrateur(request):
@@ -18,6 +19,22 @@ def index(request):
     return render(request,'AdminSpace/index.html')
 
 #api
+@api_view(['POST'])
+def addCandidate(request):
+    if(request.method == 'POST'):
+        # data = JSONParser().parse(request)
+        serializer = CandidateSerializer(data=request.data)
+        # instanciate with the serializer
+        # serializer = CandidateSerializer(data=data)
+        # check if the sent information is okay
+        if(serializer.is_valid()):
+            # if okay, save it on the database
+            serializer.save()
+            # provide a Json Response with the data that was saved
+            return JsonResponse(serializer.data, status=201)
+            # provide a Json Response with the necessary error information
+        print(serializer.errors)
+        return JsonResponse(serializer.errors, status=400)
 
 @csrf_exempt
 def candidate(request):
@@ -31,21 +48,7 @@ def candidate(request):
         serializer = CandidateSerializer(tasks, many=True)
         # return a Json response
         return JsonResponse(serializer.data,safe=False)
-    elif(request.method == 'POST'):
-        # parse the incoming information
-        data = JSONParser().parse(request)
-        # instanciate with the serializer
-        serializer = CandidateSerializer(data=data)
-        # check if the sent information is okay
-        if(serializer.is_valid()):
-            # if okay, save it on the database
-            serializer.save()
-            # provide a Json Response with the data that was saved
-            return JsonResponse(serializer.data, status=201)
-            # provide a Json Response with the necessary error information
-        print(serializer.errors)
-        return JsonResponse(serializer.errors, status=400)
-
+    
 @csrf_exempt
 def candidate_detail(request, pk):
     try:
