@@ -244,19 +244,9 @@
                                                             <label class="form-label" for="customFile">Programme du
                                                                 candidat</label>
                                                             <input type="file" accept=".pdf" class="form-control" id="customFile" ref="program"  v-on:change="handleProgramUpload()" name="candidateProgram">
-                                                            <!-- <label class="form-label" for="customFile">Image liée au
-                                                                candidat</label>
-                                                            <input type="text" class="form-control" id="customFile" v-model="candidateImage">
-                                                            <br>
-                                                            <label class="form-label" for="customFile">Programme du
-                                                                candidat</label>
-                                                            <input type="text" class="form-control" id="customFile" v-model="candidateProgram"> -->
-                                                            <p>[[candidateProgram]]</p>
 
                                                         </div>
                                                         <div class="text-start">
-                                                            <!-- <button type="submit" class="btn btn-primary"
-                                                                data-bs-dismiss="modal">Ajouter</button> -->
                                                             <button type="button" class="btn btn-primary"
                                                                 data-bs-dismiss="modal" v-on:click="addCandidate()">Ajouter</button>
                                                             <button type="button" class="btn btn-danger"
@@ -346,8 +336,7 @@
                                                         </svg>
                                                     </span>
                                                 </a>
-                                                <a class="btn btn-sm btn-icon text-danger " data-bs-toggle="tooltip"
-                                                    title="Delete the row" href="#">
+                                                <a class="btn btn-sm btn-icon text-danger " data-bs-toggle="tooltip" v-on:click="deleteCandidate(candidate.CandidateName)" title="Delete">
                                                     <span class="btn-inner">
                                                         <svg width="20" viewBox="0 0 24 24" fill="none"
                                                             xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
@@ -525,7 +514,7 @@
                     formData.append('CandidateProgram', this.candidateProgram);
                 }
  
-                await axios.post('/adminspace/api/addCandidates', formData,{
+                await axios.post('/adminspace/api/addCandidate', formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         "X-CSRFToken": "{{ csrf_token }}",
@@ -538,7 +527,7 @@
                     console.log(error);
                 });
 
-                this.getCandidate()
+                await this.getCandidate()
                 this.candidateProgram = null
                 this.candidateImage = null
                 this.candidateDescription = ""
@@ -546,9 +535,20 @@
 
             },
             getCandidate: async function () {
-                axios
-                    .get('/adminspace/api/candidates')
+                await axios
+                    .get('/adminspace/api/getCandidates')
                     .then(response => (this.candidates = response.data))
+            },
+            deleteCandidate: async function (id) {
+                await axios
+                    .delete('/adminspace/api/delCandidate/' + id,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    }
+                })
+                .then(response => (this.candidates = response.data))
+                this.getCandidate()
             },
         },
     })

@@ -18,26 +18,41 @@ def parametre(request):
 def index(request):
     return render(request,'AdminSpace/index.html')
 
-#api
+# Utils
+
+def isCandidateExist(candidate):
+    return Candidate.objects.filter(CandidateName=candidate).exists()
+
+#Api
 @api_view(['POST'])
 def addCandidate(request):
     if(request.method == 'POST'):
-        # data = JSONParser().parse(request)
         serializer = CandidateSerializer(data=request.data)
-        # instanciate with the serializer
-        # serializer = CandidateSerializer(data=data)
-        # check if the sent information is okay
-        if(serializer.is_valid()):
-            # if okay, save it on the database
-            serializer.save()
-            # provide a Json Response with the data that was saved
-            return JsonResponse(serializer.data, status=201)
-            # provide a Json Response with the necessary error information
-        print(serializer.errors)
+        if not(isCandidateExist(request.data['CandidateName'])):
+            if(serializer.is_valid()):
+                # if okay, save it on the database
+                serializer.save()
+                # provide a Json Response with the data that was saved
+                return JsonResponse(serializer.data, status=201)
+        else:
+            return JsonResponse({'message':'Candidate already exist'}, status=400)
+
         return JsonResponse(serializer.errors, status=400)
 
+      
+def getCandidate(request, pk):
+    if(request.method == 'GET'):
+        try:
+            candidate = Candidate.objects.get(pk=pk)
+        except Candidate.DoesNotExist:
+            return JsonResponse({'message':'Candidate does not exist'}, status=400)
+        # serialize the tasks
+        serializer = CandidateSerializer(candidate, many=False)
+        # return the serialized tasks
+        return JsonResponse(serializer.data, safe=False)
+
 @csrf_exempt
-def candidate(request):
+def getCandidates(request):
     '''
     List all candidates snippets
     '''
@@ -48,12 +63,33 @@ def candidate(request):
         serializer = CandidateSerializer(tasks, many=True)
         # return a Json response
         return JsonResponse(serializer.data,safe=False)
+    else:
+        return HttpResponse(status=400)
+
+@api_view(['DELETE'])
+def delCandidate(request, pk):
+    '''
+    Delete a candidate
+    '''
+    if(request.method == 'DELETE'):
+        # get the task with the id
+        try:
+            candidate = Candidate.objects.get(CandidateName=pk)
+        except Candidate.DoesNotExist:
+            return HttpResponse({"message':'Candidate does'nt exist"},status=400)
+        # delete the task
+        candidate.delete()
+        # return a Json response
+        return JsonResponse({'message':'Candidate deleted successfully'}, status=204)
+    else:
+        return HttpResponse(status=400)
     
 @csrf_exempt
 def candidate_detail(request, pk):
     try:
         # obtain the task with the passed id.
-        task = Candidate.objects.get(pk=pk)
+        task = Candidate.objects.get(CandidateName=pk)
+        print(task)
     except:
         # respond with a 404 error message
         return HttpResponse(status=404)  
@@ -75,22 +111,3 @@ def candidate_detail(request, pk):
         task.delete() 
         # return a no content response.
         return HttpResponse(status=204) 
-
-# def addCandidate(request):
-#     candidate = Candidate.objects.get(CandidateName = request.POST['CandidateName'])
-#     if candidate is None :
-#         try:
-#             candidate = Candidate(CandidateName = CandidateName, CandidateDescription = CandidateDescription, CandidateImage = CandidateImage, CandidateProgram = CandidateProgram)
-#             candidate.save()
-#         except Exception as e:
-#             return JsonResponse({'error': '1', 'message': str(e)})
-#         return JsonResponse({'error' : "0", 'message' : "Candidate added successfully"})
-#     else:
-#         return JsonResponse({'error' : "1","message" : "Candidate already exist"})
-
-# def getCandidate(request):
-#     try:
-#         candidates = list(Candidate.objects.all().values())
-#     except Exception as e:
-#         return JsonResponse({'error': '1', 'message': str(e)})
-#     return JsonResponse({'error' : "0", 'message' : "Candidate found successfully", 'Candidates' : candidates, 'count' : len(candidates)})
