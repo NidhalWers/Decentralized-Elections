@@ -83,6 +83,25 @@ def delCandidate(request, pk):
         return JsonResponse({'message':'Candidate deleted successfully'}, status=204)
     else:
         return HttpResponse(status=400)
+
+@api_view(['PUT'])
+@csrf_exempt
+def updateCandidate(request, pk):
+    '''
+    Update a candidate
+    '''
+    if(request.method == 'PUT'):
+        # get the task with the id
+        try:
+            candidate = Candidate.objects.get(CandidateName=pk)
+        except Candidate.DoesNotExist:
+            return HttpResponse({"message':'Candidate does'nt exist"},status=400)
+        # update the task
+        serializer = CandidateSerializer(candidate, data=request.data)
+        if(serializer.is_valid()):
+            Candidate.objects.filter(CandidateName=pk).update(**serializer.data)
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
     
 @csrf_exempt
 def candidate_detail(request, pk):
