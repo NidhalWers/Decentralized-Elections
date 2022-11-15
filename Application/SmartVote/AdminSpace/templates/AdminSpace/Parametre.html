@@ -230,7 +230,10 @@
                                                     <div class="modal-body">
                                                         <div class="form-group">
                                                             <label class="form-label">Nom du candidat</label>
-                                                            <input type="text" class="form-control" v-model="candidateName" name="candidateName">
+                                                            <input type="text" v-bind:class='{"is-invalid": candidateName=="", "is-valid": candidateName!=""}' class="form-control" v-model="candidateName" name="candidateName">
+                                                            <div v-if='candidateName==""' class="invalid-feedback">
+                                                            Ce champs est requis
+                                                            </div>
                                                             <br>
                                                             <label class="form-label">Affiliation du candidat</label>
                                                             <input type="text" class="form-control" v-model="candidateDescription" name="candidateDescription">
@@ -245,7 +248,7 @@
                                                         </div>
                                                         <div class="text-start">
                                                             <button type="button" class="btn btn-primary"
-                                                                data-bs-dismiss="modal" v-on:click="addCandidate()">Ajouter</button>
+                                                                data-bs-dismiss="modal" :disabled='candidateName==""' v-on:click="addCandidate()">Ajouter</button>
                                                             <button type="button" class="btn btn-danger"
                                                                 data-bs-dismiss="modal" aria-label="Close">Annuler</button>
                                                         </div>
@@ -385,7 +388,7 @@
                                                 </a>
                                             </td>
                                             <td class="text-center" v-if="candidate.CandidateName == candidateToUpdate">
-                                                <button type="button" class="btn btn-outline-success" v-on:click="updateCandidate(candidate.CandidateName)">Appliquer</button>
+                                                <button type="button" class="btn btn-outline-success" :disabled='candidateNameUpdate==""' v-on:click="updateCandidate(candidate.CandidateName)">Appliquer</button>
                                                 <button type="button" class="btn btn-outline-danger" v-on:click="updateCandidateToUpdate()">Annuler</button>
                                             </td>
                                         </tr>
