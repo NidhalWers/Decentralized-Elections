@@ -145,7 +145,6 @@ CORS_EXPOSE_HEADERS = (
     'Access-Control-Allow-Origin: *',
 )
 
-
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'X-CSRFTOKEN',
 ]

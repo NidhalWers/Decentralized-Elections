@@ -97,9 +97,9 @@ def updateCandidate(request, pk):
         except Candidate.DoesNotExist:
             return HttpResponse({"message':'Candidate does'nt exist"},status=400)
         # update the task
-        serializer = CandidateSerializer(candidate, data=request.data)
+        serializer = CandidateSerializer(candidate,data=request.data)
         if(serializer.is_valid()):
-            Candidate.objects.filter(CandidateName=pk).update(**serializer.data)
+            serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
     

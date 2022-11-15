@@ -203,7 +203,7 @@
 
                                 </div>
                                 <div>
-                                    <a href="#" class=" text-center btn btn-primary btn-icon mt-lg-0 mt-md-0 mt-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <a v-on:click="resetCandidate()" class=" text-center btn btn-primary btn-icon mt-lg-0 mt-md-0 mt-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                         <i class="btn-inner">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -230,12 +230,10 @@
                                                     <div class="modal-body">
                                                         <div class="form-group">
                                                             <label class="form-label">Nom du candidat</label>
-                                                            <input type="text" class="form-control"
-                                                                placeholder="Nom du candidat" v-model="candidateName" name="candidateName">
+                                                            <input type="text" class="form-control" v-model="candidateName" name="candidateName">
                                                             <br>
                                                             <label class="form-label">Affiliation du candidat</label>
-                                                            <input type="text" class="form-control"
-                                                                placeholder="Affiliation du candidat" v-model="candidateDescription" name="candidateDescription">
+                                                            <input type="text" class="form-control" v-model="candidateDescription" name="candidateDescription">
                                                             <hr>
                                                             <label class="form-label" for="customFile">Image liée au
                                                                 candidat</label>
@@ -244,35 +242,24 @@
                                                             <label class="form-label" for="customFile">Programme du
                                                                 candidat</label>
                                                             <input type="file" accept=".pdf" class="form-control" id="customFile" ref="program"  v-on:change="handleProgramUpload()" name="candidateProgram">
-
                                                         </div>
                                                         <div class="text-start">
                                                             <button type="button" class="btn btn-primary"
                                                                 data-bs-dismiss="modal" v-on:click="addCandidate()">Ajouter</button>
                                                             <button type="button" class="btn btn-danger"
                                                                 data-bs-dismiss="modal" aria-label="Close">Annuler</button>
-
                                                         </div>
                                                     </div>
                                             </div>
-
                                         </div>
-
                                     </div>
-
-
-
                                 </div>
-
-
-
-
-
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th class="text-center">Candidats</th>
                                             <th class="text-center">Affiliation</th>
+                                            <th class="text-center">Avatar</th>
                                             <th class="text-center">Programme</th>
                                             <th class="text-center">Sélectionner</th>
                                             <th class="text-center">Modifier</th>
@@ -281,15 +268,31 @@
                                     </thead>
                                     <tbody >
                                         <tr v-for="candidate in candidates" :key="candidate.CandidateName" class="">
-                                            <td class="text-center">[[candidate.CandidateName]]</td>
-                                            <td class="text-center">[[candidate.CandidateDescription]]</td>
-                                            <td class="text-center">
-                                                <button class="btn btn-sm btn-soft-primary" data-toggle="PDF"
+                                            <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">[[candidate.CandidateName]]</td>
+                                            <td v-if="candidate.CandidateName == candidateToUpdate">
+                                                <input class="form-control form-control-lg" v-bind:class='{"is-invalid": candidateNameUpdate=="", "is-valid": candidateNameUpdate!=""}' type="text" :placeholder="candidate.CandidateName" v-model="candidateNameUpdate">
+                                                <!-- <div v-if='candidateNameUpdate==""' class="invalid-feedback">
+                                                Ce champs est requis
+                                                </div> -->
+                                            </td>
+                                            
+                                            <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">[[candidate.CandidateDescription]]</td>
+                                            <td v-if="candidate.CandidateName == candidateToUpdate"><input class="form-control form-control-lg" type="text" :placeholder="candidate.CandidateDescription" v-model="candidateDescriptionUpdate"></td>
+
+                                            <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center" ><img  v-if="candidate.CandidateName != candidateToUpdate & !updateImage  & candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"></td>
+                                            <td v-if="candidate.CandidateName == candidateToUpdate">
+                                                <input v-if="updateImage | candidate.CandidateImage==null" type="file" class="form-control" accept="image/png, image/jpeg" id="customFile" ref="image" v-on:change="handleImageUploadUpdate()">
+                                                <img  v-if="!updateImage & candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50">
+                                                <button v-if="!updateImage & candidate.CandidateImage!=null" class="btn btn-sm btn-soft-danger" v-on:click="updateImageForm()">
+                                                    <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.737 2.76196H7.979C5.919 2.76196 4.25 4.43196 4.25 6.49096V17.34C4.262 19.439 5.973 21.13 8.072 21.117C8.112 21.117 8.151 21.116 8.19 21.115H16.073C18.141 21.094 19.806 19.409 19.802 17.34V8.03996L14.737 2.76196Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M14.4736 2.75024V5.65924C14.4736 7.07924 15.6216 8.23024 17.0416 8.23424H19.7966" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M13.5759 14.6481L10.1099 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M10.1108 14.6481L13.5768 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
+                                                </button>
+                                            </td>    
+                    
+                                            <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">
+                                                <button v-if="candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
                                                     data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
                                                     data-bs-placement="top" title="PDF">
-                                                    Download PDF
-
-
+                                                    [[candidate.CandidateProgram]]
                                                     <svg width="32" viewBox="0 0 24 24" fill="none"
                                                         xmlns="http://www.w3.org/2000/svg">
                                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -306,19 +309,45 @@
                                                         <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642"
                                                             stroke="currentColor" stroke-width="1.5"
                                                             stroke-linecap="round" stroke-linejoin="round" />
-                                                    </svg>
+                                                    </svg>   
                                                 </button>
                                             </td>
-
+                                            <td v-if="candidate.CandidateName == candidateToUpdate" class="text-center">
+                                                <button v-if="!updateFile & candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
+                                                    data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="PDF">
+                                                    [[candidate.CandidateProgram]]
+                                                    <svg width="32" viewBox="0 0 24 24" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            d="M14.7364 2.76175H8.0844C6.0044 2.75375 4.3004 4.41075 4.2504 6.49075V17.2277C4.2054 19.3297 5.8734 21.0697 7.9744 21.1147C8.0114 21.1147 8.0484 21.1157 8.0844 21.1147H16.0724C18.1624 21.0407 19.8144 19.3187 19.8024 17.2277V8.03775L14.7364 2.76175Z"
+                                                            stroke="currentColor" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path
+                                                            d="M14.4746 2.75V5.659C14.4746 7.079 15.6236 8.23 17.0436 8.234H19.7976"
+                                                            stroke="currentColor" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path d="M11.6406 9.90869V15.9497" stroke="currentColor"
+                                                            stroke-width="1.5" stroke-linecap="round"
+                                                            stroke-linejoin="round" />
+                                                        <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642"
+                                                            stroke="currentColor" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>   
+                                                </button>
+                                                <input v-if="updateFile | candidate.CandidateProgram==null" type="file" accept=".pdf" class="form-control" id="customFile" ref="program"  v-on:change="handleProgramUpload()" name="candidateProgram">
+                                                <button v-if="!updateFile & candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-danger" v-on:click="rese()">
+                                                    <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.737 2.76196H7.979C5.919 2.76196 4.25 4.43196 4.25 6.49096V17.34C4.262 19.439 5.973 21.13 8.072 21.117C8.112 21.117 8.151 21.116 8.19 21.115H16.073C18.141 21.094 19.806 19.409 19.802 17.34V8.03996L14.737 2.76196Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M14.4736 2.75024V5.65924C14.4736 7.07924 15.6216 8.23024 17.0416 8.23424H19.7966" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M13.5759 14.6481L10.1099 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M10.1108 14.6481L13.5768 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
+                                                </button>
+                                            </td>
+        
 
                                             <td class="text-center">
                                                 <input class="form-check-input" type="checkbox">
                                             </td>
 
-                                            <td class="text-center">
-
-                                                <a class="btn btn-sm btn-icon text-primary flex-end"
-                                                    data-bs-toggle="tooltip" title="Edit" href="#">
+                                            <td class="text-center" v-if="candidate.CandidateName != candidateToUpdate">
+                                                <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit" v-on:click="updateCandidateToUpdate(candidate.CandidateName)">
                                                     <span class="btn-inner">
                                                         <svg width="20" viewBox="0 0 24 24" fill="none"
                                                             xmlns="http://www.w3.org/2000/svg">
@@ -354,6 +383,10 @@
                                                         </svg>
                                                     </span>
                                                 </a>
+                                            </td>
+                                            <td class="text-center" v-if="candidate.CandidateName == candidateToUpdate">
+                                                <button type="button" class="btn btn-outline-success" v-on:click="updateCandidate(candidate.CandidateName)">Appliquer</button>
+                                                <button type="button" class="btn btn-outline-danger" v-on:click="updateCandidateToUpdate()">Annuler</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -488,6 +521,13 @@
                 candidateDescription:"",
                 candidateImage:null,
                 candidateProgram:null,
+                candidateNameUpdate:"",
+                candidateDescriptionUpdate:"",
+                candidateImageUpdate:null,
+                candidateProgramUpdate:null,
+                candidateToUpdate:null,
+                updateFile:false,
+                updateImage:false,
             }
         },
         async mounted() {
@@ -502,6 +542,12 @@
             },
             handleProgramUpload:function(){
                 this.candidateProgram = this.$refs.program.files[0];
+            },
+            handleImageUploadUpdate:function(){
+                this.candidateImageUpdate = this.$refs.image.files[0];
+            },
+            handleProgramUploadUpdate:function(){
+                this.candidateProgramUpdate = this.$refs.program.files[0];
             },
             addCandidate: async function () {
                 let formData = new FormData();
@@ -548,9 +594,76 @@
                     }
                 })
                 .then(response => (this.candidates = response.data))
-                this.getCandidate()
+                await this.getCandidate()
             },
+            updateCandidate: async function (id) {
+                console.log(this.candidateNameUpdate)
+                let formData = new FormData();
+                formData.append('CandidateName', this.candidateNameUpdate);
+                formData.append('CandidateDescription', this.candidateDescriptionUpdate);
+                if (this.candidateImage != null) {
+                    formData.append('CandidateImage', this.candidateImageUpdate);
+                }
+                if (this.candidateProgram != null) {
+                    formData.append('CandidateProgram', this.candidateProgramUpdate);
+                }
+                await axios
+                    .put('/adminspace/api/updateCandidate/' + id, formData,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    }
+                })
+
+                await this.updateCandidateToUpdate()
+                await this.getCandidate()
+            },
+            updateCandidateToUpdate: async function (name){
+                if(this.candidateToUpdate == name){
+                    this.candidateToUpdate = null
+                }else{
+                    this.candidateToUpdate = name
+                }    
+                await this.resetCandidateUpdate()
+            },
+            updateFileForm: async function (){
+                if (this.updateFile == true){
+                    this.updateFile = false
+                }else{
+                this.updateFile = true}
+            },
+            updateImageForm: async function (){
+                if (this.updateImage == true){
+                    this.updateImage = false
+                }else{
+                this.updateImage = true}
+            },
+            resetCandidateFile: async function(){
+                this.candidateProgram = null
+            },
+            resetCandidateFileUpdate: async function(){
+                this.candidateProgramUpdate = null
+            },
+            resetCandidateImage: async function(){
+                this.candidateImage = null
+            },
+            resetCandidateImageUpdate: async function(){
+                this.candidateImageUpdate = null
+            },
+            resetCandidate: async function (){
+                this.candidateProgram = null
+                this.candidateImage = null
+                this.candidateDescription = ""
+                this.candidateName = ""
+            },
+            resetCandidateUpdate: async function (){
+                this.candidateProgramUpdate = null
+                this.candidateImageUpdate = null
+                this.candidateDescriptionUpdate = ""
+                this.candidateNameUpdate = ""
+            },
+            }
         },
-    })
+    )
 </script>
 {% endblock %}
