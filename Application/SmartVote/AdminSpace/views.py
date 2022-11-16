@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render
 from AdminSpace.models import Candidate
 from django.http import JsonResponse,HttpResponse
@@ -58,9 +59,9 @@ def getCandidates(request):
     '''
     if(request.method == 'GET'):
         # get all the tasks
-        tasks = Candidate.objects.all()
+        candidate = Candidate.objects.all()
         # serialize the task data
-        serializer = CandidateSerializer(tasks, many=True)
+        serializer = CandidateSerializer(candidate, many=True)
         # return a Json response
         return JsonResponse(serializer.data,safe=False)
     else:
@@ -77,7 +78,18 @@ def delCandidate(request, pk):
             candidate = Candidate.objects.get(CandidateName=pk)
         except Candidate.DoesNotExist:
             return HttpResponse({"message':'Candidate does'nt exist"},status=400)
-        # delete the task
+        # delete files
+        try:
+            if(candidate.CandidateImage):
+                os.remove(candidate.CandidateImage.path)
+        except:
+            pass
+        try:
+            if(candidate.CandidateProgram):
+                os.remove(candidate.CandidateProgram.path)
+        except:
+            pass
+        # delete candidate
         candidate.delete()
         # return a Json response
         return JsonResponse({'message':'Candidate deleted successfully'}, status=204)
@@ -85,7 +97,6 @@ def delCandidate(request, pk):
         return HttpResponse(status=400)
 
 @api_view(['PUT'])
-@csrf_exempt
 def updateCandidate(request, pk):
     '''
     Update a candidate
@@ -98,12 +109,24 @@ def updateCandidate(request, pk):
             return HttpResponse({"message':'Candidate does'nt exist"},status=400)
         # update the task
         serializer = CandidateSerializer(candidate,data=request.data)
+            
+        # check if the data is valid
         if(serializer.is_valid()):
             serializer.save()
+            #delete file if new file is uploaded
+            try:
+                if(candidate.CandidateImage != request.data['CandidateImage']):
+                    os.remove(candidate.CandidateImage.path)
+            except:
+                pass
+            try:
+                if(candidate.CandidateProgram != request.data['CandidateProgram']):
+                    os.remove(candidate.CandidateProgram.path)
+            except:
+                pass
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
     
-@csrf_exempt
 def candidate_detail(request, pk):
     try:
         # obtain the task with the passed id.
