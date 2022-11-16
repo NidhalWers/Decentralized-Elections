@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - choix du compte</title>
+    {% load static %}
+    <link rel="shortcut icon" href="{% static 'Connect/images/fc_avatar.png'%} " />
+    <!-- Library / Plugin Css Build -->
+    <link rel="stylesheet" href="{% static 'base/css/core/libs.min.css' %}">
+    <!-- Hope Ui Design System Css -->
+    <link rel="stylesheet" href="{% static 'base/css/hope-ui.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Connect/css/style.css' %}">
+</head>
+<body>
+    <div class="alert alert-bottom alert-danger alert-dismissible fade show " role="alert">
+        <span> Attention, ce site internet est à but expérimental, il ne s'agit en aucun cas d'un site officiel.</span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="container-fc">
+        <div><img src="{% static 'Connect/images/fc_avatar.png'%} " alt="France-Connect" class="img-fc img-top"></div>
+        <div class="text-top"> 
+            <div class="france"> 
+                France 
+            </div> 
+            <div class="connect"> 
+                Connect
+            </div>
+        </div>
+    </div>
+    <div class="zone-text-1">
+        <div class="text-1">
+            Je choisis un compte pour me connecter sur :
+        </div>
+    </div>
+    <div class="zone-text-2">
+        <div class="text-2">
+            les sites de l'Agence Nationale des
+        </div>
+        <div class="text-2">
+            Titres Sécurisés
+        </div>
+    </div>
+    <div class="container-logo-fc">
+        <div class="row">
+            <div class="col-4">
+                <a href="/connect/login/franceconnect/impotsgouvfr"><button class="btn-logo-fc"><img src="{% static 'Connect/images/fi-impots.png'%} " alt="impots.gouv.fr" class="img-logo-fc"></button></a>
+            </div>
+            <div class="col-4">
+                <a href="/connect/login/franceconnect/fcamelifr"><button class="btn-logo-fc"><img src="{% static 'Connect/images/fi-ameli.png'%} " alt="ameli.fr" class="img-logo-fc"></button></a>
+            </div>
+            <div class="col-4">
+                <button class="btn-logo-fc"><img src="{% static 'Connect/images/fi-laposte.png'%} " alt="laposte" class="img-logo-fc"></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <button class="btn-logo-fc"><img src="{% static 'Connect/images/fi-mcm.png'%} " alt="mcm" class="img-logo-fc"></button>
+            </div>
+            <div class="col-4">
+                <button class="btn-logo-fc"><img src="{% static 'Connect/images/fi-msa.png'%} " alt="msa" class="img-logo-fc"></button>
+            </div>
+            <div class="col-4">
+                <button class="btn-logo-fc"><img src="{% static 'Connect/images/logo-yris-font-black.svg'%} " alt="yris" class="img-logo-fc"></button>
+            </div>
+        </div>
+        <div class="fc-checkbox-container">
+            <input type="checkbox" id="remember-choice" class="fc-checkbox_input" name="storeFI" value="1" checked="">
+            <label for="remember-choice" class="fc-checkbox_label">
+                Se souvenir de mon choix
+            </label>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-container">
+          <ul class="footer-container-list">
+            <li><a href="https://franceconnect.gouv.fr">En savoir plus sur FranceConnect</a></li>
+            <li>|</li>
+            <li><a href="https://franceconnect.gouv.fr/cgu">CGU</a></li>
+            <li>|</li>
+            <li><a href="https://franceconnect.gouv.fr/faq">Foire aux questions</a></li>
+            <li>|</li>
+            <li><a href="/call?provider=aidantsconnect&amp;storeFI=1">Vous êtes un aidant professionnel</a></li>
+            
+          </ul>
+        <img src="{% static 'Connect/images/marianne.jpg'%}" alt="République Française - Liberté, Égalité, Fraternité">
+        </div>
+      
+        
+    </footer>
+</body>
+<!-- Library Bundle Script -->
+<script src="{% static 'base/js/core/libs.min.js' %}"></script>
+</html>
