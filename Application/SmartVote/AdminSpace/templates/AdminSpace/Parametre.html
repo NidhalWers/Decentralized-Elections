@@ -138,21 +138,21 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="form-label">Nom de votre élection : </label>
-                                            <input type="email" class="form-control" name="email"
-                                                placeholder="Présidentielle 2022 - 1er tour">
+                                            <label class="form-label" >Nom de votre élection : </label>
+                                            <input type="email" v-bind:class='{"is-invalid": electionName=="", "is-valid": electionName!=""}' class="form-control" name="electionName"
+                                                placeholder="Présidentielle 2022 - 1er tour" v-model="electionName">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label">Statut de l'élélection : </label>
-                                            <input type="text" class="form-control" placeholder="1er tour / 2">
+                                            <input type="text" class="form-control" placeholder="1 / 2" v-model="electionStatut">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <button type="button" name="next" class="btn btn-primary next action-button float-end"
-                                value="Next">Suivant</button>
+                                value="Next" :disabled='electionName==""'>Suivant</button>
                         </fieldset>
 
 
@@ -173,20 +173,20 @@
                                         <div class="form-group">
                                             <label class="form-label" for="exampleInputdatetime">Date de départ</label>
                                             <input type="datetime-local" class="form-control" id="exampleInputdatetime"
-                                                value="2022-11-07T13:45:00">
+                                                v-model="electionStartDate" v-bind:class='{"is-invalid": electionStartDate=="", "is-valid": electionStartDate!=""}'>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="exampleInputdatetime">Date de fin</label>
-                                            <input type="datetime-local" class="form-control" id="exampleInputdatetime"
-                                                value="2022-11-07T13:45:00">
+                                            <input type="datetime-local" :min="electionStartDate" class="form-control" id="exampleInputdatetime"
+                                            v-model="electionEndDate" v-bind:class='{"is-invalid": electionEndDate=="", "is-valid": electionEndDate!=""}' :disabled="electionStartDate==''">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <button type="button" name="next" class="btn btn-primary next action-button float-end"
-                                value="Next">Suivant</button>
+                                value="Next" :disabled="electionEndDate=='' | electionStartDate==''">Suivant</button>
                             <button type="button" name="previous"
                                 class="btn btn-dark previous action-button-previous float-end me-1"
                                 value="Previous">Retour</button>
@@ -282,9 +282,9 @@
                                             <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">[[candidate.CandidateDescription]]</td>
                                             <td v-if="candidate.CandidateName == candidateToUpdate"><input class="form-control form-control-lg" type="text" :placeholder="candidate.CandidateDescription" v-model="candidateDescriptionUpdate"></td>
 
-                                            <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center" ><img  v-if="candidate.CandidateName != candidateToUpdate & !updateImage  & candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"></td>
+                                            <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center" ><img  v-if="candidate.CandidateName != candidateToUpdate  & candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"></td>
                                             <td v-if="candidate.CandidateName == candidateToUpdate">
-                                                <input v-if="updateImage | candidate.CandidateImage==null" type="file" class="form-control" accept="image/png, image/jpeg" id="customFile" ref="image" v-on:change="handleImageUploadUpdate()">
+                                                <input v-if="updateImage | candidate.CandidateImage==null" type="file" class="form-control" accept="image/png, image/jpeg" id="customFile" ref="imageUpdate" v-on:change="handleImageUploadUpdate()">
                                                 <img  v-if="!updateImage & candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50">
                                                 <button v-if="!updateImage & candidate.CandidateImage!=null" class="btn btn-sm btn-soft-danger" v-on:click="updateImageForm()">
                                                     <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.737 2.76196H7.979C5.919 2.76196 4.25 4.43196 4.25 6.49096V17.34C4.262 19.439 5.973 21.13 8.072 21.117C8.112 21.117 8.151 21.116 8.19 21.115H16.073C18.141 21.094 19.806 19.409 19.802 17.34V8.03996L14.737 2.76196Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M14.4736 2.75024V5.65924C14.4736 7.07924 15.6216 8.23024 17.0416 8.23424H19.7966" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M13.5759 14.6481L10.1099 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M10.1108 14.6481L13.5768 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
@@ -295,7 +295,7 @@
                                                 <button v-if="candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
                                                     data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
                                                     data-bs-placement="top" title="PDF">
-                                                    [[candidate.CandidateProgram]]
+                                                    [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length)]]
                                                     <svg width="32" viewBox="0 0 24 24" fill="none"
                                                         xmlns="http://www.w3.org/2000/svg">
                                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -338,15 +338,15 @@
                                                             stroke-linecap="round" stroke-linejoin="round" />
                                                     </svg>   
                                                 </button>
-                                                <input v-if="updateFile | candidate.CandidateProgram==null" type="file" accept=".pdf" class="form-control" id="customFile" ref="program"  v-on:change="handleProgramUpload()" name="candidateProgram">
-                                                <button v-if="!updateFile & candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-danger" v-on:click="rese()">
+                                                <input v-if="updateFile | candidate.CandidateProgram==null" type="file" accept=".pdf" class="form-control" id="customFile" ref="programUpdate"  v-on:change="handleProgramUploadUpdate()" name="candidateProgram">
+                                                <button v-if="!updateFile & candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-danger" v-on:click="updateFileForm()">
                                                     <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.737 2.76196H7.979C5.919 2.76196 4.25 4.43196 4.25 6.49096V17.34C4.262 19.439 5.973 21.13 8.072 21.117C8.112 21.117 8.151 21.116 8.19 21.115H16.073C18.141 21.094 19.806 19.409 19.802 17.34V8.03996L14.737 2.76196Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M14.4736 2.75024V5.65924C14.4736 7.07924 15.6216 8.23024 17.0416 8.23424H19.7966" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M13.5759 14.6481L10.1099 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M10.1108 14.6481L13.5768 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
                                                 </button>
                                             </td>
         
 
                                             <td class="text-center">
-                                                <input class="form-check-input" type="checkbox">
+                                                <input class="form-check-input" type="checkbox" :value="candidate.CandidateName" v-model="electionCandidates">
                                             </td>
 
                                             <td class="text-center" v-if="candidate.CandidateName != candidateToUpdate">
@@ -396,7 +396,7 @@
                                 </table>
                             </div>
                             <button type="button" name="next" class="btn btn-primary next action-button float-end"
-                                value="Next">Suivant</button>
+                                value="Next" :disabled='electionCandidates.length==0'>Suivant</button>
                             <button type="button" name="previous"
                                 class="btn btn-dark previous action-button-previous float-end me-1"
                                 value="Previous">Retour</button>
@@ -414,10 +414,10 @@
                                             <table class="table">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-center" scope="col">Admin</th>
-                                                        <th class="text-center" scope="col">Titre élection</th>
-                                                        <th class="text-center" scope="col">Date début éleciton</th>
-                                                        <th class="text-center" scope="col">Date fin éleciton</th>
+                                                        <th class="text-center" scope="col">Nom de l'élection</th>
+                                                        <th class="text-center" scope="col">Statut de l'élection</th>
+                                                        <th class="text-center" scope="col">Date début élection</th>
+                                                        <th class="text-center" scope="col">Date fin élection</th>
                                                         <th class="text-center" scope="col">Nom des candidats</th>
 
                                                     </tr>
@@ -426,26 +426,21 @@
                                                 <tbody>
                                                     <tr>
                                                         <td class="text-center">
-                                                            <h6 class="mb-0">Admin</h6>
+                                                            <h6 class="mb-0">[[electionName]]</h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="mb-0">Titre</h6>
+                                                            <h6 class="mb-0">[[electionStatut]]</h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="mb-0">Début</h6>
+                                                            <h6 class="mb-0">[[electionStartDate]]</h6>
                                                         </td>
                                                         <td class="text-center">
-                                                            <h6 class="mb-0">Fin</h6>
+                                                            <h6 class="mb-0">[[electionEndDate]]</h6>
                                                         </td>
                                                         <td class="text-center">
                                                             <h6 class="mb-0">
-                                                                <ul class="list-group">
-                                                                    <ol>Alpha</ol>
-                                                                    <ol>Beta</ol>
-                                                                    <ol>Gamma</ol>
-                                                                    <ol>Epsilon</ol>
-                                                                    <ol>Landa</ol>
-                                                                    <ol>Zelda</ol>
+                                                                <ul v-for="candidateSelected in electionCandidates" class="list-group">
+                                                                    <ol>[[candidateSelected]]</ol>
                                                                 </ul>
                                                             </h6>
                                                         </td>
@@ -531,6 +526,11 @@
                 candidateToUpdate:null,
                 updateFile:false,
                 updateImage:false,
+                electionName:"",
+                electionStatut:"",
+                electionStartDate:"",
+                electionEndDate:"",
+                electionCandidates:[],
             }
         },
         async mounted() {
@@ -540,6 +540,11 @@
             await this.getCandidate()
         },
         methods: {
+            currentDate() {
+                const current = new Date();
+                const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+                return date;
+            },
             handleImageUpload:function(){
                 this.candidateImage = this.$refs.image.files[0];
             },
@@ -547,10 +552,10 @@
                 this.candidateProgram = this.$refs.program.files[0];
             },
             handleImageUploadUpdate:function(){
-                this.candidateImageUpdate = this.$refs.image.files[0];
+                this.candidateImageUpdate = this.$refs.imageUpdate[0].files[0];
             },
             handleProgramUploadUpdate:function(){
-                this.candidateProgramUpdate = this.$refs.program.files[0];
+                this.candidateProgramUpdate = this.$refs.programUpdate[0].files[0];
             },
             addCandidate: async function () {
                 let formData = new FormData();
@@ -577,16 +582,15 @@
                 });
 
                 await this.getCandidate()
-                this.candidateProgram = null
-                this.candidateImage = null
-                this.candidateDescription = ""
-                this.candidateName = ""
-
+                await this.resetCandidate()
             },
             getCandidate: async function () {
                 await axios
                     .get('/adminspace/api/getCandidates')
                     .then(response => (this.candidates = response.data))
+                    .catch(function (error) {
+                    console.log(error);
+                });
             },
             deleteCandidate: async function (id) {
                 await axios
@@ -596,30 +600,43 @@
                         "X-CSRFToken": "{{ csrf_token }}",
                     }
                 })
-                .then(response => (this.candidates = response.data))
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
                 await this.getCandidate()
             },
             updateCandidate: async function (id) {
-                console.log(this.candidateNameUpdate)
                 let formData = new FormData();
                 formData.append('CandidateName', this.candidateNameUpdate);
                 formData.append('CandidateDescription', this.candidateDescriptionUpdate);
-                if (this.candidateImage != null) {
+                if (this.candidateImageUpdate != null) {
                     formData.append('CandidateImage', this.candidateImageUpdate);
                 }
-                if (this.candidateProgram != null) {
+                if (this.candidateProgramUpdate != null) {
                     formData.append('CandidateProgram', this.candidateProgramUpdate);
                 }
+                console.log(formData)
                 await axios
                     .put('/adminspace/api/updateCandidate/' + id, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         "X-CSRFToken": "{{ csrf_token }}",
                     }
+                }).then(function (response) {
+                    console.log(response);
                 })
+                .catch(function (error) {
+                    console.log(error);
+                });
 
                 await this.updateCandidateToUpdate()
                 await this.getCandidate()
+                await this.resetCandidateUpdate()
+                this.updateFile=false
+                this.updateImage=false
             },
             updateCandidateToUpdate: async function (name){
                 if(this.candidateToUpdate == name){
