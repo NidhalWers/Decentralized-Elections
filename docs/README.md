@@ -109,13 +109,13 @@ Les informations du ticket tels que
 serviront pour créer la branche github sous cette forme : <a name="branch_name"></a>
 <br></br>
 ```
-Domain's first letter + '-' + label + Card number
+Domain's first letter + '/' + label + Card number
 ```
 avec commme source la branche correspondant au tableau
 <br></br>
 dans l'exemple suivant, la branche aura comme nom 
 ```
-B-Features#1
+B/Features#1
 ```
 
 <img width="1267" alt="lier_ticket_github_2" src="https://user-images.githubusercontent.com/32906777/194014848-bf391db9-d357-4010-ac11-06e46fcd0425.png">
