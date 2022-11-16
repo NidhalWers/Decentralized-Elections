@@ -51,7 +51,7 @@ Sur Trello on retrouve les tableaux
 
 Chaque projet a sa propre branche main : 
 - [Application](https://github.com/NidhalWers/Decentralized-Elections/tree/Application)
-- [BlockChain](https://github.com/NidhalWers/Decentralized-Elections/tree/BlockChain)
+- [BlockChain](https://github.com/NidhalWers/Decentralized-Elections/tree/Blockchain)
 - [MachineLearning](https://github.com/NidhalWers/Decentralized-Elections/tree/MachineLearning)
  
 ## Fonctionnement du Trello
