@@ -33,6 +33,8 @@ public class ElectionPayload {
 
     private String countBlankVotes;
 
+    private String status;
+
     public ElectionQuery toQuery() {
         validatePayload();
         return ElectionQuery.builder()
@@ -41,6 +43,7 @@ public class ElectionPayload {
                 .closingDate(parseClosingDate())
                 .electionName(this.electionName)
                 .blankVotesCounted(Boolean.parseBoolean(countBlankVotes))
+                .status(this.status)
                 .build();
     }
 

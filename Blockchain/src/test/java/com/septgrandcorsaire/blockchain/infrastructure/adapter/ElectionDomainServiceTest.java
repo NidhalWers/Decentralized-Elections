@@ -11,6 +11,7 @@ import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import com.septgrandcorsaire.blockchain.domain.ElectionInitializationData;
 import com.septgrandcorsaire.blockchain.domain.VotingData;
 import com.septgrandcorsaire.blockchain.infrastructure.dao.BlockchainRepository;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageOngoingElection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ class ElectionDomainServiceTest {
     void testGetBlockchainForElection() {
         final String query = "test";
 
-        final BlockChain actualBlockchain = domainService.getBlockchainForElection(query);
+        final BlockChain actualBlockchain = ((MessageOngoingElection) domainService.getBlockchainForElection(query)).blockChain;
 
         assertThat(actualBlockchain).isNotNull();
         assertThat(actualBlockchain.getName()).isEqualTo("test");

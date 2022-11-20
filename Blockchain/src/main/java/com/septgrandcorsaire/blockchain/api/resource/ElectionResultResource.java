@@ -19,20 +19,23 @@ public class ElectionResultResource implements ElectionResource {
 
     private final Map<String, Long> candidatesResults;
 
-    private ElectionResultResource(final String electionName, final LocalDateTime startingDate, final LocalDateTime closingDate, Map<String, Long> candidatesResults) {
+    private final String electionStatus;
+
+    private ElectionResultResource(final String electionName, final LocalDateTime startingDate, final LocalDateTime closingDate, Map<String, Long> candidatesResults, String electionStatus) {
         this.electionName = electionName;
         this.startingDate = startingDate;
         this.closingDate = closingDate;
         this.candidatesResults = candidatesResults;
+        this.electionStatus = electionStatus;
     }
 
-    public static ElectionResultResource of(final ElectionResult electionResult) {
+    public static ElectionResultResource of(final ElectionResult electionResult, final String status) {
         return new ElectionResultResource(
                 electionResult.getElectionName(),
                 electionResult.getStartingDate(),
                 electionResult.getClosingDate(),
-                electionResult.getCandidatesResults()
-        );
+                electionResult.getCandidatesResults(),
+                status);
     }
 
     public String getElectionName() {
@@ -49,5 +52,9 @@ public class ElectionResultResource implements ElectionResource {
 
     public Map<String, Long> getCandidatesResults() {
         return candidatesResults;
+    }
+
+    public String getElectionStatus() {
+        return electionStatus;
     }
 }

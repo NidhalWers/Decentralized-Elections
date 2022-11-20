@@ -1,7 +1,6 @@
 package com.septgrandcorsaire.blockchain.api;
 
 import com.septgrandcorsaire.blockchain.Application;
-import com.septgrandcorsaire.blockchain.api.error.exception.ElectionAlreadyFinishedException;
 import com.septgrandcorsaire.blockchain.api.payload.ElectionPayload;
 import com.septgrandcorsaire.blockchain.api.payload.VotePayload;
 import com.septgrandcorsaire.blockchain.api.resource.BlockChainResource;
@@ -10,8 +9,11 @@ import com.septgrandcorsaire.blockchain.api.resource.ElectionResource;
 import com.septgrandcorsaire.blockchain.api.resource.ElectionResultResource;
 import com.septgrandcorsaire.blockchain.application.ElectionApplicationService;
 import com.septgrandcorsaire.blockchain.domain.Block;
-import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageBlockchainCreated;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageElectionResult;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageFinishedElection;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageOngoingElection;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.code.ElectionState;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,19 +37,18 @@ public class BlockchainController {
     public BlockChainResource createElection(@RequestBody ElectionPayload payload) {
         Application.LOGGER.info("GET /smart-vote/api/v1/create-election");
         MessageBlockchainCreated result = electionApplicationService.createBlockchainForElection(payload.toQuery());
-        return BlockChainResource.of(result.blockChain, result.apiKey);
+        return BlockChainResource.of(result.blockChain, result.apiKey, result.electionStatus);
     }
 
     @GetMapping(value = "/smart-vote/api/v1/get-election/{election_name}")
     public ElectionResource getElection(@PathVariable("election_name") String input) {
         Application.LOGGER.info("GET /smart-vote/api/v1/get-election/" + input);
-        BlockChain result;
-        try {
-            result = electionApplicationService.getElectionData(input);
-        } catch (ElectionAlreadyFinishedException exception) {
-            return ElectionResultResource.of(exception.getElectionResult());
-        }
-        return BlockChainResource.of(result, null);
+        MessageElectionResult result = electionApplicationService.getElectionData(input);
+        if (result.code().equals(ElectionState.ONGOING))
+            return BlockChainResource.of(((MessageOngoingElection) result).blockChain, null, null); // todo use of status
+        else
+            return ElectionResultResource.of(((MessageFinishedElection) result).electionResult, null); //todo use
+
     }
 
     @GetMapping(value = "/smart-vote/api/v1/get-sandbox/")

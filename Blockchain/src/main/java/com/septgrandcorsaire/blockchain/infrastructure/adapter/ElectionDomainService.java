@@ -7,6 +7,9 @@ import com.septgrandcorsaire.blockchain.domain.*;
 import com.septgrandcorsaire.blockchain.infrastructure.dao.ApiKeyRepository;
 import com.septgrandcorsaire.blockchain.infrastructure.dao.BlockchainRepository;
 import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageBlockchainCreated;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageElectionResult;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageFinishedElection;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageOngoingElection;
 import com.septgrandcorsaire.blockchain.infrastructure.service.ApiKeyGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,29 +29,36 @@ public class ElectionDomainService {
     @Value("${mining.difficulty}")
     private int MINING_DIFFICULTY;
 
-    public BlockChain getBlockchainForElection(final String electionName) {
+    public MessageElectionResult getBlockchainForElection(final String electionName) {
         BlockChain blockChain = BlockchainRepository.INSTANCE.getBlockchain(electionName);
         verifyExistingElection(blockChain, electionName);
-        handleFinishedElection(blockChain);
-        return blockChain;
+        MessageElectionResult message = handleFinishedElection(blockChain);
+        if (message != null) return message;
+        return MessageOngoingElection.builder()
+                .blockChain(blockChain)
+                .build(); //todo use of status;
     }
 
-    private void handleFinishedElection(BlockChain blockChain) {
+    private MessageFinishedElection handleFinishedElection(BlockChain blockChain) {
         ElectionInitializationData electionInitializationData = blockChain.getInitializationData();
         if (LocalDateTime.now().isAfter(electionInitializationData.getClosingDate())) {
-            ElectionAlreadyFinishedException exception = new ElectionAlreadyFinishedException(String.format(ErrorCode.ELECTION_ALREADY_FINISHED.getDefaultMessage(), electionInitializationData.getElectionName(), electionInitializationData.getClosingDate()));
-            exception.setElectionResult(ElectionResult.builder()
-                    .startingDate(electionInitializationData.getStartingDate())
-                    .closingDate(electionInitializationData.getClosingDate())
-                    .candidatesResults(blockChain.getVotingBlock().stream()
-                            .map(Block::getData)
-                            .map(data -> ((VotingData) data))
-                            .map(VotingData::getCandidateName)
-                            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting())))
-                    .build()
-            );
-            throw exception;
+            //ElectionAlreadyFinishedException exception = new ElectionAlreadyFinishedException(String.format(ErrorCode.ELECTION_ALREADY_FINISHED.getDefaultMessage(), electionInitializationData.getElectionName(), electionInitializationData.getClosingDate()));
+            MessageFinishedElection message = MessageFinishedElection.builder()
+                    .electionResult(ElectionResult.builder()
+                            .startingDate(electionInitializationData.getStartingDate())
+                            .closingDate(electionInitializationData.getClosingDate())
+                            .candidatesResults(blockChain.getVotingBlock().stream()
+                                    .map(Block::getData)
+                                    .map(data -> ((VotingData) data))
+                                    .map(VotingData::getCandidateName)
+                                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting())))
+                            .build()
+                    )//todo use of status
+                    .build();
+            //throw exception;
+            return message;
         }
+        return null;
     }
 
     private void verifyExistingElection(BlockChain blockChain, String query) {
@@ -67,7 +77,7 @@ public class ElectionDomainService {
         final String apiKey = ApiKeyGenerator.generateKey();
         ApiKeyRepository.INSTANCE.addKey(blockChain.getName(), apiKey);
 
-        return MessageBlockchainCreated.of(blockChain, apiKey);
+        return MessageBlockchainCreated.of(blockChain, apiKey, query.getStatus());
     }
 
     private void verifyCreateElectionRequestValidity(final String electionName) {

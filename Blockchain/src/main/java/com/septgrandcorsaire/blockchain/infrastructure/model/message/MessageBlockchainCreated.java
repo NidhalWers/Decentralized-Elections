@@ -8,12 +8,16 @@ public class MessageBlockchainCreated implements Message {
 
     public final String apiKey;
 
-    private MessageBlockchainCreated(BlockChain blockChain, String apiKey) {
+    public final String electionStatus;
+
+    private MessageBlockchainCreated(BlockChain blockChain, String apiKey, String electionStatus) {
         this.blockChain = blockChain;
         this.apiKey = apiKey;
+        this.electionStatus = electionStatus;
     }
 
-    public static MessageBlockchainCreated of(BlockChain blockChain, String apiKey) {
-        return new MessageBlockchainCreated(blockChain, apiKey);
+    public static MessageBlockchainCreated of(BlockChain blockChain, String apiKey, String electionStatus) {
+        return new MessageBlockchainCreated(blockChain, apiKey, electionStatus);
     }
+
 }
