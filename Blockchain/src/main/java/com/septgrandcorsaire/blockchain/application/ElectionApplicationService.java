@@ -30,11 +30,15 @@ public class ElectionApplicationService {
         return electionDomainService.createBlockchainForElection(query);
     }
 
-    public MessageElectionResult getElectionData(String inputRequest) {
-        if (inputRequest == null || inputRequest.isBlank()) {
+    public MessageElectionResult getElectionData(String electionRequested, String statusQueried) {
+        if (electionRequested == null || electionRequested.isBlank()) {
             throw new IllegalArgumentException("must provide a valid election name");
         }
-        return electionDomainService.getBlockchainForElection(inputRequest);
+        return electionDomainService.getBlockchainForElection(electionRequested, statusQueried);
+    }
+
+    public MessageElectionResult getElectionData(String electionRequested) {
+        return getElectionData(electionRequested, null);
     }
 
     public Block voteInElection(VoteQuery query) {

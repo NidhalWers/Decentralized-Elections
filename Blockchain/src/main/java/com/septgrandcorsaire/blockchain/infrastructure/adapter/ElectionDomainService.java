@@ -29,14 +29,19 @@ public class ElectionDomainService {
     @Value("${mining.difficulty}")
     private int MINING_DIFFICULTY;
 
-    public MessageElectionResult getBlockchainForElection(final String electionName) {
-        BlockChain blockChain = BlockchainRepository.INSTANCE.getBlockchain(electionName);
+    public MessageElectionResult getBlockchainForElection(final String electionName, final String electionStatus) {
+        BlockChain blockChain = BlockchainRepository.INSTANCE.getBlockchain(electionName, electionStatus);
         verifyExistingElection(blockChain, electionName);
         MessageElectionResult message = handleFinishedElection(blockChain);
         if (message != null) return message;
         return MessageOngoingElection.builder()
                 .blockChain(blockChain)
+                .status(electionStatus)
                 .build(); //todo use of status;
+    }
+
+    public MessageElectionResult getBlockchainForElection(final String electionName) {
+        return getBlockchainForElection(electionName, null);
     }
 
     private MessageFinishedElection handleFinishedElection(BlockChain blockChain) {
