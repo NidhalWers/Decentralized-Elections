@@ -6,6 +6,7 @@ import com.septgrandcorsaire.blockchain.domain.ElectionInitializationData;
 import com.septgrandcorsaire.blockchain.domain.VotingData;
 import com.septgrandcorsaire.blockchain.infrastructure.adapter.ElectionDomainService;
 import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageBlockchainCreated;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageOngoingElection;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -60,7 +61,7 @@ class ElectionApplicationServiceTest {
                         && request.getClosingDate().getDayOfMonth() == 25
                         && request.getClosingDate().getHour() == 10
                         && request.getClosingDate().getMinute() == 0
-        ))).thenReturn(MessageBlockchainCreated.of(blockChainForMock, "an-api-key"));
+        ))).thenReturn(MessageBlockchainCreated.of(blockChainForMock, "an-api-key", null));
 
         final BlockChain actualResult = applicationService.createBlockchainForElection(query).blockChain; //todo test la présence d'une api key
 
@@ -126,9 +127,9 @@ class ElectionApplicationServiceTest {
 
         when(mockDomainService.getBlockchainForElection(Mockito.argThat(request ->
                 request.equals(inputRequest)
-        ))).thenReturn(blockChainForMock);
+        ))).thenReturn(MessageOngoingElection.builder().blockChain(blockChainForMock).build());
 
-        final BlockChain actualResult = applicationService.getElectionData(inputRequest);
+        final BlockChain actualResult = ((MessageOngoingElection) applicationService.getElectionData(inputRequest)).blockChain;
 
         assertThat(actualResult).isNotNull();
         assertThat(actualResult.getName()).isEqualTo("first_test");
