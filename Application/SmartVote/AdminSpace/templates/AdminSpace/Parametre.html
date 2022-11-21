@@ -210,8 +210,13 @@
                                             </svg>
                                         </i>
                                         <span>Ajouter un candidat</span>
-                                    </a>
 
+                                    </a>
+                                    <div class="form-check form-switch form-check-inline ">
+                                        <input class="form-check-input" type="checkbox" id="switch2" checked v-model="electionBlank"/>
+                                        <label class="form-check-label pl-2" for="switch2">Autoriser le vote blanc</label>
+                                    </div>
+                                    
                                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
                                         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
                                         style="display: none;" aria-hidden="true">
@@ -319,7 +324,7 @@
                                                 <button v-if="!updateFile & candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
                                                     data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
                                                     data-bs-placement="top" title="PDF">
-                                                    [[candidate.CandidateProgram]]
+                                                    [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length)]]
                                                     <svg width="32" viewBox="0 0 24 24" fill="none"
                                                         xmlns="http://www.w3.org/2000/svg">
                                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -467,8 +472,8 @@
 
 
 
-                            <button type="button" name="next" class="btn btn-success next action-button float-end"
-                                value="Next">Validé</button>
+                            <button type="button" name="next" class="btn btn-success action-button float-end"
+                                v-on:click="createElectionInBlockchain()">Valider</button>
                             <button type="button" name="previous"
                                 class="btn btn-dark previous action-button-previous float-end me-1"
                                 value="Previous">Retour</button>
@@ -531,10 +536,8 @@
                 electionStartDate:"",
                 electionEndDate:"",
                 electionCandidates:[],
+                electionBlank:true,
             }
-        },
-        async mounted() {
-            await this.getCandidate()
         },
         async mounted() {
             await this.getCandidate()
@@ -681,6 +684,34 @@
                 this.candidateImageUpdate = null
                 this.candidateDescriptionUpdate = ""
                 this.candidateNameUpdate = ""
+            },
+            createElectionInBlockchain: async function (){
+
+                var data = JSON.stringify({
+                    "candidates" : this.electionCandidates,
+                    "starting_date" : this.electionStartDate,
+                    "closing_date" : this.electionEndDate,
+                    "election_name" : this.electionName,
+                    "count_blank_votes" : this.electionBlank
+                    });
+
+                    var config = {
+                    method: 'post',
+                    url: 'http://localhost:8080/smart-vote/api/v1/create-election',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    data : data
+                    };
+
+                    await axios(config)
+                        .then(function (response) {
+                        console.log(response);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
             },
             }
         },

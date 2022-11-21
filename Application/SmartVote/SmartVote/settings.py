@@ -136,16 +136,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_COOKIE_NAME = "XCSRF-TOKEN"
 
-CORS_ORIGIN_WHITELIST = (
-  'http://localhost:8000',
-)
-
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-
-CORS_EXPOSE_HEADERS = (
-    'Access-Control-Allow-Origin: *',
-)
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'X-CSRFTOKEN',
