@@ -36,7 +36,9 @@ public class BlockchainRepository {
     public BlockChain getBlockchain(String electionName, String electionStatus) {
         ElectionStatusAndBlockchain value = nameBlockchainMap.get(electionName);
         if (value != null) {
-            if (electionStatus == null || (electionStatus != null && electionStatus.equals(value.status))) {
+            if (electionStatus == null
+                    || electionStatus.equals("")
+                    || electionStatus.equals(value.status)) {
                 return value.blockChain;
             }
         }
@@ -47,7 +49,12 @@ public class BlockchainRepository {
         return getBlockchain(electionName, null);
     }
 
-    public boolean electionAlreadyExistsWithThisName(String electionName) {
-        return nameBlockchainMap.containsKey(electionName);
+    public boolean electionAlreadyExistsWithThisNameAndStatus(String electionName, String electionStatus) {
+        return getBlockchain(electionName, electionStatus) != null;
     }
+
+    public boolean electionAlreadyExistsWithThisName(String electionName) {
+        return electionAlreadyExistsWithThisNameAndStatus(electionName, null);
+    }
+
 }
