@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -125,10 +126,10 @@ class ElectionApplicationServiceTest {
         final BlockChain blockChainForMock = new BlockChain("first_test", 4);
         blockChainForMock.addBlock(blockChainForMock.newBlock(ElectionInitializationData.fromElectionQuery(query), 0, null));
 
-        when(mockDomainService.getBlockchainForElection(Mockito.argThat(request ->
-                request.equals(inputRequest)
-        ))).thenReturn(MessageOngoingElection.builder().blockChain(blockChainForMock).build());
-
+        when(mockDomainService.getBlockchainForElection(
+                Mockito.argThat(request -> request.equals(inputRequest)),
+                Mockito.argThat(Objects::isNull)
+        )).thenReturn(MessageOngoingElection.builder().blockChain(blockChainForMock).build());
         final BlockChain actualResult = ((MessageOngoingElection) applicationService.getElectionData(inputRequest)).blockChain;
 
         assertThat(actualResult).isNotNull();

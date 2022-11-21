@@ -35,7 +35,8 @@ public class BlockChainResource implements ElectionResource {
                 blockChain.getName(),
                 new BlockchainDomainService().isBlockchainValid(blockChain),
                 blockChain.getBlocks().stream().map(block -> BlockResource.of(block)).collect(Collectors.toList()),
-                apiKey, electionStatus
+                apiKey,
+                electionStatus
         );
     }
 

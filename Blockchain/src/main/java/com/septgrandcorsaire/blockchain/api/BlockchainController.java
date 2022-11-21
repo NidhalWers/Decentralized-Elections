@@ -41,20 +41,20 @@ public class BlockchainController {
     }
 
     @GetMapping(value = "/smart-vote/api/v1/get-election/{election_name}")
-    public ElectionResource getElection(@PathVariable("election_name") String input) {
+    public ElectionResource getElection(@PathVariable("election_name") String input, @RequestParam(required = false) String status) {
         Application.LOGGER.info("GET /smart-vote/api/v1/get-election/" + input);
-        MessageElectionResult result = electionApplicationService.getElectionData(input);
+        MessageElectionResult result = electionApplicationService.getElectionData(input, status);
         if (result.code().equals(ElectionState.ONGOING))
-            return BlockChainResource.of(((MessageOngoingElection) result).blockChain, null, null); // todo use of status
+            return BlockChainResource.of(((MessageOngoingElection) result).blockChain, null, status);
         else
-            return ElectionResultResource.of(((MessageFinishedElection) result).electionResult, null); //todo use
+            return ElectionResultResource.of(((MessageFinishedElection) result).electionResult, status);
 
     }
 
     @GetMapping(value = "/smart-vote/api/v1/get-sandbox/")
     public ElectionResource getSandboxElection() {
         Application.LOGGER.info("GET /smart-vote/api/v1/get-sandbox/");
-        return getElection("sandbox");
+        return getElection("sandbox", null);
     }
 
     @PostMapping(value = "/smart-vote/api/v1/vote",

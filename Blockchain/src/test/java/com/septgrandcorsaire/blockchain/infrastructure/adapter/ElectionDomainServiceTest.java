@@ -157,7 +157,7 @@ class ElectionDomainServiceTest {
         VoteQuery query = VoteQuery.builder()
                 .electionName("test")
                 .candidateName("one")
-                .votingDate(LocalDateTime.now().plusDays(1).plusHours(5))
+                .votingDate(endingTestTime.plusDays(1).plusHours(5))
                 .voterId("voter1")
                 .build();
 

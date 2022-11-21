@@ -43,7 +43,7 @@ public class ElectionPayload {
                 .closingDate(parseClosingDate())
                 .electionName(this.electionName)
                 .blankVotesCounted(Boolean.parseBoolean(countBlankVotes))
-                .status(this.status)
+                .electionStatus(this.status)
                 .build();
     }
 
