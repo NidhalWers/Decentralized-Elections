@@ -106,8 +106,8 @@ def updateCandidate(request, pk):
         try:
             candidate = Candidate.objects.get(CandidateName=pk)
         except Candidate.DoesNotExist:
-            return HttpResponse({"message':'Candidate does'nt exist"},status=400)
-        # update the task
+            return JsonResponse({"message':'Candidate does'nt exist"},status=400)
+        
         serializer = CandidateSerializer(candidate,data=request.data)
             
         # check if the data is valid
@@ -124,6 +124,15 @@ def updateCandidate(request, pk):
                     os.remove(candidate.CandidateProgram.path)
             except:
                 pass
+
+            if(serializer.data["CandidateName"] != pk):
+                print("name changed")
+                try:
+                    candidate = Candidate.objects.get(CandidateName=pk)
+                    candidate.delete()
+                except Candidate.DoesNotExist:
+                    return JsonResponse({"message':'Error updating CandidateName : Candidate does'nt exist"},status=400)
+
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
     
