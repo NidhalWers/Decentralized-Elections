@@ -78,7 +78,7 @@ public class ElectionDomainService {
 
         final BlockChain blockChain = new BlockChain(query.getElectionName(), MINING_DIFFICULTY);
         blockChain.addBlock(blockChain.newBlock(ElectionInitializationData.fromElectionQuery(query), 0, null));
-        BlockchainRepository.INSTANCE.addBlockchain(query.getElectionName(), blockChain);
+        BlockchainRepository.INSTANCE.addBlockchain(query.getElectionName(), blockChain, query.getElectionStatus());
 
         final String apiKey = ApiKeyGenerator.generateKey();
         ApiKeyRepository.INSTANCE.addKey(blockChain.getName(), apiKey);

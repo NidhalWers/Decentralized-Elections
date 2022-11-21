@@ -20,10 +20,13 @@ public class BlockchainRepository {
     }
 
 
-    public void addBlockchain(String electionName, BlockChain blockChain) {
-        nameBlockchainMap.put(electionName, ElectionStatusAndBlockchain.of(blockChain));
+    public void addBlockchain(String electionName, BlockChain blockChain, String electionStatus) {
+        nameBlockchainMap.put(electionName, ElectionStatusAndBlockchain.of(electionStatus, blockChain));
     }
 
+    public void addBlockchain(String electionName, BlockChain blockChain) {
+        addBlockchain(electionName, blockChain, null);
+    }
 
     public void addBlockchain(String electionName, String electionStatus, BlockChain blockChain) {
         nameBlockchainMap.put(electionName, ElectionStatusAndBlockchain.of(electionStatus, blockChain));
