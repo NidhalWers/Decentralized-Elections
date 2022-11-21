@@ -3,3 +3,4 @@
 /Blockchain/target/
 *.pyc
 *.env
+*.pdf
