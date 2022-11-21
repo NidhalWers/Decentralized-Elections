@@ -23,4 +23,6 @@ public class ElectionQuery {
     private String electionName;
 
     private boolean blankVotesCounted;
+
+    private String electionStatus;
 }

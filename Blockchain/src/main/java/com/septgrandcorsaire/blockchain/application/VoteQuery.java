@@ -20,12 +20,15 @@ public class VoteQuery {
 
     private String voterId;
 
+    private String electionStatus;
+
     public VoteQuery setCandidateName(String input) {
         return VoteQuery.builder()
                 .electionName(electionName)
                 .candidateName(input)
                 .votingDate(votingDate)
                 .voterId(voterId)
+                .electionStatus(electionStatus)
                 .build();
     }
 }

@@ -29,6 +29,8 @@ public class VotePayload {
 
     private String voterId;
 
+    private String electionStatus;
+
     public VoteQuery toQuery() {
         validatePayload();
         return VoteQuery.builder()
@@ -36,6 +38,7 @@ public class VotePayload {
                 .candidateName(candidateName)
                 .votingDate(parseVotingDate())
                 .voterId(voterId)
+                .electionStatus(electionStatus)
                 .build();
     }
 
