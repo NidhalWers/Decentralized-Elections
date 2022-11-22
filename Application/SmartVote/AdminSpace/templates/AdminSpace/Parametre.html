@@ -125,6 +125,14 @@
                                 </a>
                             </li>
                         </ul>
+                        <div class="alert alert-warning d-flex align-items-center" v-if="error!=null" role="alert">
+                            <svg class="bi flex-shrink-0 me-2" width="24" height="24">
+                                <use xlink:href="#exclamation-triangle-fill" />
+                            </svg>
+                            <div>
+                                [[error]]
+                            </div>
+                        </div>
 
                         <fieldset style="display: block;">
                             <div class="form-card text-start">
@@ -150,9 +158,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                
                             </div>
+                            <button class="btn btn-primary float-end" type="button" disabled v-if="loading">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Suivant...
+                            </button>
                             <button type="button" name="next" class="btn btn-primary next action-button float-end"
-                                value="Next" :disabled='electionName==""'>Suivant</button>
+                                value="Next" :disabled='electionName==""' v-on:click="updateError()" v-if="!loading">Suivant</button>
                         </fieldset>
 
 
@@ -185,11 +198,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <button class="btn btn-primary float-end" type="button" disabled v-if="loading">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Suivant...
+                            </button>
                             <button type="button" name="next" class="btn btn-primary next action-button float-end"
-                                value="Next" :disabled="electionEndDate=='' | electionStartDate==''">Suivant</button>
+                                value="Next" :disabled="electionEndDate=='' | electionStartDate==''" v-on:click="updateError()" v-if="!loading">Suivant</button>
                             <button type="button" name="previous"
                                 class="btn btn-dark previous action-button-previous float-end me-1"
-                                value="Previous">Retour</button>
+                                value="Previous" v-on:click="updateError()">Retour</button>
                         </fieldset>
 
 
@@ -252,8 +269,12 @@
                                                             <input type="file" accept=".pdf" class="form-control" id="customFile" ref="program"  v-on:change="handleProgramUpload()" name="candidateProgram">
                                                         </div>
                                                         <div class="text-start">
+                                                            <button class="btn btn-primary" type="button" disabled v-if="loading">
+                                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                Ajouter...
+                                                            </button>
                                                             <button type="button" class="btn btn-primary"
-                                                                data-bs-dismiss="modal" :disabled='candidateName==""' v-on:click="addCandidate()">Ajouter</button>
+                                                                data-bs-dismiss="modal" :disabled='candidateName==""' v-on:click="addCandidate()" v-if="!loading">Ajouter</button>
                                                             <button type="button" class="btn btn-danger"
                                                                 data-bs-dismiss="modal" aria-label="Close">Annuler</button>
                                                         </div>
@@ -400,11 +421,15 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <button class="btn btn-primary float-end" type="button" disabled v-if="loading">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Suivant...
+                            </button>
                             <button type="button" name="next" class="btn btn-primary next action-button float-end"
-                                value="Next" :disabled='electionCandidates.length==0'>Suivant</button>
+                                value="Next" :disabled='electionCandidates.length==0' v-on:click="updateError()" v-if="!loading">Suivant</button>
                             <button type="button" name="previous"
                                 class="btn btn-dark previous action-button-previous float-end me-1"
-                                value="Previous">Retour</button>
+                                value="Previous" v-on:click="updateError()">Retour</button>
                         </fieldset>
                         <fieldset style="display: none;">
                             <div class="form-card text-start">
@@ -471,12 +496,15 @@
 
 
 
-
+                            <button class="btn btn-success float-end" type="button" disabled v-if="loading">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Validation...
+                            </button>
                             <button type="button" name="next" class="btn btn-success action-button float-end"
-                                v-on:click="createElectionInBlockchain()">Valider</button>
+                                v-on:click="createElectionInBlockchain()" v-if="!loading">Valider</button>
                             <button type="button" name="previous"
                                 class="btn btn-dark previous action-button-previous float-end me-1"
-                                value="Previous">Retour</button>
+                                value="Previous" v-on:click="updateError()">Retour</button>
                         </fieldset>
 
 
@@ -537,9 +565,9 @@
                 electionEndDate:"",
                 electionCandidates:[],
                 electionBlank:true,
-                isError:false,
-                errorMessage:"",
                 responseApiCall:null,
+                error:null,
+                loading:false,
             }
         },
         async mounted() {
@@ -564,6 +592,7 @@
                 this.candidateProgramUpdate = this.$refs.programUpdate[0].files[0];
             },
             addCandidate: async function () {
+                this.loading=true
                 let formData = new FormData();
                 formData.append('CandidateName', this.candidateName);
                 formData.append('CandidateDescription', this.candidateDescription);
@@ -582,23 +611,29 @@
                 })
                 .then(function (response) {
                     console.log(response);
+                    this.loading=false
                 })
                 .catch(function (error) {
+                    alert("Impossible d'ajouter le candidat");
                     console.log(error);
+                    this.loading=false
                 });
 
                 await this.getCandidate()
                 await this.resetCandidate()
+                this.loading=false
             },
             getCandidate: async function () {
                 await axios
                     .get('/adminspace/api/getCandidates')
                     .then(response => (this.candidates = response.data))
                     .catch(function (error) {
+                    alert("Chargement des candidats impossible")
                     console.log(error);
                 });
             },
             deleteCandidate: async function (id) {
+                this.loading=true
                 await axios
                     .delete('/adminspace/api/delCandidate/' + id,{
                     headers: {
@@ -608,13 +643,18 @@
                 })
                 .then(function (response) {
                     console.log(response);
+                    this.loading=false
                 })
                 .catch(function (error) {
+                    alert("impossible de supprimer le candidat")
                     console.log(error);
+                    this.loading=false
                 });
                 await this.getCandidate()
+                this.loading=false
             },
             updateCandidate: async function (id) {
+                this.loading=true
                 let formData = new FormData();
                 formData.append('CandidateName', this.candidateNameUpdate);
                 formData.append('CandidateDescription', this.candidateDescriptionUpdate);
@@ -633,9 +673,12 @@
                     }
                 }).then(function (response) {
                     console.log(response);
+                    this.loading=false
                 })
                 .catch(function (error) {
+                    alert("Impossible de mettre à jour le candidat")
                     console.log(error);
+                    this.loading=false
                 });
 
                 await this.updateCandidateToUpdate()
@@ -643,6 +686,7 @@
                 await this.resetCandidateUpdate()
                 this.updateFile=false
                 this.updateImage=false
+                this.loading=false
             },
             updateCandidateToUpdate: async function (name){
                 if(this.candidateToUpdate == name){
@@ -689,7 +733,7 @@
                 this.candidateNameUpdate = ""
             },
             createElectionInBlockchain: async function (){
-
+                this.loading=false
                 var data = JSON.stringify({
                     "candidates" : this.electionCandidates,
                     "starting_date" : this.electionStartDate,
@@ -711,13 +755,16 @@
                     await axios(config)
                     .then(response => (this.responseApiCall = response.data))
                     .catch(function (error) {
-                            console.log(error);
-                        });
+                        alert("Les informations de l'élection ne sont pas valides")
+                        console.log(error);
+                        this.loading=false
+                    });
 
                     await this.addElection()
+                    this.loading=false
             },
             addElection: async function(){
-                console.log(this.responseApiCall)
+                this.loading=true
                 let formData = new FormData();
                 formData.append('ElectionName', this.electionName);
                 formData.append('ElectionStatus', this.electionStatut);
@@ -733,10 +780,17 @@
                     .then(function (response) {
                         console.log(response);
                         window.location = "/adminspace/success"
+                        this.loading=false
                     })
                     .catch(function (error) {
+                        alert(error)
                         console.log(error);
+                        this.loading=false
                     });
+                this.loading=false
+            },
+            updateError: async function(){
+                this.error = null
             },
             }
         },
