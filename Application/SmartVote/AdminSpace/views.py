@@ -1,8 +1,7 @@
 import os
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from AdminSpace.models import Candidate
 from django.http import JsonResponse,HttpResponse
-from rest_framework.parsers import JSONParser
 # To bypass having a CSRF token
 from django.views.decorators.csrf import csrf_exempt
 # API definition for task
@@ -13,17 +12,23 @@ from dotenv import load_dotenv
 load_dotenv('.env')
 
 # Create your views here.
-def administrateur(request):
-    return render(request,'AdminSpace/Administrateur.html')
-
 def parametre(request):
-    return render(request,'AdminSpace/Parametre.html')
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return render(request,'AdminSpace/parametre.html')
+    return redirect('/')
 
 def index(request):
-    return render(request,'AdminSpace/index.html')
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return render(request,'AdminSpace/index.html')
+    return redirect('/')
 
 def success(request):
-    return render(request,'AdminSpace/success.html')
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return render(request,'AdminSpace/success.html')
+    return redirect('/')
 
 # Utils
 
