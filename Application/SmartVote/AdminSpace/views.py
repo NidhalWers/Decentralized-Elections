@@ -6,8 +6,11 @@ from rest_framework.parsers import JSONParser
 # To bypass having a CSRF token
 from django.views.decorators.csrf import csrf_exempt
 # API definition for task
-from .serializers import CandidateSerializer
+from .serializers import CandidateSerializer,ElectionSerializer
 from rest_framework.decorators import api_view
+from cryptography.fernet import Fernet
+from dotenv import load_dotenv
+load_dotenv('.env')
 
 # Create your views here.
 def administrateur(request):
@@ -19,10 +22,19 @@ def parametre(request):
 def index(request):
     return render(request,'AdminSpace/index.html')
 
+def success(request):
+    return render(request,'AdminSpace/success.html')
+
 # Utils
 
 def isCandidateExist(candidate):
     return Candidate.objects.filter(CandidateName=candidate).exists()
+
+def encrypt(message: bytes, key: bytes) -> bytes:
+    return Fernet(key).encrypt(message)
+
+def decrypt(token: bytes, key: bytes) -> bytes:
+    return Fernet(key).decrypt(token)
 
 #Api
 @api_view(['POST'])
@@ -131,34 +143,21 @@ def updateCandidate(request, pk):
                     candidate = Candidate.objects.get(CandidateName=pk)
                     candidate.delete()
                 except Candidate.DoesNotExist:
-                    return JsonResponse({"message':'Error updating CandidateName : Candidate does'nt exist"},status=400)
+                    return HttpResponse({"message':'Error updating CandidateName : Candidate does'nt exist"},status=400)
 
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
     
-def candidate_detail(request, pk):
-    try:
-        # obtain the task with the passed id.
-        task = Candidate.objects.get(CandidateName=pk)
-        print(task)
-    except:
-        # respond with a 404 error message
-        return HttpResponse(status=404)  
-    if(request.method == 'PUT'):
-        # parse the incoming information
-        data = JSONParser().parse(request)  
-        # instanciate with the serializer
-        serializer = CandidateSerializer(task, data=data)
-        # check whether the sent information is okay
-        if(serializer.is_valid()):  
+@api_view(['POST'])
+def addElection(request):
+    if(request.method == 'POST'):
+        request.data._mutable=True
+        request.data['ElectionApiKey']= encrypt(request.data['ElectionApiKey'].encode(), os.environ.get("DECRYPT_KEY").encode())
+        serializer = ElectionSerializer(data=request.data)
+        if(serializer.is_valid()):
             # if okay, save it on the database
-            serializer.save() 
-            # provide a JSON response with the data that was submitted
+            serializer.save()
+            # provide a Json Response with the data that was saved
             return JsonResponse(serializer.data, status=201)
-        # provide a JSON response with the necessary error information
+
         return JsonResponse(serializer.errors, status=400)
-    elif(request.method == 'DELETE'):
-        # delete the task
-        task.delete() 
-        # return a no content response.
-        return HttpResponse(status=204) 

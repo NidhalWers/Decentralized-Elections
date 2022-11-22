@@ -172,7 +172,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="exampleInputdatetime">Date de départ</label>
-                                            <input type="datetime-local" class="form-control" id="exampleInputdatetime"
+                                            <input type="datetime-local" class="form-control" id="exampleInputdatetime" :min="currentDate()"
                                                 v-model="electionStartDate" v-bind:class='{"is-invalid": electionStartDate=="", "is-valid": electionStartDate!=""}'>
                                         </div>
                                     </div>
@@ -537,6 +537,9 @@
                 electionEndDate:"",
                 electionCandidates:[],
                 electionBlank:true,
+                isError:false,
+                errorMessage:"",
+                responseApiCall:null,
             }
         },
         async mounted() {
@@ -706,12 +709,34 @@
                     };
 
                     await axios(config)
-                        .then(function (response) {
-                        console.log(response);
-                        })
-                        .catch(function (error) {
+                    .then(response => (this.responseApiCall = response.data))
+                    .catch(function (error) {
                             console.log(error);
                         });
+
+                    await this.addElection()
+            },
+            addElection: async function(){
+                console.log(this.responseApiCall)
+                let formData = new FormData();
+                formData.append('ElectionName', this.electionName);
+                formData.append('ElectionStatus', this.electionStatut);
+                formData.append('ElectionApiKey', this.responseApiCall.api_key);
+                
+
+                await axios.post('/adminspace/api/addElection', formData,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    }
+                    })
+                    .then(function (response) {
+                        console.log(response);
+                        window.location = "/adminspace/success"
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             }
         },
