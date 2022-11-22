@@ -1,7 +1,4 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 
 from Connect.models import Citizen
 
@@ -9,12 +6,18 @@ from Connect.models import Citizen
 
 def vote(request):
     if request.user.is_authenticated:
-        return render(request,'Vote/vote.html',context={'status':1})
+        if request.user.is_superuser:
+            return redirect('/adminspace')
+        else:
+            return render(request,'Vote/vote.html')
     else:
-        return render(request,'Vote/home.html',context={'status':1})
+        return redirect('/')
 
 def selectVote(request):
     if request.user.is_authenticated:
-        return render(request,'Vote/selectVote.html',context={'status':1})
+        if request.user.is_superuser:
+            return redirect('/adminspace')
+        else:
+            return render(request,'Vote/selectVote.html',context={'status':1})
     else:
         return render(request,'Vote/home.html',context={'status':1})
