@@ -9,4 +9,4 @@ class CandidateSerializer(serializers.HyperlinkedModelSerializer):
 class ElectionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Election
-        fields = ['ElectionName','ElectionStatus','ElectionApiKey']
+        fields = ['ElectionName','ElectionStatus','ElectionApiKey','ElectionCandidates']
