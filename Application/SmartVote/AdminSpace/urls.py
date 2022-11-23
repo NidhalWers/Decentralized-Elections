@@ -13,4 +13,5 @@ urlpatterns = [
     path('api/addElection', views.addElection, name='addElection'),
     path('api/getElections', views.getElections, name='getElections'),
     path('api/getElection/<str:name>/<str:status>/', views.getElection, name='getElection'),
+    path('api/getElection/<str:name>', views.getElection, name='getElection'),
 ]
