@@ -84,7 +84,7 @@ def getCandidates(request):
     else:
         return HttpResponse(status=400)
 
-@csrf_exempt
+
 def getElection(request,name,status):
     '''
     List all candidates snippets
@@ -98,6 +98,19 @@ def getElection(request,name,status):
         return JsonResponse(serializer.data,safe=False)
     else:
         return HttpResponse(status=400)
+
+def getElections(request):
+    '''
+    List all candidates snippets
+    '''
+    if(request.method == 'GET'):
+        # get all the tasks
+        election = Election.objects.all()
+        # serialize the task data
+        serializer = ElectionSerializer(election, many=True)
+        # return a Json response
+        return JsonResponse(serializer.data,safe=False)
+    
 
 @api_view(['DELETE'])
 def delCandidate(request, pk):
@@ -187,3 +200,5 @@ def addElection(request):
             # provide a Json Response with the data that was saved
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+
+

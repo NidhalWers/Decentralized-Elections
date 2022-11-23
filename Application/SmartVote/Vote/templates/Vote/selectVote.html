@@ -91,4 +91,33 @@
         </div>
     </div>
 </div> 
+
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    var parametre = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#parametre',
+        data() {
+            return {
+                elections:{},
+            }
+        },
+        async mounted() {
+            await this.getElections()
+        },
+        methods: {
+            getElection: async function () {
+                await axios
+                    .get('/adminspace/api/getElections')
+                    .then(response => (this.elections = response.data))
+                    .catch(response => (this.printError(response.data)));
+            },
+            }
+        },
+    )
+</script>
 {% endblock %}
