@@ -11,4 +11,5 @@ urlpatterns = [
     path('api/delCandidate/<str:pk>', views.delCandidate, name='delCandidate'),
     path('api/updateCandidate/<str:pk>', views.updateCandidate, name='delCandidate'),
     path('api/addElection', views.addElection, name='addElection'),
+    path('api/getElection/<str:pk>', views.getElection, name='getElection'),
 ]

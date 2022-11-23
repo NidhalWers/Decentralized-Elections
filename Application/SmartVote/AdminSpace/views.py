@@ -1,6 +1,6 @@
 import os
 from django.shortcuts import render,redirect
-from AdminSpace.models import Candidate
+from AdminSpace.models import Candidate,Election
 from django.http import JsonResponse,HttpResponse
 # To bypass having a CSRF token
 from django.views.decorators.csrf import csrf_exempt
@@ -84,6 +84,21 @@ def getCandidates(request):
     else:
         return HttpResponse(status=400)
 
+@csrf_exempt
+def getElection(request,name,status):
+    '''
+    List all candidates snippets
+    '''
+    if(request.method == 'GET'):
+        # get all the tasks
+        election = Election.objects.get(ElectionName=name,ElectionStatus=status)
+        # serialize the task data
+        serializer = ElectionSerializer(election, many=False)
+        # return a Json response
+        return JsonResponse(serializer.data,safe=False)
+    else:
+        return HttpResponse(status=400)
+
 @api_view(['DELETE'])
 def delCandidate(request, pk):
     '''
@@ -95,6 +110,13 @@ def delCandidate(request, pk):
             candidate = Candidate.objects.get(CandidateName=pk)
         except Candidate.DoesNotExist:
             return HttpResponse({"message':'Candidate does'nt exist"},status=400)
+
+        # check if is in an election
+        print(Election.objects.all().values_list('ElectionCandidates',flat=True))
+        for election in Election.objects.all().values_list('ElectionCandidates',flat=True):
+            if pk in election:
+                return HttpResponse({"message':'Candidate is in an election"},status=400)
+
         # delete files
         try:
             if(candidate.CandidateImage):
@@ -164,5 +186,4 @@ def addElection(request):
             serializer.save()
             # provide a Json Response with the data that was saved
             return JsonResponse(serializer.data, status=201)
-
         return JsonResponse(serializer.errors, status=400)
