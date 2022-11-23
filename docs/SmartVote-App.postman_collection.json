@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "72f8869c-1b13-42c4-90e0-8a67dad6b51b",
+		"name": "SmartVote",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13698138"
+	},
+	"item": [
+		{
+			"name": "Post Candidate",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CandidateName",
+							"value": "test18",
+							"type": "text"
+						},
+						{
+							"key": "CandidateDescription",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "CandidateImage",
+							"type": "file",
+							"src": []
+						},
+						{
+							"key": "CandidateProgram",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/adminspace/api/addCandidate",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"adminspace",
+						"api",
+						"addCandidate"
+					],
+					"query": [
+						{
+							"key": "CandidatesName",
+							"value": "test5",
+							"disabled": true
+						},
+						{
+							"key": "CandidatesDescription",
+							"value": "test5",
+							"disabled": true
+						},
+						{
+							"key": "CandidateImage",
+							"value": "test5",
+							"disabled": true
+						},
+						{
+							"key": "CandidateProgram",
+							"value": "test5",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Candidates",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/adminspace/api/candidates",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"adminspace",
+						"api",
+						"candidates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Del Candidate",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CandidateName",
+							"value": "test15",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/adminspace/api/delCandidate/test2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"adminspace",
+						"api",
+						"delCandidate",
+						"test2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Put Candidate",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "CandidateName",
+							"value": "test20",
+							"type": "text"
+						},
+						{
+							"key": "CandidateDescription",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "CandidateImage",
+							"type": "file",
+							"src": []
+						},
+						{
+							"key": "CandidateProgram",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/adminspace/api/updateCandidate/test6",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"adminspace",
+						"api",
+						"updateCandidate",
+						"test6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post Election",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "ElectionName",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "ElectionStatus",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "ElectionApiKey",
+							"value": "test",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/adminspace/api/addElection",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"adminspace",
+						"api",
+						"addElection"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Election",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get Elections",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
