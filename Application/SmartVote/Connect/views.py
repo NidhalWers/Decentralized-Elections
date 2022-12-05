@@ -1,5 +1,8 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+from .models import Citizen
+from .serializers import CitizenSerializer
 
 # Create your views here.
 
@@ -14,6 +17,9 @@ def impots_html(request):
 
 def ameli_html(request):
     return render(request,'Connect/ameli.html')
+
+def account_html(request):
+    return render(request,'Connect/account.html')
 
 # Render 
 
@@ -59,3 +65,16 @@ def login_ameli(request):
 
 
 # API
+def get_user_infos(request,pk):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            try:
+                citizen = Citizen.objects.get(pk=pk)
+            except Citizen.DoesNotExist:
+                return JsonResponse({'message':'Candidate does not exist'}, status=400)
+            # serialize the tasks
+            serializer = CitizenSerializer(citizen, many=False)
+            # return the serialized tasks
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return JsonResponse({'status':0,'error':'Utilisateur non connecté'})
