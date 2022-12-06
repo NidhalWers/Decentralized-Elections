@@ -11,4 +11,5 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
     path('account/', views.account_html, name='account'),
     path('api/getUserInfos/<int:pk>', views.get_user_infos, name='get_user_infos'),
+    path('api/getUserIdCrypted/<int:pk>', views.get_user_id_crypted, name='get_user_id_crypted'),
 ]
