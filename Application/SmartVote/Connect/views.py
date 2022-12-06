@@ -95,7 +95,7 @@ def decrypt(token: bytes, key: bytes) -> bytes:
 
 def get_user_infos(request,pk):
     if request.method == 'GET':
-        # if request.user.is_authenticated:
+        if request.user.is_authenticated:
             try:
                 citizen = Citizen.objects.get(pk=pk)
             except Citizen.DoesNotExist:
@@ -105,12 +105,12 @@ def get_user_infos(request,pk):
 
             # return the serialized tasks
             return JsonResponse(serializer.data, safe=False)
-        # else:
-        #     return JsonResponse({'status':0,'error':'Utilisateur non connecté'})
+        else:
+            return JsonResponse({'status':0,'error':'Utilisateur non connecté'})
 
 def get_user_id_crypted(request,pk):
     if request.method == 'GET':
-        # if request.user.is_authenticated:
+        if request.user.is_authenticated:
             return JsonResponse(encrypt(str(pk).encode(), os.environ.get("DECRYPT_KEY").encode()).decode("utf-8"), safe=False)
-        # else:
-        #     return JsonResponse({'status':0,'error':'Utilisateur non connecté'})
+        else:
+            return JsonResponse({'status':0,'error':'Utilisateur non connecté'})
