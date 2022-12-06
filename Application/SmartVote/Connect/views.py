@@ -1,5 +1,13 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+from .models import Citizen
+from .serializers import CitizenSerializer
+from cryptography.fernet import Fernet
+from dotenv import load_dotenv
+load_dotenv('.env')
+import os
+import json
 
 # Create your views here.
 
@@ -14,6 +22,9 @@ def impots_html(request):
 
 def ameli_html(request):
     return render(request,'Connect/ameli.html')
+
+def account_html(request):
+    return render(request,'Connect/account.html')
 
 # Render 
 
@@ -57,5 +68,49 @@ def login_ameli(request):
         else:
             return render(request,'connect/ameli.html', context={'status':1})
 
+# Utils 
+
+def encrypt(message: bytes, key: bytes) -> bytes:
+    return Fernet(key).encrypt(message)
+
+def decrypt(token: bytes, key: bytes) -> bytes:
+    return Fernet(key).decrypt(token)
 
 # API
+
+# def get_user_infos(request):
+#     if request.method == 'GET':
+#         if request.user.is_authenticated:
+#             try:
+#                 citizen = Citizen.objects.get(user=request.user)
+#             except Citizen.DoesNotExist:
+#                 return JsonResponse({'message':'User does not exist'}, status=400)
+#             # serialize the tasks
+#             serializer = CitizenSerializer(citizen, many=False)
+
+#             # return the serialized tasks
+#             return JsonResponse(serializer.data, safe=False)
+#         else:
+#             return JsonResponse({'status':0,'error':'Utilisateur non connecté'})
+
+def get_user_infos(request,pk):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            try:
+                citizen = Citizen.objects.get(pk=pk)
+            except Citizen.DoesNotExist:
+                return JsonResponse({'message':'User does not exist'}, status=400)
+            # serialize the tasks
+            serializer = CitizenSerializer(citizen, many=False)
+
+            # return the serialized tasks
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            return JsonResponse({'status':0,'error':'Utilisateur non connecté'})
+
+def get_user_id_crypted(request,pk):
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            return JsonResponse(encrypt(str(pk).encode(), os.environ.get("DECRYPT_KEY").encode()).decode("utf-8"), safe=False)
+        else:
+            return JsonResponse({'status':0,'error':'Utilisateur non connecté'})

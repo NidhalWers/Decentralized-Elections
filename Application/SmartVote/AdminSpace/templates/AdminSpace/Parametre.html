@@ -749,6 +749,8 @@
                 formData.append('ElectionStatus', this.electionStatut);
                 formData.append('ElectionApiKey', this.responseApiCall.api_key);
                 formData.append('ElectionCandidates', this.electionCandidates);
+                formData.append('ElectionStartDate', this.electionStartDate);
+                formData.append('ElectionEndDate', this.electionEndDate);
                 
 
                 await axios.post('/adminspace/api/addElection', formData,{

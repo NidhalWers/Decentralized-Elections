@@ -2,93 +2,125 @@
 
 {% block body %}
 {% load static %}
-<div class="row">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">Accueil</li>
-        </ol>
-    </nav> 
+
+<div id="Election">
+
+    <div class="row">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Accueil</li>
+            </ol>
+        </nav> 
+    </div>
+    <div class="row pb-5 mt-0">
+        <p class="h1 d-flex justify-content-center">Election disponible</p>
+        <p class="h6 d-flex justify-content-center">Selectionner une élection</p>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                            <div class="fs-italic">
+                                <h5>Présidentiel 2022 - 1er tour</h5>
+                            </div>	
+                            <div class="mt-3 text-center text-muted-50">
+                                <p>temps restant : 23:59:00</p>
+                            </div>
+                            <a href="/vote"><button type="button" class="btn btn-soft-primary">Choisir</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <hr>
+    <div class="row">
+        <p><em>Mes prochaines élections</em></p>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                            <div class="fs-italic">
+                                <h5>Présidentiel 2022 - 2ème tour</h5>
+                            </div>	
+                            <div class="mt-3 text-center text-muted-50">
+                                <p>Disponible le 01/01/2023</p>
+                            </div>
+                            <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <hr>
+    <div class="row">
+        <p><em>Mes anciennes élections</em></p>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                            <div class="fs-italic">
+                                <h5>Présidentiel 2018 - 2ème tour</h5>
+                            </div>	
+                            <div class="mt-3 text-center text-muted-50">
+                                <p>Terminé le 01/01/2018</p>
+                            </div>
+                            <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                            <div class="fs-italic">
+                                <h5>Présidentiel 2018 - 1er tour</h5>
+                            </div>	
+                            <div class="mt-3 text-center text-muted-50">
+                                <p>Terminé le 01/01/2018</p>
+                            </div>
+                            <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
 </div>
-<div class="row pb-5 mt-0">
-    <p class="h1 d-flex justify-content-center">Election disponible</p>
-    <p class="h6 d-flex justify-content-center">Selectionner une élection</p>
-</div>
-<div class="row">
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-center">
-                    <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                        <div class="fs-italic">
-                            <h5>Présidentiel 2022 - 1er tour</h5>
-                        </div>	
-                        <div class="mt-3 text-center text-muted-50">
-                            <p>temps restant : 23:59:00</p>
-                        </div>
-                        <a href="/vote"><button type="button" class="btn btn-soft-primary">Choisir</button></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> 
-<hr>
-<div class="row">
-    <p><em>Mes prochaines élections</em></p>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-center">
-                    <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                        <div class="fs-italic">
-                            <h5>Présidentiel 2022 - 2ème tour</h5>
-                        </div>	
-                        <div class="mt-3 text-center text-muted-50">
-                            <p>Disponible le 01/01/2023</p>
-                        </div>
-                        <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> 
-<hr>
-<div class="row">
-    <p><em>Mes anciennes élections</em></p>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-center">
-                    <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                        <div class="fs-italic">
-                            <h5>Présidentiel 2018 - 2ème tour</h5>
-                        </div>	
-                        <div class="mt-3 text-center text-muted-50">
-                            <p>Terminé le 01/01/2018</p>
-                        </div>
-                        <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-center">
-                    <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                        <div class="fs-italic">
-                            <h5>Présidentiel 2018 - 1er tour</h5>
-                        </div>	
-                        <div class="mt-3 text-center text-muted-50">
-                            <p>Terminé le 01/01/2018</p>
-                        </div>
-                        <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> 
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    var parametre = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#Election',
+        data() {
+            return {
+                elections:{},
+            }
+        },
+        async mounted() {
+            await this.getElections()
+        },
+        methods: {
+            getElection: async function () {
+                await axios
+                    .get('/adminspace/api/getElections')
+                    .then(response => (this.elections = response.data))
+                    .catch(response => (console.log(response.data)));
+            },
+            }
+        },
+    )
+</script>
 {% endblock %}

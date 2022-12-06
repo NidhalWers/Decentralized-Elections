@@ -1,0 +1,126 @@
+{% extends "base/base.html" %}
+
+{% block body %}
+{% load static %}
+    <div class="row" id="account">
+        <div class="col-lg-3">
+           <div class="card">
+             <div class="card-header">
+                <div class="header-title">
+                   <h4 class="card-title">Les dernières élections</h4>
+                </div>
+             </div>
+             <div class="card-body">
+                <ul class="list-inline m-0 p-0">
+                   <li class="d-flex mb-2">
+                      <div class="news-icon me-3">
+                         <svg width="20" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2Z" />
+                         </svg>
+                      </div>
+                      <p class="news-detail mb-0">there is a meetup in your city on fryday at 19:00. <a href="#">see details</a></p>
+                   </li>
+                   <li class="d-flex">
+                      <div class="news-icon me-3">
+                         <svg width="20" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2Z" />
+                         </svg>
+                      </div>
+                      <p class="news-detail mb-0">20% off coupon on selected items at pharmaprix </p>
+                   </li>
+                </ul>
+             </div>
+           </div>
+        </div>
+        <div class="col-lg-6">
+           <div class="profile-content tab-content">
+             <div id="profile-profile" class="tab-pane fade  active show">
+                <div class="card">
+                   <div class="card-header">
+                      <div class="header-title">
+                         <h4 class="card-title">Profile</h4>
+                      </div>
+                   </div>
+                   <div class="card-body">
+                      <div class="text-center">
+                         <div class="mt-3">
+                            <h3 class="d-inline-block">[[infos.first_name]] [[infos.last_name]]</h3>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+           <div class="card">
+             <div class="card-header">
+                <div class="header-title">
+                   <h4 class="card-title">Informations</h4>
+                </div>
+             </div>
+             <div class="card-body">
+               <div>Genre: <span class="ms-3">[[infos.gender]]</span></div>
+               <div>Date de naissance: <span class="ms-3">[[infos.birth_date]]</span></div>
+               <br>
+                <div class="mb-1">Email: <a href="#" class="ms-3">[[infos.email]]</a></div>
+                <div class="mb-1">Phone: <a href="#" class="ms-3">[[infos.phone]]</a></div>
+                <div>Location: <span class="ms-3">[[infos.street_number]] [[infos.street_name]], [[infos.postal_code]] [[infos.city]]</span></div>
+                <div>Numéro de sécurité social: <span class="ms-3">[[infos.sick_security_number]]</span></div>
+                <div>Numéro fiscal: <span class="ms-3">[[infos.fiscal_number]]</span></div>
+             </div>
+           </div>
+           <div class="card">
+            <div class="card-header">
+               <div class="header-title">
+                  <h4 class="card-title">Comment me retrouver dans la Blockchain ?</h4>
+               </div>
+            </div>
+            <div class="card-body">
+              <div>Mon Id: <span class="ms-3">[[idCrypted]]</span></div>
+              <br>
+              <span class="ms-3">
+              Dans la Blockchain, vous pouvez retrouver votre identité en utilisant votre Id. Pour cela, vous pouvez utiliser le site <a href="https://www.blockchain.com/btc/address/[[idCrypted]]">Blockchain</a> ou <a href="https://www.blockchain.com/btc/address/[[idCrypted]]">Blockcypher</a>.
+             </span>
+             </div>
+          </div>
+        </div>
+         
+    </div> 
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    var parametre = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#account',
+        data() {
+            return {
+                infos:{},
+                idCrypted: '',
+            }
+        },
+        async mounted() {
+            await this.getInfos()
+        },
+        methods: {
+            getInfos: async function () {
+                await axios
+                    .get('/connect/api/getUserInfos/{{ user.id }}')
+                    .then(response => (this.infos = response.data))
+                    .catch(response => (console.log(response.data)));
+                  await this.getIdCrypted()
+            },
+            getIdCrypted: async function () {
+                await axios
+                    .get('/connect/api/getUserIdCrypted/{{ user.id }}')
+                    .then(response => (this.idCrypted = response.data))
+                    .catch(response => (console.log(response.data)));
+            },
+            }
+        },
+    )
+</script>  
+{% endblock %}
