@@ -26,7 +26,7 @@
                                 <h5>Présidentiel 2022 - 1er tour</h5>
                             </div>	
                             <div class="mt-3 text-center text-muted-50">
-                                <p>temps restant : 23:59:00</p>
+                                <p>[[date]]</p>
                             </div>
                             <a href="/vote"><button type="button" class="btn btn-soft-primary">Choisir</button></a>
                         </div>
@@ -107,19 +107,47 @@
         data() {
             return {
                 elections:{},
+                electionsAvailable:{},
+                date: new Date(),
             }
         },
         async mounted() {
-            await this.getElections()
+            await this.getElections(),
+            await this.getAvailableElections()
+            
         },
+        async updated() {
+            await this.currentDate()
+        },
+
         methods: {
-            getElection: async function () {
+            getElections: async function () {
                 await axios
                     .get('/adminspace/api/getElections')
                     .then(response => (this.elections = response.data))
                     .catch(response => (console.log(response.data)));
+                    
             },
-            }
+            getAvailableElections: async function () {
+                await axios
+                    .get('/adminspace/api/getAvailableElections')
+                    .then(response => (this.electionsAvailable = response.data))
+                    .catch(response => (console.log(response.data)));
+                    
+            },
+
+            currentDate() {
+            const today = date;
+            // const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            // const dateTime = date +' '+ time;
+            // this.date = this.time;
+            console.log(this.today);
+            },
+            },
+    
+        
+
         },
     )
 </script>
