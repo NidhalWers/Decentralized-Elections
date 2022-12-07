@@ -129,10 +129,7 @@
                     
             },
             getAvailableElections: async function () {
-                await axios
-                    .get('/adminspace/api/getAvailableElections')
-                    .then(response => (this.electionsAvailable = response.data))
-                    .catch(response => (console.log(response.data)));
+                    
                     
             },
 
