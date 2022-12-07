@@ -10,6 +10,8 @@ from rest_framework.decorators import api_view
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 load_dotenv('.env')
+from Connect.models import Citizen
+from django.contrib.auth import authenticate, login
 
 # Create your views here.
 def parametre(request):
@@ -29,6 +31,26 @@ def success(request):
         if request.user.is_superuser:
             return render(request,'AdminSpace/success.html')
     return redirect('/')
+
+def connect_admin(request):
+    if request.method == 'POST':
+        id_connect = request.POST['email']
+        password = request.POST['password1']
+        user = authenticate(id_connect=id_connect, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect('/', context={'status':1})
+            else:
+                return render (request,'AdminSpace/connect/sign-in.html', context={'status':0,'error':'Compte inactif ou inexistant'})
+        else:
+            return render (request,'AdminSpace/connect/sign-in.html', context={'status':0,'error':'Mot de passe ou identifiant incorrect'})
+    else:
+        if request.user.is_authenticated:
+            return redirect('/', context={'status':1})
+        else:
+            return render(request,'AdminSpace/connect/sign-in.html', context={'status':1})
+
 
 # Utils
 

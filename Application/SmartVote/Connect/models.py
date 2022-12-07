@@ -13,3 +13,4 @@ class Citizen(AbstractUser):
     fiscal_number = models.BigIntegerField(blank=True,null=True)
     sick_security_number = models.BigIntegerField(blank=True,null=True)
     birth_date = models.DateField(blank=True,null=True)
+
