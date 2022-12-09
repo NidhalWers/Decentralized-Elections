@@ -26,7 +26,7 @@
                                 <h5>Présidentiel 2022 - 1er tour</h5>
                             </div>	
                             <div class="mt-3 text-center text-muted-50">
-                                <p>[[date]]</p>
+                                <p>[[actualTime]]</p>
                             </div>
                             <a href="/vote"><button type="button" class="btn btn-soft-primary">Choisir</button></a>
                         </div>
@@ -105,20 +105,20 @@
         delimiters: ['[[', ']]'],
         el: '#Election',
         data() {
-            return {
-                elections:{},
-                electionsAvailable:{},
-                date: new Date(),
-            }
+                return {
+                    actualTime:"",
+                    elections:{},
+                    electionsAvailable:{}
+                }
         },
         async mounted() {
             await this.getElections(),
             await this.getAvailableElections()
             
         },
-        async updated() {
-            await this.currentDate()
-        },
+        created() {
+                setInterval(this.currentDate, 1);
+            },
 
         methods: {
             getElections: async function () {
@@ -133,19 +133,18 @@
                     
             },
 
-            currentDate() {
-            const today = date;
-            // const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-            // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-            // const dateTime = date +' '+ time;
-            // this.date = this.time;
-            console.log(this.today);
-            },
+            currentDate: function() {
+                const today = new Date();
+                    const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate()+1);
+                    const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                    const dateTime = date +' '+ time;
+                    this.actualTime = dateTime;
+                },
             },
     
         
 
         },
-    )
+    );
 </script>
 {% endblock %}
