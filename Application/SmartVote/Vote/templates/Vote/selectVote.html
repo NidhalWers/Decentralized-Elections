@@ -12,9 +12,9 @@
             </ol>
         </nav> 
     </div>
-    <div class="row pb-5 mt-0">
+    <div v-for="election in elections"  class="row pb-5 mt-0">
         <p class="h1 d-flex justify-content-center">Election disponible</p>
-        <p>[[elections]]</p>
+        <p v-if="election.ElectionStartDate != 'actualTime'" style="color:red;">[[election.ElectionStartDate]]</p>
         <p class="h6 d-flex justify-content-center">Selectionner une élection</p>
     </div>
     <div class="row">
