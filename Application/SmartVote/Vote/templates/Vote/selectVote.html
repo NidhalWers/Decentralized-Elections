@@ -6,28 +6,30 @@
 <div id="Election">
 
     <div class="row">
-        <nav aria-label="breadcrumb">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-between">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">Accueil</li>
+                
             </ol>
+            <p class="breadcrumb-item active" aria-current="page" style="font-style: italic;">[[actualTime]]</p>
         </nav> 
     </div>
-    <div v-for="election in elections"  class="row pb-5 mt-0">
+    <div class="row pb-5 mt-0">
         <p class="h1 d-flex justify-content-center">Election disponible</p>
-        <p v-if="election.ElectionStartDate != 'actualTime'" style="color:red;">[[election.ElectionStartDate]]</p>
+
         <p class="h6 d-flex justify-content-center">Selectionner une élection</p>
     </div>
     <div class="row">
-        <div class="col-lg-4">
+        <div v-for="election in elections" v-if="election.ElectionStartDate>actualTime>election.ElectionEndDate" class="col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-center">
                         <div class="d-flex flex-column text-center align-items-center justify-content-between ">
                             <div class="fs-italic">
-                                <h5>Présidentiel 2022 - 1er tour</h5>
+                                <h5>[[election.ElectionName]]</h5>
                             </div>	
                             <div class="mt-3 text-center text-muted-50">
-                                <p>[[actualTime]]</p>
+                                <p>[[election.ElectionStartDate]]</p>
                             </div>
                             <a href="/vote"><button type="button" class="btn btn-soft-primary">Choisir</button></a>
                         </div>
@@ -39,16 +41,16 @@
     <hr>
     <div class="row">
         <p><em>Mes prochaines élections</em></p>
-        <div class="col-lg-4">
+        <div v-for="election in elections" v-if="election.ElectionStartDate>actualTime" class="col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-center">
                         <div class="d-flex flex-column text-center align-items-center justify-content-between ">
                             <div class="fs-italic">
-                                <h5>Présidentiel 2022 - 2ème tour</h5>
+                                <h5>[[election.ElectionName]]</h5>
                             </div>	
                             <div class="mt-3 text-center text-muted-50">
-                                <p>Disponible le 01/01/2023</p>
+                                <p style="color:red;">Démarre le : [[election.ElectionStartDate]]</p>
                             </div>
                             <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
                         </div>
@@ -60,16 +62,16 @@
     <hr>
     <div class="row">
         <p><em>Mes anciennes élections</em></p>
-        <div class="col-lg-4">
+        <div v-for="election in elections" v-if="actualTime>election.ElectionEndDate" class="col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-center">
                         <div class="d-flex flex-column text-center align-items-center justify-content-between ">
                             <div class="fs-italic">
-                                <h5>Présidentiel 2018 - 2ème tour</h5>
+                                <h5>[[election.ElectionName]]</h5>
                             </div>	
                             <div class="mt-3 text-center text-muted-50">
-                                <p>Terminé le 01/01/2018</p>
+                                <p style="color:red;" >Terminé depuis le : [[election.ElectionEndDate]]</p>
                             </div>
                             <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
                         </div>
@@ -77,7 +79,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <!-- <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-center">
@@ -93,7 +95,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div> 
 </div>
 <!-- vue:js -->
@@ -108,17 +110,15 @@
         data() {
                 return {
                     actualTime:"",
-                    elections:{},
-                    electionsAvailable:{}
+                    elections:{}
                 }
         },
         async mounted() {
-            await this.getElections(),
-            await this.getAvailableElections()
+            await this.getElections()
             
         },
         created() {
-                setInterval(this.currentDate, 1);
+                setInterval(this.currentDate, 1000);
             },
 
         methods: {
@@ -129,16 +129,30 @@
                     .catch(response => (console.log(response.data)));
                     
             },
-            getAvailableElections: async function () {
-                    
-                    
-            },
 
             currentDate: function() {
                 const today = new Date();
-                    const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate()+1);
-                    const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                    const dateTime = date +' '+ time;
+                    const year = today.getFullYear();
+                    const month = today.getMonth()+1;
+                    const day = ('0'+today.getDate()).slice(-2);
+                    const hour = ('0'+today.getHours()).slice(-2);
+                    const minute = ('0'+today.getMinutes()).slice(-2);
+                    const second = ('0'+today.getSeconds()).slice(-2);
+                    // if (month < 10) {
+                    //     month = "0" + month;}
+                    // if (day < 10) {
+                    //     day = "0" + day;}
+                    // if (hour < 10) {
+                    //     hour = "0" + hour;}
+                    // if (minute < 10) {
+                    //     minute = "0" + minute;}
+                    // if (second < 10) {
+                    //     second = "0" + second;}
+                    // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                    // const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate());
+                    const dateTime = year +'-'+ month+'-'+day+'T'+hour+':'+minute+':'+second+'Z'; 
+                
+                    // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
                     this.actualTime = dateTime;
                 },
             },
