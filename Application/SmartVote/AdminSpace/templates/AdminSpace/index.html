@@ -25,17 +25,36 @@
     <div class="row">
         <p><em>Elections en cours</em></p>
         <div v-for="election in elections" v-if="(actualTime > election.ElectionStartDate && election.ElectionEndDate > actualTime)" class="col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                            <div class="fs-italic">
-                                <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
-                            </div>	
-                            <div class="mt-1 text-center text-muted-50">
-                                <p>[[soustractionDate(election.ElectionEndDate,currentDates)]] restant</p>
+            <div v-if="election.ElectionBlind" class="opacity-50">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                <div class="fs-italic">
+                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                </div>	
+                                <div class="mt-1 text-center text-muted-50">
+                                    <p>[[soustractionDate(election.ElectionEndDate,currentDates)]] restant</p>
+                                </div>
+                                <button type="button" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" class="btn btn-soft-primary">Voir l'élection</button>
                             </div>
-                            <button type="button" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" class="btn btn-soft-primary">Voir l'élection</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="!election.ElectionBlind">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                <div class="fs-italic">
+                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                </div>	
+                                <div class="mt-1 text-center text-muted-50">
+                                    <p>[[soustractionDate(election.ElectionEndDate,currentDates)]] restant</p>
+                                </div>
+                                <button type="button" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" class="btn btn-soft-primary">Voir l'élection</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -46,17 +65,36 @@
     <div class="row">
         <p><em>Prochaines élections</em></p>
         <div v-for="election in elections" v-if="election.ElectionStartDate>actualTime" class="col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                            <div class="fs-italic">
-                                <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
-                            </div>	
-                            <div class="mt-1 text-center text-muted-50">
-                                <p>Disponible dans [[soustractionDate(election.ElectionStartDate,currentDates)]]</p>
+            <div v-if="election.ElectionBlind" class="opacity-50">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                <div class="fs-italic">
+                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                </div>	
+                                <div class="mt-1 text-center text-muted-50">
+                                    <p>Disponible dans [[soustractionDate(election.ElectionStartDate,currentDates)]]</p>
+                                </div>
+                                <button v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" type="button" class="btn btn-soft-light">Voir l'élection</button>
                             </div>
-                            <button v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" type="button" class="btn btn-soft-light">Voir l'élection</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="!election.ElectionBlind">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                <div class="fs-italic">
+                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                </div>	
+                                <div class="mt-1 text-center text-muted-50">
+                                    <p>Disponible dans [[soustractionDate(election.ElectionStartDate,currentDates)]]</p>
+                                </div>
+                                <button v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" type="button" class="btn btn-soft-light">Voir l'élection</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -67,17 +105,36 @@
     <div class="row">
         <p><em>Anciennes élections</em></p>
         <div v-for="election in elections" v-if="actualTime>election.ElectionEndDate" class="col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                            <div class="fs-italic">
-                                <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
-                            </div>	
-                            <div class="mt-1 text-center text-muted-50">
-                                <p>Terminé depuis [[soustractionDate(currentDates,election.ElectionEndDate)]]</p>
+            <div v-if="election.ElectionBlind" class="opacity-50">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                <div class="fs-italic">
+                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                </div>	
+                                <div class="mt-1 text-center text-muted-50">
+                                    <p>Terminé depuis [[soustractionDate(currentDates,election.ElectionEndDate)]]</p>
+                                </div>
+                                <a href="/vote"><button type="button" class="btn btn-soft-success">Voir l'élection et les resultats</button></a>
                             </div>
-                            <a href="/vote"><button type="button" class="btn btn-soft-success">Voir l'élection et les resultats</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="!election.ElectionBlind">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                <div class="fs-italic">
+                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                </div>	
+                                <div class="mt-1 text-center text-muted-50">
+                                    <p>Terminé depuis [[soustractionDate(currentDates,election.ElectionEndDate)]]</p>
+                                </div>
+                                <a href="/vote"><button type="button" class="btn btn-soft-success">Voir l'élection et les resultats</button></a>
+                            </div>
                         </div>
                     </div>
                 </div>
