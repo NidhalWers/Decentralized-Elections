@@ -9,13 +9,12 @@
         <nav aria-label="breadcrumb" class="d-flex justify-content-between">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active" aria-current="page">Administration des votes</li>
-                
             </ol>
-            <a href="parametre"><button type="button" class="btn btn-primary">+ Créer une élection</button></a>
             <div>
-                <a href="parametre"><button type="button" class="btn btn-primary">+ Créer une élection</button></a>
-                <p class="breadcrumb-item active" aria-current="page" style="font-style: italic;">[[currentDates]]</p>
+                <a href="parametre" class=""><button type="button" class="btn btn-primary">Voir la liste des candidats</button></a>
+                <a href="parametre"><button type="button" class="btn btn-primary">Créer une élection</button></a>
             </div>
+            <!-- <p><em>[[currentDates]]</em></p> -->
         </nav> 
     </div>
     <div class="row pb-5 mt-0">
@@ -162,7 +161,12 @@
 
             // Function to redirect to election page
             redirectToElection: function(electionName,electionStatus) {
-                    window.location.href = "/adminspace/viewElection/"+electionName+"/"+electionStatus;
+                    if(electionStatus.length == 0){
+                        window.location.href = "/adminspace/viewElection/"+electionName;
+                    }else{
+                        window.location.href = "/adminspace/viewElectionStatus/"+electionName+"/"+electionStatus;
+                    }
+                    
             },
         },
     });

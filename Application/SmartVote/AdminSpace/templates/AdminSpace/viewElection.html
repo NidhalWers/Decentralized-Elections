@@ -35,8 +35,8 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <span v-if="electionStarted">Temps restant pour voter </span>
-                        <span v-if="!electionStarted">Election disponible dans </span>
+                        <span v-if="!electionStarted">Temps restant pour voter </span>
+                        <span v-if="electionStarted">Election disponible dans </span>
                     </div>
                     <div>
                         <span>[[timeRemaining]]</span>
@@ -50,7 +50,7 @@
             <button type="button" class="btn btn-primary">Modifier les candidats</button>
         </div>
         <div class="col-lg-2 col-md-6">
-            <button type="button" class="btn btn-danger">Supprimer l'élection</button>
+            <button v-on:click="delElection()" type="button" class="btn btn-danger">Supprimer l'élection</button>
         </div>
     </div>
     <hr>
@@ -132,11 +132,19 @@
             getElection: async function () {
                 electionName = "{{name}}"
                 electionStatus = "{{status}}"
-                await axios
-                    .get('/adminspace/api/getElection/'+electionName+'/'+electionStatus)
-                    .then(response => (this.election = response.data))
-                    .catch(response => (console.log(response.data)));   
-                    
+                if(electionStatus != "None"){
+                    await axios
+                        .get('/adminspace/api/getElectionStatus/'+electionName+'/'+electionStatus)
+                        .then(response => (this.election = response.data))
+                        .catch(response => (console.log(response.data))); 
+                }
+                else{
+                    await axios
+                        .get('/adminspace/api/getElection/'+electionName)
+                        .then(response => (this.election = response.data))
+                        .catch(response => (console.log(response.data))); 
+                };
+                console.log(this.election)
                 this.election[0].ElectionCandidates = this.election[0].ElectionCandidates.split(",");
                 this.checkElectionStarted()
                 this.getTimeRemaining()
@@ -205,6 +213,37 @@
                 },
                 getTimeRemaining: function(){
                     this.timeRemaining = this.soustractionDate(this.election[0].ElectionEndDate,this.currentDates);
+                },
+                delElection: async function(){
+                    electionName = "{{name}}"
+                    electionStatus = "{{status}}"
+                    if(electionStatus != "None"){
+                        await axios
+                            .delete('/adminspace/api/delElectionStatus/'+this.election[0].ElectionName+"/"+this.election[0].ElectionStatus,{
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                "X-CSRFToken": "{{ csrf_token }}",
+                            }
+                        })
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch(response => (this.printError(response.data)));
+                    }
+                    else{
+                        await axios
+                            .delete('/adminspace/api/delElection/'+this.election[0].ElectionName,{
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                "X-CSRFToken": "{{ csrf_token }}",
+                            }
+                        })
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch(response => (this.printError(response.data)));
+                    }
+                    window.location.href = "/";
                 },
             },
         },
