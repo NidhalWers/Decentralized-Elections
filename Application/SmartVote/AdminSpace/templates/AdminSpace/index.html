@@ -11,6 +11,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Administration des votes</li>
                 
             </ol>
+            <a href="parametre"><button type="button" class="btn btn-primary">+ Créer une élection</button></a>
             <div>
                 <a href="parametre"><button type="button" class="btn btn-primary">+ Créer une élection</button></a>
                 <p class="breadcrumb-item active" aria-current="page" style="font-style: italic;">[[currentDates]]</p>
@@ -30,12 +31,12 @@
                     <div class="d-flex align-items-center justify-content-center">
                         <div class="d-flex flex-column text-center align-items-center justify-content-between ">
                             <div class="fs-italic">
-                                <h5>[[election.ElectionName]]</h5>
+                                <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
                             </div>	
-                            <div class="mt-3 text-center text-muted-50">
-                                <p>Disponible pendant [[soustractionDate(election.ElectionEndDate,currentDates)]]</p>
+                            <div class="mt-1 text-center text-muted-50">
+                                <p>[[soustractionDate(election.ElectionEndDate,currentDates)]] restant</p>
                             </div>
-                            <a href="/vote"><button type="button" class="btn btn-soft-primary">Choisir</button></a>
+                            <button type="button" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" class="btn btn-soft-primary">Voir l'élection</button>
                         </div>
                     </div>
                 </div>
@@ -44,19 +45,19 @@
     </div> 
     <hr>
     <div class="row">
-        <p><em>Mes prochaines élections</em></p>
+        <p><em>Prochaines élections</em></p>
         <div v-for="election in elections" v-if="election.ElectionStartDate>actualTime" class="col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-center">
                         <div class="d-flex flex-column text-center align-items-center justify-content-between ">
                             <div class="fs-italic">
-                                <h5>[[election.ElectionName]]</h5>
+                                <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
                             </div>	
-                            <div class="mt-3 text-center text-muted-50">
-                                <p>Démarre dans [[soustractionDate(election.ElectionStartDate,currentDates)]]</p>
+                            <div class="mt-1 text-center text-muted-50">
+                                <p>Disponible dans [[soustractionDate(election.ElectionStartDate,currentDates)]]</p>
                             </div>
-                            <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
+                            <button v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" type="button" class="btn btn-soft-light">Voir l'élection</button>
                         </div>
                     </div>
                 </div>
@@ -65,19 +66,19 @@
     </div> 
     <hr>
     <div class="row">
-        <p><em>Mes anciennes élections</em></p>
+        <p><em>Anciennes élections</em></p>
         <div v-for="election in elections" v-if="actualTime>election.ElectionEndDate" class="col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-center">
                         <div class="d-flex flex-column text-center align-items-center justify-content-between ">
                             <div class="fs-italic">
-                                <h5>[[election.ElectionName]]</h5>
+                                <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
                             </div>	
-                            <div class="mt-3 text-center text-muted-50">
+                            <div class="mt-1 text-center text-muted-50">
                                 <p>Terminé depuis [[soustractionDate(currentDates,election.ElectionEndDate)]]</p>
                             </div>
-                            <a href="/vote"><button type="button" class="btn btn-soft-success">Voir les résultats</button></a>
+                            <a href="/vote"><button type="button" class="btn btn-soft-success">Voir l'élection et les resultats</button></a>
                         </div>
                     </div>
                 </div>
@@ -159,8 +160,11 @@
                 }
             },
 
+            // Function to redirect to election page
+            redirectToElection: function(electionName,electionStatus) {
+                    window.location.href = "/adminspace/viewElection/"+electionName+"/"+electionStatus;
             },
         },
-    );
+    });
 </script>
 {% endblock %}

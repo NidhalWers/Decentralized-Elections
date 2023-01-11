@@ -51,11 +51,19 @@ def connect_admin(request):
         else:
             return render(request,'AdminSpace/connect/sign-in.html', context={'status':1})
 
+def viewElection(request,name,status):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return render(request,'AdminSpace/viewElection.html', context={'name':name,'status':status})
+    return redirect('/')
 
 # Utils
 
 def isCandidateExist(candidate):
     return Candidate.objects.filter(CandidateName=candidate).exists()
+
+def isElectionExist(name,status):
+    return Election.objects.filter(Name=name,Status=status).exists()
 
 def encrypt(message: bytes, key: bytes) -> bytes:
     return Fernet(key).encrypt(message)
@@ -79,7 +87,7 @@ def addCandidate(request):
 
         return JsonResponse(serializer.errors, status=400)
 
-      
+
 def getCandidate(request, pk):
     if(request.method == 'GET'):
         try:
@@ -216,11 +224,16 @@ def addElection(request):
         request.data._mutable=True
         request.data['ElectionApiKey']= encrypt(request.data['ElectionApiKey'].encode(), os.environ.get("DECRYPT_KEY").encode())
         serializer = ElectionSerializer(data=request.data)
-        if(serializer.is_valid()):
-            # if okay, save it on the database
-            serializer.save()
-            # provide a Json Response with the data that was saved
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
+        if not(isElectionExist(request.data['ElectionName'],request.data['ElectionStatus'])):
+            if(serializer.is_valid()):
+                # if okay, save it on the database
+                serializer.save()
+                # provide a Json Response with the data that was saved
+                return JsonResponse(serializer.data, status=201)
+            else:
+                 return JsonResponse(serializer.errors, status=400)
+        else:
+            return JsonResponse({'message':'Election already exist'}, status=400)
+       
 
 

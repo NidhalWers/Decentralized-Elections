@@ -1,0 +1,213 @@
+{% extends "base/base.html" %}
+
+{% block body %}
+{% load static %}
+<div id="Election">
+    <div class="row">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Voir l'élection</li>
+            </ol>
+        </nav> 
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-bottom border-4 border-0 border-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span>Statut</span>
+                    </div>
+                    <div>
+                        <span class="counter">[[election[0].ElectionStatus]]</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>  
+        <div class="col-lg-6 col-md-0">
+            <p class="h1 d-flex justify-content-center">[[election[0].ElectionName]]</p>
+            <p class="h6 d-flex justify-content-center">Candidats inscrient à cette élection</p>
+        </div> 
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-bottom border-4 border-0 border-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span v-if="electionStarted">Temps restant pour voter </span>
+                        <span v-if="!electionStarted">Election disponible dans </span>
+                    </div>
+                    <div>
+                        <span>[[timeRemaining]]</span>
+                    </div>
+                </div>
+                
+            </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-6">
+            <button type="button" class="btn btn-primary">Modifier les candidats</button>
+        </div>
+        <div class="col-lg-2 col-md-6">
+            <button type="button" class="btn btn-danger">Supprimer l'élection</button>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div v-for="candidate in candidates" class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                            <div class="fs-italic">
+                                <h5> [[candidate.CandidateName]]</h5>
+                            </div>	
+                            <div class="mt-3 text-center text-muted-50">
+                                <p>[[candidate.CandidateDescription]]</p>
+                            </div>
+                            <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50">
+                            <button v-if="candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
+                                data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="PDF">
+                                [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length)]]
+                                <svg width="32" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M14.7364 2.76175H8.0844C6.0044 2.75375 4.3004 4.41075 4.2504 6.49075V17.2277C4.2054 19.3297 5.8734 21.0697 7.9744 21.1147C8.0114 21.1147 8.0484 21.1157 8.0844 21.1147H16.0724C18.1624 21.0407 19.8144 19.3187 19.8024 17.2277V8.03775L14.7364 2.76175Z"
+                                        stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                    <path
+                                        d="M14.4746 2.75V5.659C14.4746 7.079 15.6236 8.23 17.0436 8.234H19.7976"
+                                        stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M11.6406 9.90869V15.9497" stroke="currentColor"
+                                        stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642"
+                                        stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>   
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>  
+</div>
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    var parametre = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#Election',
+        data() {
+                return {
+                    election:[{
+                        "ElectionName": "",
+                        "ElectionStatus": "",
+                    }],
+                    actualTime:"",
+                    currentDates:"",
+                    candidates:[],
+                    timeRemaining:0,
+                    electionStarted: true,
+                }
+        },
+        async mounted() {
+            await this.getElection()
+            await this.fillCandidates()
+        },    
+        created() {
+                setInterval(this.currentDate, 1000);
+                setInterval(this.getElection, 1000);
+            },
+        methods: {
+            
+            getElection: async function () {
+                electionName = "{{name}}"
+                electionStatus = "{{status}}"
+                await axios
+                    .get('/adminspace/api/getElection/'+electionName+'/'+electionStatus)
+                    .then(response => (this.election = response.data))
+                    .catch(response => (console.log(response.data)));   
+                    
+                this.election[0].ElectionCandidates = this.election[0].ElectionCandidates.split(",");
+                this.checkElectionStarted()
+                this.getTimeRemaining()
+            },
+            checkElectionStarted:function(){
+                if (this.election[0].ElectionEndDate < this.currentDates){
+                    window.location.href = "/";
+                }
+                if(this.election[0].ElectionStartDate < this.currentDates){
+                    this.electionStarted = true
+                }
+                else{
+                    this.electionStarted = false
+                }
+            },
+            currentDate: function() {
+                const today = new Date();
+                    const year = today.getFullYear();
+                    const month = ('0'+today.getMonth()+1).slice(-2);
+                    const day = ('0'+today.getDate()).slice(-2);
+                    const hour = ('0'+today.getHours()).slice(-2);
+                    const minute = ('0'+today.getMinutes()).slice(-2);
+                    const second = ('0'+today.getSeconds()).slice(-2);
+                    // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                    // const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate());
+                    const dateTime = year +'-'+ month+'-'+day+'T'+hour+':'+minute+':'+second+'Z'; 
+                    const currentDateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
+                    // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
+                    this.currentDates = currentDateTime;
+                    this.actualTime = dateTime;
+                },
+                // Function diffenrece between two dates and return number of days, hours, minutes and seconds
+                soustractionDate: function(date1, date2) {
+                    var date1 = new Date(date1);
+                    var date2 = new Date(date2);
+                    var diff = date1.getTime() - date2.getTime();
+                    var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    var hours = Math.floor(diff / (1000 * 60 * 60));
+                    var minutes = Math.floor(diff / (1000 * 60));
+                    var seconds = Math.floor(diff / 1000);
+                    if (days > 0) {
+                        return days + " jours";
+                    } else if (hours > 0) {
+                        return hours + " heures";
+                    } else if (minutes > 0) {
+                        return minutes + " minutes";
+                    } else if (seconds > 0) {
+                        return seconds + " secondes";
+                    } else {
+                        return "0 secondes";
+                    }
+                },
+                getCandidate: async function(candidateName){
+                    await axios
+                    .get('/adminspace/api/getCandidate/'+candidateName)
+                    .then(response => (this.candidate = response.data))
+                    .catch(response => (console.log(response.data)));
+                },
+                fillCandidates: async function(){
+                    for(var candidate in this.election[0].ElectionCandidates){
+                        await axios
+                        .get('/adminspace/api/getCandidate/'+this.election[0].ElectionCandidates[candidate])
+                        .then(response => (this.candidates.push(response.data)))
+                        .catch(response => (console.log(response.data)));
+                    }
+                },
+                getTimeRemaining: function(){
+                    this.timeRemaining = this.soustractionDate(this.election[0].ElectionEndDate,this.currentDates);
+                },
+            },
+        },
+    );
+</script>
+{% endblock %}
