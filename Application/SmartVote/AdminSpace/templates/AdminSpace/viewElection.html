@@ -46,11 +46,18 @@
             </div>
             </div>
         </div>
-        <div class="col-lg-2 col-md-6">
+    </div>
+    <div class="row">
+        <div class="col-lg-2">
             <button type="button" class="btn btn-primary">Modifier les candidats</button>
         </div>
-        <div class="col-lg-2 col-md-6">
+        <div class="col-lg-2">
             <button v-on:click="delElection()" type="button" class="btn btn-danger">Supprimer l'élection</button>
+        </div>
+
+        <div class="form-check form-switch form-check-inline col-lg-2 float-end">
+            <input class="form-check-input" type="checkbox" id="switch2" v-model="election[0].ElectionBlind" v-on:click="updateElection()"/>
+            <label class="form-check-label pl-2" for="switch2">Cacher l'élection</label>
         </div>
     </div>
     <hr>
@@ -111,12 +118,14 @@
                     election:[{
                         "ElectionName": "",
                         "ElectionStatus": "",
+                        "ElectionBlind": false,
                     }],
                     actualTime:"",
                     currentDates:"",
                     candidates:[],
                     timeRemaining:0,
                     electionStarted: true,
+                    electionBlind: false,
                 }
         },
         async mounted() {
@@ -144,7 +153,6 @@
                         .then(response => (this.election = response.data))
                         .catch(response => (console.log(response.data))); 
                 };
-                console.log(this.election)
                 this.election[0].ElectionCandidates = this.election[0].ElectionCandidates.split(",");
                 this.checkElectionStarted()
                 this.getTimeRemaining()
@@ -159,6 +167,37 @@
                 else{
                     this.electionStarted = false
                 }
+            },
+            updateElection: async function () {
+                let formData = new FormData();
+                formData.append('ElectionName', this.election[0].ElectionName);
+                formData.append('ElectionBlind', !this.election[0].ElectionBlind);
+                if(this.election[0].ElectionStatus != ""){
+                    await axios
+                        .put('/adminspace/api/updateElectionStatus/'+this.election[0].ElectionName+'/'+this.election[0].ElectionStatus,formData,{
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        }
+                        })
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch(response => (console.log(response.data)));
+                }else{
+                    await axios
+                        .put('/adminspace/api/updateElection/'+this.election[0].ElectionName,formData,{
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        }
+                        })
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch(response => (console.log(response.data)));
+                }
+                this.getElection()
             },
             currentDate: function() {
                 const today = new Date();
@@ -215,9 +254,7 @@
                     this.timeRemaining = this.soustractionDate(this.election[0].ElectionEndDate,this.currentDates);
                 },
                 delElection: async function(){
-                    electionName = "{{name}}"
-                    electionStatus = "{{status}}"
-                    if(electionStatus != "None"){
+                    if(this.election[0].ElectionStatus != ""){
                         await axios
                             .delete('/adminspace/api/delElectionStatus/'+this.election[0].ElectionName+"/"+this.election[0].ElectionStatus,{
                             headers: {
@@ -228,7 +265,7 @@
                         .then(function (response) {
                             console.log(response);
                         })
-                        .catch(response => (this.printError(response.data)));
+                        .catch(response => (console.log(response.data)));
                     }
                     else{
                         await axios
@@ -241,7 +278,7 @@
                         .then(function (response) {
                             console.log(response);
                         })
-                        .catch(response => (this.printError(response.data)));
+                        .catch(response => (console.log(response.data)));
                     }
                     window.location.href = "/";
                 },

@@ -18,6 +18,9 @@ urlpatterns = [
     path('api/getElections', views.getElections, name='getElections'),
     path('api/getElectionStatus/<str:name>/<str:status>', views.getElectionStatus, name='getElectionStatus'),
     path('api/getElection/<str:name>', views.getElection, name='getElection'),
-    path('api/delElectionStatus/<str:pk>/<str:status>', views.delElection, name='delElection'),
+    path('api/delElectionStatus/<str:pk>/<str:status>', views.delElectionStatus, name='delElection'),
     path('api/delElection/<str:pk>', views.delElection, name='delElection'),
+    path('api/updateElection/<str:pk>', views.updateElection, name='updateElection'),
+    path('api/updateElectionStatus/<str:pk>/<str:status>', views.updateElectionStatus, name='updateElection'),
+
 ]
