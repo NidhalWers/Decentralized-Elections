@@ -115,7 +115,7 @@ def getCandidates(request):
     '''
     if(request.method == 'GET'):
         # get all the tasks
-        candidate = Candidate.objects.all()
+        candidate = Candidate.objects.all().order_by('CandidateName')
         # serialize the task data
         serializer = CandidateSerializer(candidate, many=True)
         # return a Json response
@@ -153,8 +153,6 @@ def getElection(request,name):
             return JsonResponse(serializer.data,safe=False)
         except Election.DoesNotExist:
             return JsonResponse({'message':'Election does not exist'}, status=400)
-
-
 
 def getElections(request):
     '''
@@ -221,17 +219,17 @@ def updateCandidate(request, pk):
         # check if the data is valid
         if(serializer.is_valid()):
             serializer.save()
-            #delete file if new file is uploaded
-            try:
-                if(candidate.CandidateImage != request.data['CandidateImage']):
-                    os.remove(candidate.CandidateImage.path)
-            except:
-                pass
-            try:
-                if(candidate.CandidateProgram != request.data['CandidateProgram']):
-                    os.remove(candidate.CandidateProgram.path)
-            except:
-                pass
+            # #delete file if new file is uploaded
+            # try:
+            #     if(candidate.CandidateImage != request.data['CandidateImage']):
+            #         os.remove(candidate.CandidateImage.path)
+            # except:
+            #     pass
+            # try:
+            #     if(candidate.CandidateProgram != request.data['CandidateProgram']):
+            #         os.remove(candidate.CandidateProgram.path)
+            # except:
+            #     pass
 
             if(serializer.data["CandidateName"] != pk):
                 print("name changed")
