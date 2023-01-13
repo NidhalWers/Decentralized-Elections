@@ -185,7 +185,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="exampleInputdatetime">Date de départ</label>
-                                            <input type="datetime-local" class="form-control" id="exampleInputdatetime" :min="currentDate()"
+                                            <input type="datetime-local" class="form-control" id="exampleInputdatetime" 
                                                 v-model="electionStartDate" v-bind:class='{"is-invalid": electionStartDate=="", "is-valid": electionStartDate!=""}'>
                                         </div>
                                     </div>
@@ -229,11 +229,14 @@
                                         <span>Ajouter un candidat</span>
 
                                     </a>
-                                    <div class="form-check form-switch form-check-inline ">
-                                        <input class="form-check-input" type="checkbox" id="switch2" checked v-model="electionBlank"/>
+                                    <div class="form-check form-switch form-check-inline float-end">
+                                        <input class="form-check-input" type="checkbox" id="switch2" v-model="electionBlankVote"/>
                                         <label class="form-check-label pl-2" for="switch2">Autoriser le vote blanc</label>
                                     </div>
-                                    
+                                    <div class="form-check form-switch form-check-inline float-end">
+                                        <input class="form-check-input" type="checkbox" id="switch2" v-model="electionBlind"/>
+                                        <label class="form-check-label pl-2" for="switch2">Cacher l'élection</label>
+                                    </div>
                                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
                                         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
                                         style="display: none;" aria-hidden="true">
@@ -564,7 +567,8 @@
                 electionStartDate:"",
                 electionEndDate:"",
                 electionCandidates:[],
-                electionBlank:true,
+                electionBlankVote:false,
+                electionBlind:false,
                 responseApiCall:null,
                 error:null,
                 loading:false,
@@ -574,11 +578,6 @@
             await this.getCandidate()
         },
         methods: {
-            currentDate() {
-                const current = new Date();
-                const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
-                return date;
-            },
             handleImageUpload:function(){
                 this.candidateImage = this.$refs.image.files[0];
             },
@@ -722,7 +721,8 @@
                     "starting_date" : this.electionStartDate,
                     "closing_date" : this.electionEndDate,
                     "election_name" : this.electionName,
-                    "count_blank_votes" : this.electionBlank
+                    "count_blank_votes" : this.electionBlank,
+                    "status" : this.electionStatut
                     });
 
                     var config = {
@@ -751,7 +751,8 @@
                 formData.append('ElectionCandidates', this.electionCandidates);
                 formData.append('ElectionStartDate', this.electionStartDate);
                 formData.append('ElectionEndDate', this.electionEndDate);
-                
+                formData.append('ElectionBlankVote', this.electionBlankVote);
+                formData.append('ElectionBlind', this.electionBlind);
 
                 await axios.post('/adminspace/api/addElection', formData,{
                     headers: {
