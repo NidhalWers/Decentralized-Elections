@@ -1,5 +1,6 @@
 package com.septgrandcorsaire.blockchain.api.resource;
 
+import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.domain.BlockChain;
 import com.septgrandcorsaire.blockchain.infrastructure.adapter.BlockchainDomainService;
 
@@ -36,6 +37,26 @@ public class BlockChainResource implements ElectionResource {
                 new BlockchainDomainService().isBlockchainValid(blockChain),
                 blockChain.getBlocks().stream().map(block -> BlockResource.of(block)).collect(Collectors.toList()),
                 apiKey,
+                electionStatus
+        );
+    }
+
+    public static BlockChainResource of(String electionName, String electionStatus, Block block) {
+        return new BlockChainResource(
+                electionName,
+                true,
+                List.of(block).stream().map(b -> BlockResource.of(b)).collect(Collectors.toList()),
+                null,
+                electionStatus
+        );
+    }
+
+    public static BlockChainResource of(String electionName, String electionStatus, List<Block> blocks) {
+        return new BlockChainResource(
+                electionName,
+                true,
+                blocks.stream().map(b -> BlockResource.of(b)).collect(Collectors.toList()),
+                null,
                 electionStatus
         );
     }

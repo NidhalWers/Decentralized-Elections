@@ -6,10 +6,7 @@ import com.septgrandcorsaire.blockchain.application.VoteQuery;
 import com.septgrandcorsaire.blockchain.domain.*;
 import com.septgrandcorsaire.blockchain.infrastructure.dao.ApiKeyRepository;
 import com.septgrandcorsaire.blockchain.infrastructure.dao.BlockchainRepository;
-import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageBlockchainCreated;
-import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageElectionResult;
-import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageFinishedElection;
-import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageOngoingElection;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.*;
 import com.septgrandcorsaire.blockchain.infrastructure.service.ApiKeyGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -109,16 +106,17 @@ public class ElectionDomainService {
         return newVoteBlock;
     }
 
-    public Block getVoteInElection(String election, String status, String vote) {
+    public MessageVoteInElection getVoteInElection(String election, String status, String vote) {
         BlockChain blockChain = BlockchainRepository.INSTANCE.getBlockchain(election, status);
         verifyExistingElection(blockChain, election);
+        if (vote == null || vote.isBlank()) {
+            return MessageVoteInElection.of(blockChain);
+        }
         var votingBlocks = blockChain.getVotingBlock();
         var result = votingBlocks.stream()
                 .filter(block -> vote.equals(block.getHash()))
                 .findFirst();
-        if (result.isEmpty())
-            throw new VoteNotFoundWithThisHashException(election, vote);
-        return result.get();
+        return result.map(block -> MessageVoteInElection.of(block, blockChain)).orElseGet(() -> MessageVoteInElection.of(blockChain));
     }
 
     private void verifyVoterHasNotAlreadyVoted(List<Block> votingBlock, VoteQuery query) {

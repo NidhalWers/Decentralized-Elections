@@ -9,10 +9,7 @@ import com.septgrandcorsaire.blockchain.api.resource.ElectionResource;
 import com.septgrandcorsaire.blockchain.api.resource.ElectionResultResource;
 import com.septgrandcorsaire.blockchain.application.ElectionApplicationService;
 import com.septgrandcorsaire.blockchain.domain.Block;
-import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageBlockchainCreated;
-import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageElectionResult;
-import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageFinishedElection;
-import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageOngoingElection;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.*;
 import com.septgrandcorsaire.blockchain.infrastructure.model.message.code.ElectionState;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -58,10 +55,12 @@ public class BlockchainController {
     }
 
     @GetMapping(value = "/smart-vote/api/v1/get-vote")
-    public BlockResource getVoteInElection(@RequestParam String election, @RequestParam(required = false) String status, @RequestParam String vote) {
+    public BlockChainResource getVoteInElection(@RequestParam String election, @RequestParam(required = false) String status, @RequestParam(required = false) String vote) {
         Application.LOGGER.info(String.format("GET /smart-vote/api/v1/get-election/%s?status=%s&vote='%s'", election, status, vote));
-        Block result = electionApplicationService.getVoteInElection(election, status, vote);
-        return BlockResource.of(result);
+        MessageVoteInElection result = electionApplicationService.getVoteInElection(election, status, vote);
+        if (result.code.isNotFound())
+            return BlockChainResource.of(election, status, result.election.getVotingBlock());
+        return BlockChainResource.of(election, status, result.vote);
     }
 
     @PostMapping(value = "/smart-vote/api/v1/vote",

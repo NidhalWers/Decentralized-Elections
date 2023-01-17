@@ -4,6 +4,7 @@ import com.septgrandcorsaire.blockchain.domain.Block;
 import com.septgrandcorsaire.blockchain.infrastructure.adapter.ElectionDomainService;
 import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageBlockchainCreated;
 import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageElectionResult;
+import com.septgrandcorsaire.blockchain.infrastructure.model.message.MessageVoteInElection;
 import org.springframework.stereotype.Service;
 
 /**
@@ -45,11 +46,9 @@ public class ElectionApplicationService {
         return electionDomainService.voteInElection(query);
     }
 
-    public Block getVoteInElection(String election, String status, String vote) {
+    public MessageVoteInElection getVoteInElection(String election, String status, String vote) {
         if (election == null || election.isBlank())
             throw new IllegalArgumentException("must provide a valid election name");
-        if (vote == null || vote.isBlank())
-            throw new IllegalArgumentException("must provide a valid vote hash");
         return electionDomainService.getVoteInElection(election, status, vote);
     }
 }
