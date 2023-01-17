@@ -54,6 +54,10 @@ public class BlockChain {
         return (ElectionInitializationData) blocks.get(0).getData();
     }
 
+    public Block getGenesisBlock() {
+        return blocks.get(0);
+    }
+
     public Block newBlock(Data data, int index, String latestHash) {
         return Block.builder()
                 .index(index)

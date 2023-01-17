@@ -42,7 +42,7 @@ public class BlockchainController {
         Application.LOGGER.info(String.format("GET /smart-vote/api/v1/get-election/%s?status=%s", input, status));
         MessageElectionResult result = electionApplicationService.getElectionData(input, status);
         if (result.code().equals(ElectionState.ONGOING))
-            return BlockChainResource.of(((MessageOngoingElection) result).blockChain, null, status);
+            return BlockChainResource.of(input, status, ((MessageOngoingElection) result).blockChain.getGenesisBlock());
         else
             return ElectionResultResource.of(((MessageFinishedElection) result).electionResult, status);
 
