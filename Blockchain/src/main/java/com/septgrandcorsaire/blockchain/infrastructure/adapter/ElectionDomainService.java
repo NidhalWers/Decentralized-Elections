@@ -109,6 +109,18 @@ public class ElectionDomainService {
         return newVoteBlock;
     }
 
+    public Block getVoteInElection(String election, String status, String vote) {
+        BlockChain blockChain = BlockchainRepository.INSTANCE.getBlockchain(election, status);
+        verifyExistingElection(blockChain, election);
+        var votingBlocks = blockChain.getVotingBlock();
+        var result = votingBlocks.stream()
+                .filter(block -> vote.equals(block.getHash()))
+                .findFirst();
+        if (result.isEmpty())
+            throw new VoteNotFoundWithThisHashException(election, vote);
+        return result.get();
+    }
+
     private void verifyVoterHasNotAlreadyVoted(List<Block> votingBlock, VoteQuery query) {
         List<String> voterWithThisId = votingBlock.stream()
                 .map(block -> ((VoterData) block.getData()).getVoterId())

@@ -44,4 +44,12 @@ public class ElectionApplicationService {
     public Block voteInElection(VoteQuery query) {
         return electionDomainService.voteInElection(query);
     }
+
+    public Block getVoteInElection(String election, String status, String vote) {
+        if (election == null || election.isBlank())
+            throw new IllegalArgumentException("must provide a valid election name");
+        if (vote == null || vote.isBlank())
+            throw new IllegalArgumentException("must provide a valid vote hash");
+        return electionDomainService.getVoteInElection(election, status, vote);
+    }
 }
