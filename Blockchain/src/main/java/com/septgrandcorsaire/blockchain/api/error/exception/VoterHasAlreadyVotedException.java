@@ -1,15 +1,9 @@
 package com.septgrandcorsaire.blockchain.api.error.exception;
 
-public class VoterHasAlreadyVotedException extends RuntimeException {
+public class VoterHasAlreadyVotedException extends SmartVoteException {
 
-    private ErrorCode code;
-
-    public VoterHasAlreadyVotedException(String message) {
-        super(message);
-        this.code = ErrorCode.HAS_ALREADY_VOTED;
-    }
-
-    public ErrorCode getCode() {
-        return code;
+    public VoterHasAlreadyVotedException(String voterId, String electionName) {
+        super(String.format(ErrorCode.HAS_ALREADY_VOTED.getDefaultMessage(), voterId, electionName),
+                ErrorCode.HAS_ALREADY_VOTED);
     }
 }

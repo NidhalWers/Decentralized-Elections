@@ -66,7 +66,7 @@ public class ElectionDomainService {
 
     private void verifyExistingElection(BlockChain blockChain, String query) {
         if (blockChain == null) {
-            throw new ElectionNotFoundException(String.format(ErrorCode.NOT_FOUND_ELECTION.getDefaultMessage(), query));
+            throw new ElectionNotFoundException(query);
         }
     }
 
@@ -110,7 +110,7 @@ public class ElectionDomainService {
         BlockChain blockChain = BlockchainRepository.INSTANCE.getBlockchain(election, status);
         verifyExistingElection(blockChain, election);
         verifyThatElectionIsFinished(blockChain.getInitializationData());
-        
+
         if (vote == null || vote.isBlank()) {
             return MessageVoteInElection.of(blockChain);
         }
@@ -127,7 +127,7 @@ public class ElectionDomainService {
                 .filter(voter -> voter.equals(query.getVoterId()))
                 .collect(Collectors.toList());
         if (!voterWithThisId.isEmpty()) {
-            throw new VoterHasAlreadyVotedException(String.format(ErrorCode.HAS_ALREADY_VOTED.getDefaultMessage(), query.getVoterId(), query.getElectionName()));
+            throw new VoterHasAlreadyVotedException(query.getVoterId(), query.getElectionName());
         }
     }
 
@@ -136,7 +136,7 @@ public class ElectionDomainService {
             if (initializationData.getCandidates().contains("blank_votes")) {
                 return query.setCandidateName("blank_votes");
             } else {
-                throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "candidate_name"));
+                throw IllegalPayloadArgumentException.ofErrorCode(ErrorCode.REQUIRED_PARAMETER, "candidate_name");
             }
         }
         return query;
@@ -149,7 +149,7 @@ public class ElectionDomainService {
 
     private void verifyThatTheVoteIsTakenAfterTheElectionHasBegun(VoteQuery query, ElectionInitializationData electionInitializationData) {
         if (query.getVotingDate().isBefore(electionInitializationData.getStartingDate())) {
-            throw new ElectionNotStartedException(String.format(ErrorCode.ELECTION_NOT_STARTED.getDefaultMessage(), query.getElectionName(), electionInitializationData.getStartingDate()));
+            throw new ElectionNotStartedException(query.getElectionName(), electionInitializationData.getStartingDate());
         }
     }
 
@@ -161,7 +161,7 @@ public class ElectionDomainService {
 
     private void verifyThatTheVoteIsTakenBeforeTheElectionIsOver(VoteQuery query, ElectionInitializationData electionInitializationData) {
         if (query.getVotingDate().isAfter(electionInitializationData.getClosingDate())) {
-            throw new ElectionAlreadyFinishedException(String.format(ErrorCode.ELECTION_ALREADY_FINISHED.getDefaultMessage(), query.getElectionName(), electionInitializationData.getClosingDate()));
+            throw new ElectionAlreadyFinishedException(query.getElectionName(), electionInitializationData.getClosingDate());
         }
     }
 

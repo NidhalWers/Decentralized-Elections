@@ -1,19 +1,15 @@
 package com.septgrandcorsaire.blockchain.api.error.exception;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Nidhal TEYEB
  * @since 0.0.1-SNAPSHOT
  */
-public class ElectionNotStartedException extends RuntimeException {
+public class ElectionNotStartedException extends SmartVoteException {
 
-    private ErrorCode code;
-
-    public ElectionNotStartedException(String message) {
-        super(message);
-        this.code = ErrorCode.ELECTION_NOT_STARTED;
-    }
-
-    public ErrorCode getCode() {
-        return code;
+    public ElectionNotStartedException(String electionName, LocalDateTime startingDate) {
+        super(String.format(ErrorCode.ELECTION_NOT_STARTED.getDefaultMessage(), electionName, startingDate),
+                ErrorCode.ELECTION_NOT_STARTED);
     }
 }

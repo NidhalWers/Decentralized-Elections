@@ -1,7 +1,6 @@
 package com.septgrandcorsaire.blockchain.infrastructure.dao;
 
 import com.septgrandcorsaire.blockchain.api.error.exception.ElectionNotFoundException;
-import com.septgrandcorsaire.blockchain.api.error.exception.ErrorCode;
 import com.sun.jdi.InternalException;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +27,7 @@ public class ApiKeyRepository {
     public boolean isApiKeyCorrespondingToElection(String inputKey, String electionName) {
         String expectedKey = apiKeyRepository.get(electionName);
         if (expectedKey == null) {
-            throw new ElectionNotFoundException(String.format(ErrorCode.NOT_FOUND_ELECTION.getDefaultMessage(), electionName));
+            throw new ElectionNotFoundException(electionName);
             //return false;
         }
         return apiKeyRepository.get(electionName).equals(inputKey);

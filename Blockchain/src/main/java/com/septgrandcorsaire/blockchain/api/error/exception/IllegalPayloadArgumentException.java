@@ -1,15 +1,14 @@
 package com.septgrandcorsaire.blockchain.api.error.exception;
 
-public class IllegalPayloadArgumentException extends IllegalArgumentException {
-
-    private ErrorCode code;
+public class IllegalPayloadArgumentException extends SmartVoteException {
 
     public IllegalPayloadArgumentException(ErrorCode code, String s) {
-        super(s);
-        this.code = code;
+        super(s, code);
     }
 
-    public ErrorCode getCode() {
-        return code;
+    public static IllegalPayloadArgumentException ofErrorCode(ErrorCode code, String parameterName) {
+        return new IllegalPayloadArgumentException(
+                code,
+                String.format(code.getDefaultMessage(), parameterName));
     }
 }
