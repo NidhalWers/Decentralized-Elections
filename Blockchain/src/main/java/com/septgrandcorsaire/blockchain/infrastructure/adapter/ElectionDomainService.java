@@ -109,6 +109,8 @@ public class ElectionDomainService {
     public MessageVoteInElection getVoteInElection(String election, String status, String vote) {
         BlockChain blockChain = BlockchainRepository.INSTANCE.getBlockchain(election, status);
         verifyExistingElection(blockChain, election);
+        verifyThatElectionIsFinished(blockChain.getInitializationData());
+        
         if (vote == null || vote.isBlank()) {
             return MessageVoteInElection.of(blockChain);
         }
@@ -148,6 +150,12 @@ public class ElectionDomainService {
     private void verifyThatTheVoteIsTakenAfterTheElectionHasBegun(VoteQuery query, ElectionInitializationData electionInitializationData) {
         if (query.getVotingDate().isBefore(electionInitializationData.getStartingDate())) {
             throw new ElectionNotStartedException(String.format(ErrorCode.ELECTION_NOT_STARTED.getDefaultMessage(), query.getElectionName(), electionInitializationData.getStartingDate()));
+        }
+    }
+
+    private void verifyThatElectionIsFinished(ElectionInitializationData electionInitializationData) {
+        if (LocalDateTime.now().isBefore(electionInitializationData.getClosingDate())) {
+            throw new ElectionNotFinishedException(electionInitializationData.getElectionName());
         }
     }
 

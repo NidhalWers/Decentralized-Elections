@@ -55,4 +55,10 @@ public class ElectionExceptionController {
         LOGGER.error(String.format("%s %s Stacktrace : %s", exception.getMessage(), exception.getCause(), ExceptionUtils.getStackTrace(exception)));
         return new ResponseEntity<>(new ErrorResource(exception.getCode().getValue(), exception.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
     }
+
+    @ExceptionHandler(value = ElectionNotFinishedException.class)
+    public ResponseEntity<ErrorResource> electionNotFinishedHandler(ElectionNotFinishedException exception) {
+        LOGGER.error(String.format("%s %s Stacktrace : %s", exception.getMessage(), exception.getCause(), ExceptionUtils.getStackTrace(exception)));
+        return new ResponseEntity<>(new ErrorResource(exception.getCode().getValue(), exception.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
+    }
 }

@@ -19,7 +19,7 @@ public enum ErrorCode {
 
     INVALID_API_KEY("INVALID_API_KEY", "This API Key cannot be used for the '%s' election. Any attempt at fraud will be fought back !"),
 
-    VOTE_NOT_FOUND("VOTE_NOT_FOUND", "There is no vote found in election %s with the hash '%s'");
+    ELECTION_NOT_FINISHED("ELECTION_NOT_FINISHED", "Action not permitted until the end of %s election");
 
     private String value;
 
