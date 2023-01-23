@@ -63,6 +63,12 @@ def viewElection(request,name):
             return render(request,'AdminSpace/viewElection.html', context={'name':name,'status':"None"})
     return redirect('/')
 
+def viewCandidates(request):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return render(request,'AdminSpace/viewCandidates.html')
+    return redirect('/')
+
 # Utils
 
 def isCandidateExist(candidate):
@@ -231,7 +237,6 @@ def updateCandidate(request, pk):
 
             try :
                 if request.data['CandidateImage']:
-                    print("image changed")
                     if(candidate.CandidateImage != request.data['CandidateImage']):
                         try:
                             os.remove(candidate.CandidateImage.path)
@@ -247,7 +252,6 @@ def updateCandidate(request, pk):
 
             try :
                 if request.data['CandidateProgram']:
-                    print("image changed")
                     if(candidate.CandidateProgram != request.data['CandidateProgram']):
                         try:
                             os.remove(candidate.CandidateProgram.path)
@@ -262,17 +266,6 @@ def updateCandidate(request, pk):
                 pass
 
             serializer.save()
-            # #delete file if new file is uploaded
-            # try:
-            #     if(candidate.CandidateImage != request.data['CandidateImage']):
-            #         os.remove(candidate.CandidateImage.path)
-            # except:
-            #     pass
-            # try:
-            #     if(candidate.CandidateProgram != request.data['CandidateProgram']):
-            #         os.remove(candidate.CandidateProgram.path)
-            # except:
-            #     pass
 
             if(serializer.data["CandidateName"] != pk):
                 print("name changed")
