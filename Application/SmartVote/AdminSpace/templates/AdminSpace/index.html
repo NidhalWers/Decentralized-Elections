@@ -116,7 +116,7 @@
                                 <div class="mt-1 text-center text-muted-50">
                                     <p>Terminé depuis [[soustractionDate(currentDates,election.ElectionEndDate)]]</p>
                                 </div>
-                                <a href="/vote"><button type="button" class="btn btn-soft-success">Voir l'élection et les resultats</button></a>
+                                <button type="button" class="btn btn-soft-success" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
                             </div>
                         </div>
                     </div>
@@ -133,7 +133,7 @@
                                 <div class="mt-1 text-center text-muted-50">
                                     <p>Terminé depuis [[soustractionDate(currentDates,election.ElectionEndDate)]]</p>
                                 </div>
-                                <a href="/vote"><button type="button" class="btn btn-soft-success">Voir l'élection et les resultats</button></a>
+                                <button type="button" class="btn btn-soft-success" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
                             </div>
                         </div>
                     </div>

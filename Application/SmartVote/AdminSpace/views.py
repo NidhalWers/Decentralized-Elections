@@ -218,6 +218,49 @@ def updateCandidate(request, pk):
             
         # check if the data is valid
         if(serializer.is_valid()):
+            try:
+                print("request.data['CandidateImage'] : ")
+                print(request.data['CandidateImage'])
+            except:
+                pass
+            try:
+                print("candidate.CandidateImage : ")
+                print(candidate.CandidateImage)
+            except:
+                pass
+
+            try :
+                if request.data['CandidateImage']:
+                    print("image changed")
+                    if(candidate.CandidateImage != request.data['CandidateImage']):
+                        try:
+                            os.remove(candidate.CandidateImage.path)
+                        except:
+                            pass
+                else:
+                    try:
+                        os.remove(candidate.CandidateImage.path)
+                    except:
+                        pass
+            except:
+                pass
+
+            try :
+                if request.data['CandidateProgram']:
+                    print("image changed")
+                    if(candidate.CandidateProgram != request.data['CandidateProgram']):
+                        try:
+                            os.remove(candidate.CandidateProgram.path)
+                        except:
+                            pass
+                else:
+                    try:
+                        os.remove(candidate.CandidateProgram.path)
+                    except:
+                        pass
+            except:
+                pass
+
             serializer.save()
             # #delete file if new file is uploaded
             # try:
