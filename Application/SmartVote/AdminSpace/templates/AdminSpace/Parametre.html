@@ -493,44 +493,42 @@
                                     </div>
                                 </div>
 
-
                             </div>
 
-
-
-
-                            <button class="btn btn-success float-end" type="button" disabled v-if="loading">
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Validation...
-                            </button>
-                            <button type="button" name="next" class="btn btn-success action-button float-end"
-                                v-on:click="createElectionInBlockchain()" v-if="!loading">Valider</button>
+                            <button type="button" name="next" class="btn btn-success action-button float-end" data-bs-toggle="modal" data-bs-target="#staticBackdropValidate">Valider</button>
                             <button type="button" name="previous"
                                 class="btn btn-dark previous action-button-previous float-end me-1"
                                 value="Previous" v-on:click="updateError()">Retour</button>
                         </fieldset>
 
-
-
-
-
-
-
-
                     </form>
                 </div>
-
-
-
-
-
             </div>
 
-
-
-
         </div>
-
+        <div class="modal fade" id="staticBackdropValidate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropValidate" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Confirmer la Création de l'élection</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="email" class="form-label">Attention, vous ne pourrez plus modifier l'élection après l'avoir créée. Veuillez vérifier l'ensemble des informations avant de la publier.</label>
+                        </div>
+                        <div class="text-start">
+                            <button type="button" v-on:click="createElectionInBlockchain()" v-if="!loading" class="btn btn-primary" data-bs-dismiss="modal">Créer l'élection</button>
+                            <button type="button" disabled v-if="loading" class="btn btn-primary" data-bs-dismiss="modal">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Validation...
+                            </button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
     </div>
