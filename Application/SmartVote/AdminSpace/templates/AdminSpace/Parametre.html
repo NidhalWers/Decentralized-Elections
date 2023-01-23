@@ -311,7 +311,7 @@
                                             <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">[[candidate.CandidateDescription]]</td>
                                             <td v-if="candidate.CandidateName == candidateToUpdate"><input class="form-control form-control-lg" type="text" :placeholder="candidate.CandidateDescription" v-model="candidateDescriptionUpdate"></td>
 
-                                            <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center" ><img  v-if="candidate.CandidateName != candidateToUpdate  & candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"></td>
+                                            <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center" ><img  v-if="candidate.CandidateName != candidateToUpdate  & candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-25"></td>
                                             <td v-if="candidate.CandidateName == candidateToUpdate">
                                                 <input v-if="updateImage | candidate.CandidateImage==null" type="file" class="form-control" accept="image/png, image/jpeg" id="customFile" ref="imageUpdate" v-on:change="handleImageUploadUpdate()">
                                                 <img  v-if="!updateImage & candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50">
