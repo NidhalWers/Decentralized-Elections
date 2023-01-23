@@ -641,17 +641,24 @@
                 this.loading=false
             },
             updateCandidate: async function (id) {
+                console.log(this.updateImage)
                 this.loading=true
                 let formData = new FormData();
                 formData.append('CandidateName', this.candidateNameUpdate);
                 formData.append('CandidateDescription', this.candidateDescriptionUpdate);
+
                 if (this.candidateImageUpdate != null) {
                     formData.append('CandidateImage', this.candidateImageUpdate);
+                }else if (this.updateImage){
+                    formData.append('CandidateImage', "");
                 }
+
                 if (this.candidateProgramUpdate != null) {
                     formData.append('CandidateProgram', this.candidateProgramUpdate);
+                }else if (this.updateFile){
+                    formData.append('CandidateProgram', "");
                 }
-                console.log(formData)
+                
                 await axios
                     .put('/adminspace/api/updateCandidate/' + id, formData,{
                     headers: {
