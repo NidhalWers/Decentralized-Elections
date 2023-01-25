@@ -23,5 +23,6 @@ urlpatterns = [
     path('api/delElection/<str:pk>', views.delElection, name='delElection'),
     path('api/updateElection/<str:pk>', views.updateElection, name='updateElection'),
     path('api/updateElectionStatus/<str:pk>/<str:status>', views.updateElectionStatus, name='updateElection'),
-
+    path('api/isElectionExistStatus/<str:name>/<str:status>', views.isElectionExistStatusAPI, name='isElectionExistStatusAPI'),
+    path('api/isElectionExist/<str:name>', views.isElectionExistAPI, name='isElectionExistAPI'),
 ]

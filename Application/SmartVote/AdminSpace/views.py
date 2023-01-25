@@ -98,7 +98,7 @@ def addCandidate(request):
                 # provide a Json Response with the data that was saved
                 return JsonResponse(serializer.data, status=201)
         else:
-            return JsonResponse({'message':'Candidate already exist'}, status=400)
+            return JsonResponse({'message':'Ce candidat existe déjà'}, status=400)
 
         return JsonResponse(serializer.errors, status=400)
 
@@ -108,7 +108,7 @@ def getCandidate(request, pk):
         try:
             candidate = Candidate.objects.get(pk=pk)
         except Candidate.DoesNotExist:
-            return JsonResponse({'message':'Candidate does not exist'}, status=400)
+            return JsonResponse({'message':"Ce candidat n'existe pas"}, status=400)
         # serialize the tasks
         serializer = CandidateSerializer(candidate, many=False)
         # return the serialized tasks
@@ -139,7 +139,7 @@ def getElectionStatus(request,name,status='None'):
         try:
             election = Election.objects.filter(ElectionName=name,ElectionStatus=status)
         except Election.DoesNotExist:
-            return JsonResponse({'message':'Election does not exist'}, status=400)
+            return JsonResponse({'message':"Ce candidat n'existe pas"}, status=400)
         # serialize the task data
         serializer = ElectionSerializer(election, many=True)
         # return a Json response
@@ -158,7 +158,7 @@ def getElection(request,name):
             # return a Json response
             return JsonResponse(serializer.data,safe=False)
         except Election.DoesNotExist:
-            return JsonResponse({'message':'Election does not exist'}, status=400)
+            return JsonResponse({'message':"Ce candidat n'existe pas"}, status=400)
 
 def getElections(request):
     '''
@@ -182,7 +182,7 @@ def delCandidate(request, pk):
         try:
             candidate = Candidate.objects.get(CandidateName=pk)
         except Candidate.DoesNotExist:
-            return HttpResponse({"message':'Candidate does'nt exist"},status=400)
+            return HttpResponse({'message':"Ce candidat n'existe pas"},status=400)
 
         # check if is in an election
         print(Election.objects.all().values_list('ElectionCandidates',flat=True))
@@ -218,7 +218,7 @@ def updateCandidate(request, pk):
         try:
             candidate = Candidate.objects.get(CandidateName=pk)
         except Candidate.DoesNotExist:
-            return JsonResponse({"message':'Candidate does'nt exist"},status=400)
+            return JsonResponse({'message':"Ce candidat n'existe pas"},status=400)
         
         serializer = CandidateSerializer(candidate,data=request.data)
             
@@ -273,7 +273,7 @@ def updateCandidate(request, pk):
                     candidate = Candidate.objects.get(CandidateName=pk)
                     candidate.delete()
                 except Candidate.DoesNotExist:
-                    return HttpResponse({"message':'Error updating CandidateName : Candidate does'nt exist"},status=400)
+                    return HttpResponse({'message':"Ce candidat n'existe pas"},status=400)
 
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
@@ -293,7 +293,7 @@ def addElection(request):
             else:
                  return JsonResponse(serializer.errors, status=400)
         else:
-            return JsonResponse({'message':'Election already exist'}, status=400)
+            return JsonResponse({'message':'Cette élection existe déjà'}, status=400)
        
 @api_view(['DELETE'])
 def delElectionStatus(request, pk, status='None'):
@@ -305,7 +305,7 @@ def delElectionStatus(request, pk, status='None'):
         try:
             election = Election.objects.get(ElectionName=pk,ElectionStatus=status)
         except Election.DoesNotExist:
-            return JsonResponse({"message':'Election does'nt exist"},status=400)
+            return JsonResponse({'message':"Cette élection n'existe pas"},status=400)
 
         # delete election
         election.delete()
@@ -324,7 +324,7 @@ def delElection(request, pk):
         try:
             election = Election.objects.get(ElectionName=pk)
         except Election.DoesNotExist:
-            return JsonResponse({"message':'Election does'nt exist"},status=400)
+            return JsonResponse({'message':"Cette élection n'existe pas"},status=400)
 
         # delete election
         election.delete()
@@ -343,7 +343,7 @@ def updateElection(request, pk):
         try:
             election = Election.objects.get(ElectionName=pk)
         except Election.DoesNotExist:
-            return JsonResponse({"message':'Election does'nt exist"},status=400)
+            return JsonResponse({'message':"Cette élection n'existe pas"},status=400)
         
         serializer = ElectionSerializer(election,data=request.data)
             
@@ -356,7 +356,7 @@ def updateElection(request, pk):
                     election = Election.objects.get(ElectionName=pk)
                     election.delete()
                 except Election.DoesNotExist:
-                    return HttpResponse({"message':'Error updating ElectionName : Election does'nt exist"},status=400)
+                    return HttpResponse({'message':"Cette élection n'existe pas"},status=400)
 
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
@@ -371,7 +371,7 @@ def updateElectionStatus(request, pk, status='None'):
         try:
             election = Election.objects.get(ElectionName=pk,ElectionStatus=status)
         except Election.DoesNotExist:
-            return JsonResponse({"message':'Election does'nt exist"},status=400)
+            return JsonResponse({'message':"Cette élection n'existe pas"},status=400)
         
         serializer = ElectionSerializer(election,data=request.data)
             
@@ -384,7 +384,33 @@ def updateElectionStatus(request, pk, status='None'):
                     election = Election.objects.get(ElectionName=pk)
                     election.delete()
                 except Election.DoesNotExist:
-                    return HttpResponse({"message':'Error updating ElectionName : Election does'nt exist"},status=400)
+                    return HttpResponse({'message':"Cette élection n'existe pas"},status=400)
 
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+
+@api_view(['GET'])
+def isElectionExistStatusAPI(request, name, status):
+    '''
+    Check if an election exist
+    '''
+    if(request.method == 'GET'):
+        # get the task with the id
+        try:
+            election = Election.objects.get(ElectionName=name,ElectionStatus=status)
+        except Election.DoesNotExist:
+            return JsonResponse({'message':"Cette élection n'existe pas"},status=201)
+        return JsonResponse({'message':'Cette élection existe déjà'}, status=201)
+
+@api_view(['GET'])
+def isElectionExistAPI(request, name):
+    '''
+    Check if an election exist
+    '''
+    if(request.method == 'GET'):
+        # get the task with the id
+        try:
+            election = Election.objects.get(ElectionName=name,ElectionStatus__isnull=True)
+            return JsonResponse({'message':'Cette élection existe déjà'}, status=201)  
+        except Election.DoesNotExist:
+            return JsonResponse({'message':"Cette élection n'existe pas"},status=201)
