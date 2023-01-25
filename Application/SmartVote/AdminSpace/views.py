@@ -410,7 +410,7 @@ def isElectionExistAPI(request, name):
     if(request.method == 'GET'):
         # get the task with the id
         try:
-            election = Election.objects.get(ElectionName=name,ElectionStatus__isnull=True)
-            return JsonResponse({'message':'Cette élection existe déjà'}, status=201)  
+            election = Election.objects.get(ElectionName=name,ElectionStatus="")
         except Election.DoesNotExist:
             return JsonResponse({'message':"Cette élection n'existe pas"},status=201)
+        return JsonResponse({'message':'Cette élection existe déjà'}, status=201)
