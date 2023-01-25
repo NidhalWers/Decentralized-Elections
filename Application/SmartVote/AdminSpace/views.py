@@ -185,7 +185,6 @@ def delCandidate(request, pk):
             return HttpResponse({'message':"Ce candidat n'existe pas"},status=400)
 
         # check if is in an election
-        print(Election.objects.all().values_list('ElectionCandidates',flat=True))
         for election in Election.objects.all().values_list('ElectionCandidates',flat=True):
             if pk in election:
                 return JsonResponse({"message":"Candidate is in an election, delete election before deleting the candidate"},status=400)
@@ -220,6 +219,10 @@ def updateCandidate(request, pk):
         except Candidate.DoesNotExist:
             return JsonResponse({'message':"Ce candidat n'existe pas"},status=400)
         
+        for election in Election.objects.all().values_list('ElectionCandidates',flat=True):
+            if pk in election:
+                return JsonResponse({"message":"Candidate is in an election, delete election before update the candidate"},status=400)
+
         serializer = CandidateSerializer(candidate,data=request.data)
             
         # check if the data is valid
@@ -322,7 +325,7 @@ def delElection(request, pk):
     if(request.method == 'DELETE'):
         # get the task with the id
         try:
-            election = Election.objects.get(ElectionName=pk)
+            election = Election.objects.get(ElectionName=pk,ElectionStatus="")
         except Election.DoesNotExist:
             return JsonResponse({'message':"Cette élection n'existe pas"},status=400)
 

@@ -304,7 +304,6 @@
                     })
                     this.updateError()
                 }catch(error){
-                    console.log(error.response.data)
                     this.printError("Une erreur est survenue lors de l'ajout du candidat",error.response.data)
                 }
                 await this.getCandidate()

@@ -142,9 +142,6 @@
                                             <input type="email" v-bind:class='{"is-invalid": !allowed | electionName =="", "is-valid": allowed}' class="form-control" name="electionName"
                                                 placeholder="Présidentielle 2022 - 1er tour" v-model="electionName" v-on:change="electionExist">
                                         </div>
-                                        <p class="text-danger" v-if='electionName ==""'>
-                                            Veuillez rentrer un nom d'élection.
-                                        </p>
                                         <p class="text-danger" v-if="error != ''">
                                             [[message]] : [[error]]
                                         </p>
@@ -550,7 +547,11 @@
 
                             </div>
 
-                            <button type="button" name="next" class="btn btn-success action-button float-end" data-bs-toggle="modal" data-bs-target="#staticBackdropValidate">Valider</button>
+                            <button type="button" v-if="!loading" name="next" class="btn btn-success action-button float-end" data-bs-toggle="modal" data-bs-target="#staticBackdropValidate">Valider</button>
+                            <button type="button" disabled v-if="loading" name="next" class="btn btn-success action-button float-end" data-bs-toggle="modal" data-bs-target="#staticBackdropValidate">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Validation...
+                            </button>
                             <button type="button" name="previous"
                                 class="btn btn-dark previous action-button-previous float-end me-1"
                                 value="Previous" v-on:click="updateError()">Retour</button>
@@ -570,14 +571,10 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="email" class="form-label">Attention, vous ne pourrez plus modifier l'élection après l'avoir créée. Veuillez vérifier l'ensemble des informations avant de la publier.</label>
+                            <label for="email" class="form-label"><strong>Attention</strong>, vous ne pourrez plus modifier ni <strong>l'élection</strong> ni <strong>les candidats</strong> inscrient dans cette élection après l'avoir créée. Veuillez vérifier l'ensemble des informations avant de la publier.</label>
                         </div>
                         <div class="text-start">
                             <button type="button" v-on:click="createElectionInBlockchain()" v-if="!loading" class="btn btn-primary" data-bs-dismiss="modal">Créer l'élection</button>
-                            <button type="button" disabled v-if="loading" class="btn btn-primary" data-bs-dismiss="modal">
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Validation...
-                            </button>
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
                         </div>
                     </div>
@@ -657,47 +654,49 @@
                 if (this.candidateProgram != null) {
                     formData.append('CandidateProgram', this.candidateProgram);
                 }
- 
-                await axios.post('/adminspace/api/addCandidate', formData,{
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        "X-CSRFToken": "{{ csrf_token }}",
-                    }
-                })
-                .then(function (response) {
-                    console.log(response);
-                })
-                .catch(response => (this.printError(response.data)));
+                try{
+                    await axios.post('/adminspace/api/addCandidate', formData,{
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        }
+                    })
+                    this.updateError()
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de l'ajout du candidat",error.response.data)
+                }
 
                 await this.getCandidate()
                 await this.resetCandidate()
                 this.loading=false
             },
             getCandidate: async function () {
-                await axios
-                    .get('/adminspace/api/getCandidates')
-                    .then(response => (this.candidates = response.data))
-                    .catch(response => (this.printError(response.data)));
+                try{
+                    await axios.get('/adminspace/api/getCandidates')
+                        .then(response => (this.candidates = response.data))
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de la récupération des candidats",error.response.data)
+                }
             },
             deleteCandidate: async function (id) {
                 this.loading=true
-                await axios
-                    .delete('/adminspace/api/delCandidate/' + id,{
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        "X-CSRFToken": "{{ csrf_token }}",
-                    }
-                })
-                .then(function (response) {
-                    console.log(response);
-                })
-                .catch(response => (this.printError(response.data)));
+                try{
+                    await axios
+                        .delete('/adminspace/api/delCandidate/' + id,{
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        }
+                    })
+                    this.updateError()
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de la suppression du candidat",error.response.data)
+                }
 
                 await this.getCandidate()
                 this.loading=false
             },
             updateCandidate: async function (id) {
-                console.log(this.updateImage)
                 this.loading=true
                 let formData = new FormData();
                 formData.append('CandidateName', this.candidateNameUpdate);
@@ -715,16 +714,18 @@
                     formData.append('CandidateProgram', "");
                 }
                 
+                try{
                 await axios
                     .put('/adminspace/api/updateCandidate/' + id, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         "X-CSRFToken": "{{ csrf_token }}",
                     }
-                }).then(function (response) {
-                    console.log(response);
                 })
-                .catch(response => (this.printError(response.data)));
+                this.updateError()
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de la modification du candidat",error.response.data)
+                }
 
                 await this.updateCandidateToUpdate()
                 await this.getCandidate()
@@ -778,7 +779,8 @@
                 this.candidateNameUpdate = ""
             },
             createElectionInBlockchain: async function (){
-                this.loading=false
+                event.preventDefault();
+                this.loading=true
                 var data = JSON.stringify({
                     "candidates" : this.electionCandidates,
                     "starting_date" : this.electionStartDate,
@@ -798,14 +800,19 @@
                     data : data
                     };
 
-                    await axios(config)
-                    .then(response => (this.responseApiCall = response.data))
-                    .catch(response => (this.printError(response.data)));
+                    try{
+                        await axios(config)
+                        .then(response => (this.responseApiCall = response.data))
 
-                    await this.addElection()
-                    this.loading=false
+                        await this.addElection()
+                        this.loading=false
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la création de l'élection dans la blockchain",error["message"])
+                        this.loading=false
+                    }
             },
             addElection: async function(){
+                event.preventDefault();
                 this.loading=true
                 let formData = new FormData();
                 formData.append('ElectionName', this.electionName);
@@ -817,18 +824,16 @@
                 formData.append('ElectionBlankVote', this.electionBlankVote);
                 formData.append('ElectionBlind', this.electionBlind);
                 try{
-
                 await axios.post('/adminspace/api/addElection', formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         "X-CSRFToken": "{{ csrf_token }}",
                     }
                     })
-
                     this.loading=false
                     window.location = "/adminspace/success"
                 }catch(error){
-                    this.printError("Une erreur est survenue lors de la modification du candidat",error.response.data) 
+                    this.printError("Une erreur est survenue lors de la création de l'élection, mais celle-ci existe dans la blockchain, veuillez contacter un administrateur",error.response.data) 
                 }
 
                 this.loading=false
@@ -853,7 +858,7 @@
                 errorParsed = JSON.stringify(error)
                 for (var key in error) {
                     if (error.hasOwnProperty(key)) {
-                        this.error = this.error + error[key] + " "
+                        this.error = this.error + error[key] + "."
                     }
                 }
                 this.loading=false
