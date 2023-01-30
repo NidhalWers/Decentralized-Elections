@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
  * @author Nidhal TEYEB
  * @since 0.0.1-SNAPSHOT
  */
-@CrossOrigin(origins = "*")
 @RestController
 public class BlockchainController {
 
@@ -37,7 +36,6 @@ public class BlockchainController {
         return BlockChainResource.of(result.blockChain, result.apiKey, result.electionStatus);
     }
 
-    @CrossOrigin(origins = {"http://127.0.0.1:8000"})
     @GetMapping(value = "/smart-vote/api/v1/get-election/{election_name}")
     public ElectionResource getElection(@PathVariable("election_name") String input, @RequestParam(required = false) String status) {
         Application.LOGGER.info(String.format("GET /smart-vote/api/v1/get-election/%s?status=%s", input, status));
@@ -49,7 +47,6 @@ public class BlockchainController {
 
     }
 
-    @CrossOrigin(origins = {"http://127.0.0.1:8000"})
     @GetMapping(value = "/smart-vote/api/v1/get-sandbox/")
     public ElectionResource getSandboxElection() {
         Application.LOGGER.info("GET /smart-vote/api/v1/get-sandbox/");
