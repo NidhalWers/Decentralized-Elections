@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Nidhal TEYEB
  * @since 0.0.1-SNAPSHOT
  */
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://127.0.0.1:8000", "*"})
 @RestController
 public class BlockchainController {
 
