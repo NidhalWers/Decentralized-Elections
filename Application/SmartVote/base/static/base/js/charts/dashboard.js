@@ -38,7 +38,7 @@ if (document.querySelectorAll('#myChart').length) {
 if (document.querySelectorAll('#d-activity').length) {
     const options = {
       series: [{
-        name: 'Successful deals',
+        name: 'Successfulfezaf deals',
         data: [30, 50, 35, 60, 40, 60, 60, 30, 50, 35,]
       }, {
         name: 'Failed deals',

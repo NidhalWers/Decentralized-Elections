@@ -28,7 +28,7 @@
         </div>  
         <div class="col-lg-6 col-md-0">
             <p class="h1 d-flex justify-content-center">[[election[0].ElectionName]]</p>
-            <p class="h6 d-flex justify-content-center">Candidats inscrient à cette élection</p>
+            <p class="h6 d-flex justify-content-center">Gérer l'élection</p>
         </div> 
         <div class="col-lg-3 col-md-6">
             <div class="card border-bottom border-4 border-0 border-primary">
@@ -41,7 +41,7 @@
                 </div>
                 <div>
                     <span v-if="electionStarted">[[printDate(election[0].ElectionEndDate)]]</span>
-                    <span v-if="!electionStarted">[[printDate(election[0].ElectionEndDate)]]</span>
+                    <span v-if="!electionStarted">[[printDate(election[0].ElectionStartDate)]]</span>
                 </div>
             </div>
             </div>
@@ -70,14 +70,17 @@
                             <div class="fs-italic">
                                 <h5> [[candidate.CandidateName]]</h5>
                             </div>	
+                            <div class="card-profile-progress">
+                                <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="User-Profile" class="rounded-circle w-25">
+                            </div>
                             <div class="mt-3 text-center text-muted-50">
                                 <p>[[candidate.CandidateDescription]]</p>
                             </div>
-                            <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50">
-                            <button v-if="candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
+                            <!-- <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"> -->
+                            <a v-if="candidate.CandidateProgram!=null" href="#" class="btn btn-sm rounded-pill px-2 py-2 ms-2" data-toggle="PDF"
                                 data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="PDF">
-                                [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length)]]
+                                data-bs-placement="top" title="Voir le programme">
+                                [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length-4)]]
                                 <svg width="32" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -95,7 +98,7 @@
                                         stroke="currentColor" stroke-width="1.5"
                                         stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>   
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -157,8 +160,15 @@
                 this.checkElectionStarted()
             },
             checkElectionStarted:function(){
+                electionName = "{{name}}"
+                electionStatus = "{{status}}"
                 if (this.election[0].ElectionEndDate < this.actualTime){
-                    window.location.href = "/";
+                    if(electionStatus != "None"){
+                        window.location.href = "/adminspace/viewElectionResultsStatus/"+electionName+"/"+electionStatus;
+                    }
+                    else{
+                        window.location.href = "/adminspace/viewElectionResults/"+electionName;
+                    }
                 }
                 if(this.election[0].ElectionStartDate < this.actualTime){
                     this.electionStarted = true
@@ -198,24 +208,6 @@
                 }
                 this.getElection()
             },
-            currentDate: function() {
-                const today = new Date();
-                    const year = today.getFullYear();
-                    const month = ('0'+today.getMonth()+1).slice(-2);
-                    const day = ('0'+today.getDate()).slice(-2);
-                    const hour = ('0'+today.getHours()).slice(-2);
-                    const minute = ('0'+today.getMinutes()).slice(-2);
-                    const second = ('0'+today.getSeconds()).slice(-2);
-                    // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                    // const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate());
-                    const dateTime = year +'-'+ month+'-'+day+'T'+hour+':'+minute+':'+second+'Z'; 
-                    // const currentDateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
-                    const currentDateTime = day +'/'+ month+'/'+year+' '+hour+':'+minute+':'+second;
-                    // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
-                    this.currentDates = currentDateTime;
-                    this.actualTime = dateTime;
-                },
-
                 printDate: function(date) {
                     date = new Date(date);
                     const year = date.getFullYear();
