@@ -220,7 +220,6 @@
                     const DateTime2 = day +'/'+ month+'/'+year+' '+hour+':'+minute+':'+second;
                     return DateTime2;
                 },
-
                 getCandidate: async function(candidateName){
                     await axios
                     .get('/adminspace/api/getCandidate/'+candidateName)
@@ -264,6 +263,23 @@
                     }
                     window.location.href = "/";
                 },
+                currentDate: function() {
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = ('0'+today.getMonth()+1).slice(-2);
+                    const day = ('0'+today.getDate()).slice(-2);
+                    const hour = ('0'+today.getHours()).slice(-2);
+                    const minute = ('0'+today.getMinutes()).slice(-2);
+                    const second = ('0'+today.getSeconds()).slice(-2);
+                    // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                    // const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate());
+                    const dateTime = year +'-'+ month+'-'+day+'T'+hour+':'+minute+':'+second+'Z'; 
+                    const currentDateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
+                    // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
+                    this.currentDates = currentDateTime;
+                    this.actualTime = dateTime;
+                },
+                
             },
         },
     );
