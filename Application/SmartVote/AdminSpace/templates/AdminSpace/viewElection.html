@@ -70,14 +70,17 @@
                             <div class="fs-italic">
                                 <h5> [[candidate.CandidateName]]</h5>
                             </div>	
+                            <div class="card-profile-progress">
+                                <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="User-Profile" class="rounded-circle w-25">
+                            </div>
                             <div class="mt-3 text-center text-muted-50">
                                 <p>[[candidate.CandidateDescription]]</p>
                             </div>
-                            <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50">
-                            <button v-if="candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
+                            <!-- <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"> -->
+                            <a v-if="candidate.CandidateProgram!=null" href="#" class="btn btn-sm rounded-pill px-2 py-2 ms-2" data-toggle="PDF"
                                 data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
                                 data-bs-placement="top" title="PDF">
-                                [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length)]]
+                                [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length-4)]]
                                 <svg width="32" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -95,7 +98,7 @@
                                         stroke="currentColor" stroke-width="1.5"
                                         stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>   
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
