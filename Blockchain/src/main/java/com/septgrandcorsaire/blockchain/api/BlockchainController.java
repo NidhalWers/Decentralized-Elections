@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Nidhal TEYEB
  * @since 0.0.1-SNAPSHOT
  */
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RestController
 public class BlockchainController {
 
