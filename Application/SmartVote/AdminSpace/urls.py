@@ -9,6 +9,7 @@ urlpatterns = [
     path('connection', views.connect_admin, name='connect_admin'),
     path('viewElectionStatus/<str:name>/<str:status>', views.viewElectionStatus, name='viewElectionStatus'),
     path('viewElection/<str:name>', views.viewElection, name='viewElection'),
+    path('viewCandidates', views.viewCandidates, name='viewCandidates'),
     path('api/getCandidates', views.getCandidates, name='getCandidates'),
     path('api/getCandidate/<str:pk>', views.getCandidate, name='getCandidate'),
     path('api/addCandidate', views.addCandidate, name='addCandidate'),
@@ -22,5 +23,6 @@ urlpatterns = [
     path('api/delElection/<str:pk>', views.delElection, name='delElection'),
     path('api/updateElection/<str:pk>', views.updateElection, name='updateElection'),
     path('api/updateElectionStatus/<str:pk>/<str:status>', views.updateElectionStatus, name='updateElection'),
-
+    path('api/isElectionExistStatus/<str:name>/<str:status>', views.isElectionExistStatusAPI, name='isElectionExistStatusAPI'),
+    path('api/isElectionExist/<str:name>', views.isElectionExistAPI, name='isElectionExistAPI'),
 ]

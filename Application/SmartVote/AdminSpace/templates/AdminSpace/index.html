@@ -11,7 +11,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Administration des votes</li>
             </ol>
             <div>
-                <a href="parametre" class=""><button type="button" class="btn btn-primary">Voir la liste des candidats</button></a>
+                <a href="viewCandidates" class=""><button type="button" class="btn btn-primary">Voir la liste des candidats</button></a>
                 <a href="parametre"><button type="button" class="btn btn-primary">Créer une élection</button></a>
             </div>
             <!-- <p><em>[[currentDates]]</em></p> -->
@@ -23,8 +23,13 @@
         <p class="h6 d-flex justify-content-center">Créez et paramétrez les élections</p>
     </div>
     <div class="row">
-        <p><em>Elections en cours</em></p>
-        <div v-for="election in elections" v-if="(actualTime > election.ElectionStartDate && election.ElectionEndDate > actualTime)" class="col-lg-4">
+        <div class="row">
+            <div class="d-flex align-items-center justify-content-between">
+                <p><em>Elections en cours</em></p>
+                <p><em>[[currentDates]]</em></p>
+            </div>
+        </div>
+        <div v-for="election in elections" v-if="(actualTime >= election.ElectionStartDate && election.ElectionEndDate >= actualTime)" class="col-lg-4">
             <div v-if="election.ElectionBlind" class="opacity-50">
                 <div class="card">
                     <div class="card-body">
@@ -34,7 +39,7 @@
                                     <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
                                 </div>	
                                 <div class="mt-1 text-center text-muted-50">
-                                    <p>[[soustractionDate(election.ElectionEndDate,currentDates)]] restant</p>
+                                    <p>Disponible jusqu'à : [[printDate(election.ElectionEndDate,currentDates)]]</p>
                                 </div>
                                 <button type="button" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" class="btn btn-soft-primary">Voir l'élection</button>
                             </div>
@@ -51,7 +56,7 @@
                                     <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
                                 </div>	
                                 <div class="mt-1 text-center text-muted-50">
-                                    <p>[[soustractionDate(election.ElectionEndDate,currentDates)]] restant</p>
+                                    <p>Disponible jusqu'à : [[printDate(election.ElectionEndDate,currentDates)]]</p>
                                 </div>
                                 <button type="button" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" class="btn btn-soft-primary">Voir l'élection</button>
                             </div>
@@ -74,7 +79,7 @@
                                     <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
                                 </div>	
                                 <div class="mt-1 text-center text-muted-50">
-                                    <p>Disponible dans [[soustractionDate(election.ElectionStartDate,currentDates)]]</p>
+                                    <p>Disponible le [[printDate(election.ElectionStartDate)]]</p>
                                 </div>
                                 <button v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" type="button" class="btn btn-soft-light">Voir l'élection</button>
                             </div>
@@ -91,7 +96,7 @@
                                     <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
                                 </div>	
                                 <div class="mt-1 text-center text-muted-50">
-                                    <p>Disponible dans [[soustractionDate(election.ElectionStartDate,currentDates)]]</p>
+                                    <p>Disponible le [[printDate(election.ElectionStartDate)]]</p>
                                 </div>
                                 <button v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" type="button" class="btn btn-soft-light">Voir l'élection</button>
                             </div>
@@ -114,9 +119,9 @@
                                     <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
                                 </div>	
                                 <div class="mt-1 text-center text-muted-50">
-                                    <p>Terminé depuis [[soustractionDate(currentDates,election.ElectionEndDate)]]</p>
+                                    <p>Terminé depuis le [[printDate(election.ElectionEndDate)]]</p>
                                 </div>
-                                <a href="/vote"><button type="button" class="btn btn-soft-success">Voir l'élection et les resultats</button></a>
+                                <button type="button" class="btn btn-soft-success" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
                             </div>
                         </div>
                     </div>
@@ -131,9 +136,9 @@
                                     <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
                                 </div>	
                                 <div class="mt-1 text-center text-muted-50">
-                                    <p>Terminé depuis [[soustractionDate(currentDates,election.ElectionEndDate)]]</p>
+                                    <p>Terminé depuis le [[printDate(election.ElectionEndDate)]]</p>
                                 </div>
-                                <a href="/vote"><button type="button" class="btn btn-soft-success">Voir l'élection et les resultats</button></a>
+                                <button type="button" class="btn btn-soft-success" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
                             </div>
                         </div>
                     </div>
@@ -179,42 +184,34 @@
 
             currentDate: function() {
                 const today = new Date();
-                    const year = today.getFullYear();
-                    const month = ('0'+today.getMonth()+1).slice(-2);
-                    const day = ('0'+today.getDate()).slice(-2);
-                    const hour = ('0'+today.getHours()).slice(-2);
-                    const minute = ('0'+today.getMinutes()).slice(-2);
-                    const second = ('0'+today.getSeconds()).slice(-2);
-                    // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                    // const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate());
-                    const dateTime = year +'-'+ month+'-'+day+'T'+hour+':'+minute+':'+second+'Z'; 
-                    const currentDateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
-                    // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
-                    this.currentDates = currentDateTime;
-                    this.actualTime = dateTime;
+                const year = today.getFullYear();
+                const month = ('0'+today.getMonth()+1).slice(-2);
+                const day = ('0'+today.getDate()).slice(-2);
+                const hour = ('0'+today.getHours()).slice(-2);
+                const minute = ('0'+today.getMinutes()).slice(-2);
+                const second = ('0'+today.getSeconds()).slice(-2);
+                // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                // const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate());
+                const dateTime = year +'-'+ month+'-'+day+'T'+hour+':'+minute+':'+second+'Z'; 
+                // const currentDateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
+                const currentDateTime = day +'/'+ month+'/'+year+' '+hour+':'+minute+':'+second;
+                // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
+                this.currentDates = currentDateTime;
+                this.actualTime = dateTime;
                 },
 
-            // Function diffenrece between two dates and return number of days, hours, minutes and seconds
-            soustractionDate: function(date1, date2) {
-                var date1 = new Date(date1);
-                var date2 = new Date(date2);
-                var diff = date1.getTime() - date2.getTime();
-                var days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                var hours = Math.floor(diff / (1000 * 60 * 60));
-                var minutes = Math.floor(diff / (1000 * 60));
-                var seconds = Math.floor(diff / 1000);
-                if (days > 0) {
-                    return days + " jours";
-                } else if (hours > 0) {
-                    return hours + " heures";
-                } else if (minutes > 0) {
-                    return minutes + " minutes";
-                } else if (seconds > 0) {
-                    return seconds + " secondes";
-                } else {
-                    return "0 secondes";
-                }
-            },
+            printDate: function(date) {
+                date = new Date(date);
+                const year = date.getFullYear();
+                const month = ('0'+date.getMonth()+1).slice(-2);
+                const day = ('0'+date.getDate()).slice(-2);
+                const hour = ('0'+date.getHours()).slice(-2);
+                const minute = ('0'+date.getMinutes()).slice(-2);
+                const second = ('0'+date.getSeconds()).slice(-2);
+                const DateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
+                const DateTime2 = day +'/'+ month+'/'+year+' '+hour+':'+minute+':'+second;
+                return DateTime2;
+                },
 
             // Function to redirect to election page
             redirectToElection: function(electionName,electionStatus) {
