@@ -69,6 +69,17 @@ def viewCandidates(request):
             return render(request,'AdminSpace/viewCandidates.html')
     return redirect('/')
 
+def resultElection(request,name):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return render(request,'AdminSpace/result.html', context={'name':name , 'status':"None"})
+    return redirect('/')
+
+def resultElectionStatus(request,name,status):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return render(request,'AdminSpace/result.html', context={'name':name, 'status':status})
+    return redirect('/')
 # Utils
 
 def isCandidateExist(candidate):
