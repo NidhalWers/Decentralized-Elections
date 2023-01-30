@@ -35,14 +35,14 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <span v-if="!electionStarted">Temps restant pour voter </span>
-                        <span v-if="electionStarted">Election disponible dans </span>
-                    </div>
-                    <div>
-                        <span>[[timeRemaining]]</span>
+                        <span v-if="electionStarted">Disponible jusqu'à :</span>
+                        <span v-if="!electionStarted">Election disponible le :</span>
                     </div>
                 </div>
-                
+                <div>
+                    <span v-if="electionStarted">[[printDate(election[0].ElectionEndDate)]]</span>
+                    <span v-if="!electionStarted">[[printDate(election[0].ElectionEndDate)]]</span>
+                </div>
             </div>
             </div>
         </div>
@@ -155,13 +155,12 @@
                 };
                 this.election[0].ElectionCandidates = this.election[0].ElectionCandidates.split(",");
                 this.checkElectionStarted()
-                this.getTimeRemaining()
             },
             checkElectionStarted:function(){
-                if (this.election[0].ElectionEndDate < this.currentDates){
+                if (this.election[0].ElectionEndDate < this.actualTime){
                     window.location.href = "/";
                 }
-                if(this.election[0].ElectionStartDate < this.currentDates){
+                if(this.election[0].ElectionStartDate < this.actualTime){
                     this.electionStarted = true
                 }
                 else{
@@ -210,32 +209,26 @@
                     // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
                     // const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate());
                     const dateTime = year +'-'+ month+'-'+day+'T'+hour+':'+minute+':'+second+'Z'; 
-                    const currentDateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
+                    // const currentDateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
+                    const currentDateTime = day +'/'+ month+'/'+year+' '+hour+':'+minute+':'+second;
                     // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
                     this.currentDates = currentDateTime;
                     this.actualTime = dateTime;
                 },
-                // Function diffenrece between two dates and return number of days, hours, minutes and seconds
-                soustractionDate: function(date1, date2) {
-                    var date1 = new Date(date1);
-                    var date2 = new Date(date2);
-                    var diff = date1.getTime() - date2.getTime();
-                    var days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    var hours = Math.floor(diff / (1000 * 60 * 60));
-                    var minutes = Math.floor(diff / (1000 * 60));
-                    var seconds = Math.floor(diff / 1000);
-                    if (days > 0) {
-                        return days + " jours";
-                    } else if (hours > 0) {
-                        return hours + " heures";
-                    } else if (minutes > 0) {
-                        return minutes + " minutes";
-                    } else if (seconds > 0) {
-                        return seconds + " secondes";
-                    } else {
-                        return "0 secondes";
-                    }
+
+                printDate: function(date) {
+                    date = new Date(date);
+                    const year = date.getFullYear();
+                    const month = ('0'+date.getMonth()+1).slice(-2);
+                    const day = ('0'+date.getDate()).slice(-2);
+                    const hour = ('0'+date.getHours()).slice(-2);
+                    const minute = ('0'+date.getMinutes()).slice(-2);
+                    const second = ('0'+date.getSeconds()).slice(-2);
+                    const DateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
+                    const DateTime2 = day +'/'+ month+'/'+year+' '+hour+':'+minute+':'+second;
+                    return DateTime2;
                 },
+
                 getCandidate: async function(candidateName){
                     await axios
                     .get('/adminspace/api/getCandidate/'+candidateName)
@@ -249,9 +242,6 @@
                         .then(response => (this.candidates.push(response.data)))
                         .catch(response => (console.log(response.data)));
                     }
-                },
-                getTimeRemaining: function(){
-                    this.timeRemaining = this.soustractionDate(this.election[0].ElectionEndDate,this.currentDates);
                 },
                 delElection: async function(){
                     if(this.election[0].ElectionStatus != ""){
