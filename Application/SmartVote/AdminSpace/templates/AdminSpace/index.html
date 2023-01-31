@@ -4,148 +4,172 @@
 {% load static %}
 
 <div id="Election">
+    <div v-if="loading" class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <div v-if="!loading">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+            </symbol>
+            <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+            </symbol>
+            <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+            </symbol>
+        </svg>
 
-    <div class="row">
-        <nav aria-label="breadcrumb" class="d-flex justify-content-between">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Administration des votes</li>
-            </ol>
+        <div v-if="error != ''" class="alert alert-danger d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
             <div>
-                <a href="viewCandidates" class=""><button type="button" class="btn btn-primary">Voir la liste des candidats</button></a>
-                <a href="parametre"><button type="button" class="btn btn-primary">Créer une élection</button></a>
+                [[message]] : [[error]]
             </div>
-            <!-- <p><em>[[currentDates]]</em></p> -->
-        </nav> 
-    </div>
-    <div class="row pb-5 mt-0">
-        <p class="h1 d-flex justify-content-center">Administration des votes</p>
-
-        <p class="h6 d-flex justify-content-center">Créez et paramétrez les élections</p>
-    </div>
-    <div class="row">
+        </div>
         <div class="row">
-            <div class="d-flex align-items-center justify-content-between">
-                <p><em>Elections en cours</em></p>
-                <p><em>[[currentDates]]</em></p>
-            </div>
+            <nav aria-label="breadcrumb" class="d-flex justify-content-between">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">Administration des votes</li>
+                </ol>
+                <div>
+                    <a href="viewCandidates" class=""><button type="button" class="btn btn-primary">Voir la liste des candidats</button></a>
+                    <a href="parametre"><button type="button" class="btn btn-primary">Créer une élection</button></a>
+                </div>
+                <!-- <p><em>[[currentDates]]</em></p> -->
+            </nav> 
         </div>
-        <div v-for="election in elections" v-if="(actualTime >= election.ElectionStartDate && election.ElectionEndDate >= actualTime)" class="col-lg-4">
-            <div v-if="election.ElectionBlind" class="opacity-50">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                                <div class="fs-italic">
-                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
-                                </div>	
-                                <div class="mt-1 text-center text-muted-50">
-                                    <p>Disponible jusqu'à : [[printDate(election.ElectionEndDate,currentDates)]]</p>
-                                </div>
-                                <button type="button" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" class="btn btn-soft-primary">Voir l'élection</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div v-if="!election.ElectionBlind">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                                <div class="fs-italic">
-                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
-                                </div>	
-                                <div class="mt-1 text-center text-muted-50">
-                                    <p>Disponible jusqu'à : [[printDate(election.ElectionEndDate,currentDates)]]</p>
-                                </div>
-                                <button type="button" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" class="btn btn-soft-primary">Voir l'élection</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="row pb-5 mt-0">
+            <p class="h1 d-flex justify-content-center">Administration des votes</p>
+
+            <p class="h6 d-flex justify-content-center">Créez et paramétrez les élections</p>
         </div>
-    </div> 
-    <hr>
-    <div class="row">
-        <p><em>Prochaines élections</em></p>
-        <div v-for="election in elections" v-if="election.ElectionStartDate>actualTime" class="col-lg-4">
-            <div v-if="election.ElectionBlind" class="opacity-50">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                                <div class="fs-italic">
-                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
-                                </div>	
-                                <div class="mt-1 text-center text-muted-50">
-                                    <p>Disponible le [[printDate(election.ElectionStartDate)]]</p>
+        <div class="row">
+            <div class="row">
+                <div class="d-flex align-items-center justify-content-between">
+                    <p><em>Elections en cours</em></p>
+                    <p><em>[[currentDates]]</em></p>
+                </div>
+            </div>
+            <div v-for="election in elections" v-if="(actualTime >= election.ElectionStartDate && election.ElectionEndDate >= actualTime)" class="col-lg-4">
+                <div v-if="election.ElectionBlind" class="opacity-50">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                    <div class="fs-italic">
+                                        <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                    </div>	
+                                    <div class="mt-1 text-center text-muted-50">
+                                        <p>Disponible jusqu'à : [[printDate(election.ElectionEndDate,currentDates)]]</p>
+                                    </div>
+                                    <button type="button" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" class="btn btn-soft-primary">Voir l'élection</button>
                                 </div>
-                                <button v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" type="button" class="btn btn-soft-light">Voir l'élection</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="!election.ElectionBlind">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                    <div class="fs-italic">
+                                        <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                    </div>	
+                                    <div class="mt-1 text-center text-muted-50">
+                                        <p>Disponible jusqu'à : [[printDate(election.ElectionEndDate,currentDates)]]</p>
+                                    </div>
+                                    <button type="button" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" class="btn btn-soft-primary">Voir l'élection</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-if="!election.ElectionBlind">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                                <div class="fs-italic">
-                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
-                                </div>	
-                                <div class="mt-1 text-center text-muted-50">
-                                    <p>Disponible le [[printDate(election.ElectionStartDate)]]</p>
+        </div> 
+        <hr>
+        <div class="row">
+            <p><em>Prochaines élections</em></p>
+            <div v-for="election in elections" v-if="election.ElectionStartDate>actualTime" class="col-lg-4">
+                <div v-if="election.ElectionBlind" class="opacity-50">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                    <div class="fs-italic">
+                                        <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                    </div>	
+                                    <div class="mt-1 text-center text-muted-50">
+                                        <p>Disponible le [[printDate(election.ElectionStartDate)]]</p>
+                                    </div>
+                                    <button v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" type="button" class="btn btn-soft-light">Voir l'élection</button>
                                 </div>
-                                <button v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" type="button" class="btn btn-soft-light">Voir l'élection</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="!election.ElectionBlind">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                    <div class="fs-italic">
+                                        <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                    </div>	
+                                    <div class="mt-1 text-center text-muted-50">
+                                        <p>Disponible le [[printDate(election.ElectionStartDate)]]</p>
+                                    </div>
+                                    <button v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)" type="button" class="btn btn-soft-light">Voir l'élection</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div> 
-    <hr>
-    <div class="row">
-        <p><em>Anciennes élections</em></p>
-        <div v-for="election in elections" v-if="actualTime>election.ElectionEndDate" class="col-lg-4">
-            <div v-if="election.ElectionBlind" class="opacity-50">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                                <div class="fs-italic">
-                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
-                                </div>	
-                                <div class="mt-1 text-center text-muted-50">
-                                    <p>Terminé depuis le [[printDate(election.ElectionEndDate)]]</p>
+        </div> 
+        <hr>
+        <div class="row">
+            <p><em>Anciennes élections</em></p>
+            <div v-for="election in elections" v-if="actualTime>election.ElectionEndDate" class="col-lg-4">
+                <div v-if="election.ElectionBlind" class="opacity-50">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                    <div class="fs-italic">
+                                        <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                    </div>	
+                                    <div class="mt-1 text-center text-muted-50">
+                                        <p>Terminé depuis le [[printDate(election.ElectionEndDate)]]</p>
+                                    </div>
+                                    <button type="button" class="btn btn-soft-success" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
                                 </div>
-                                <button type="button" class="btn btn-soft-success" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="!election.ElectionBlind">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                    <div class="fs-italic">
+                                        <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
+                                    </div>	
+                                    <div class="mt-1 text-center text-muted-50">
+                                        <p>Terminé depuis le [[printDate(election.ElectionEndDate)]]</p>
+                                    </div>
+                                    <button type="button" class="btn btn-soft-success" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-if="!election.ElectionBlind">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-center">
-                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                                <div class="fs-italic">
-                                    <h5>[[election.ElectionName]]</h5><p><em>[[election.ElectionStatus]]</em></p>
-                                </div>	
-                                <div class="mt-1 text-center text-muted-50">
-                                    <p>Terminé depuis le [[printDate(election.ElectionEndDate)]]</p>
-                                </div>
-                                <button type="button" class="btn btn-soft-success" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> 
+        </div> 
+    </div>
 </div>
 <!-- vue:js -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
@@ -160,7 +184,10 @@
                 return {
                     actualTime:"",
                     currentDates:"",
-                    elections:{}
+                    elections:{},
+                    error:'',
+                    message:'',
+                    loading:true,
                 }
         },
         async mounted() {
@@ -175,11 +202,18 @@
             
         methods: {
             getElections: async function () {
-                await axios
+                try{
+                    await axios
                     .get('/adminspace/api/getElections')
                     .then(response => (this.elections = response.data))
-                    .catch(response => (console.log(response.data)));
-                    
+
+                    this.loading = false
+                }catch(error){
+                    console.log(error)
+                    this.printError("Une erreur est survenue lors de la récupération des élections",error.response.data)
+                    this.loading = false
+                }
+                
             },
 
             currentDate: function() {
@@ -221,6 +255,20 @@
                         window.location.href = "/adminspace/viewElectionStatus/"+electionName+"/"+electionStatus;
                     }
                     
+            },
+            updateError: async function(){
+                this.error = ''
+                this.message = ''
+            },
+            printError: async function(message,error){
+                this.message = message
+                errorParsed = JSON.stringify(error)
+                for (var key in error) {
+                    if (error.hasOwnProperty(key)) {
+                        this.error = this.error + error[key] + " "
+                    }
+                }
+                this.loading=false
             },
         },
     });

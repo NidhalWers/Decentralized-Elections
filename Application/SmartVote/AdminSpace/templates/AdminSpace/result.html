@@ -167,6 +167,9 @@
                             "Candidat2": 3,
                         }
                     },
+                    error:'',
+                    message:'',
+                    loading:true,
                 }
         },
         async mounted() {
@@ -181,16 +184,26 @@
                 electionName = "{{name}}"
                 electionStatus = "{{status}}"
                 if(electionStatus != "None"){
+                    try{
                     await axios
                         .get('/adminspace/api/getElectionStatus/'+electionName+'/'+electionStatus)
                         .then(response => (this.election = response.data))
-                        .catch(response => (console.log(response.data))); 
+                    }
+                    catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération de l'élection",error.response.data)
+                        this.loading = false
+                    }
                 }
                 else{
+                    try{
                     await axios
                         .get('/adminspace/api/getElection/'+electionName)
                         .then(response => (this.election = response.data))
-                        .catch(response => (console.log(response.data))); 
+                    }
+                    catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération de l'élection",error.response.data)
+                        this.loading = false
+                    }
                 };
                 this.election[0].ElectionCandidates = this.election[0].ElectionCandidates.split(",");
             },
@@ -199,29 +212,31 @@
                 formData.append('ElectionName', this.election[0].ElectionName);
                 formData.append('ElectionBlind', !this.election[0].ElectionBlind);
                 if(this.election[0].ElectionStatus != ""){
-                    await axios
-                        .put('/adminspace/api/updateElectionStatus/'+this.election[0].ElectionName+'/'+this.election[0].ElectionStatus,formData,{
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                            "X-CSRFToken": "{{ csrf_token }}",
-                        }
-                        })
-                        .then(function (response) {
-                            console.log(response);
-                        })
-                        .catch(response => (console.log(response.data)));
+                    try{
+                        await axios
+                            .put('/adminspace/api/updateElectionStatus/'+this.election[0].ElectionName+'/'+this.election[0].ElectionStatus,formData,{
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                "X-CSRFToken": "{{ csrf_token }}",
+                            }
+                            })
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la modification de l'élection",error.response.data)
+                        this.loading = false
+                    }
                 }else{
-                    await axios
-                        .put('/adminspace/api/updateElection/'+this.election[0].ElectionName,formData,{
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                            "X-CSRFToken": "{{ csrf_token }}",
-                        }
-                        })
-                        .then(function (response) {
-                            console.log(response);
-                        })
-                        .catch(response => (console.log(response.data)));
+                    try{
+                        await axios
+                            .put('/adminspace/api/updateElection/'+this.election[0].ElectionName,formData,{
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                "X-CSRFToken": "{{ csrf_token }}",
+                            }
+                            })
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la modification de l'élection",error.response.data)
+                        this.loading = false
+                    }
                 }
                 this.getElection()
             },
@@ -257,10 +272,14 @@
                 },
 
                 getCandidate: async function(candidateName){
-                    await axios
-                    .get('/adminspace/api/getCandidate/'+candidateName)
-                    .then(response => (this.candidate = response.data))
-                    .catch(response => (console.log(response.data)));
+                    try{
+                        await axios
+                        .get('/adminspace/api/getCandidate/'+candidateName)
+                        .then(response => (this.candidate = response.data))
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération du candidat",error.response.data)
+                        this.loading = false
+                    }
                 },
                 fillCandidates: async function(){
                     for(var candidate in this.election[0].ElectionCandidates){
@@ -270,36 +289,52 @@
                                 .then(response => (this.candidates.push(response.data)))
                             
                         }catch(error){
-                            console.log(error)
+                            this.printError("Une erreur est survenue lors de la récupération des candidats",error.response.data)
+                            this.loading = false
                         }
                     }
                 },
+                updateError: async function(){
+                    this.error = ''
+                    this.message = ''
+                },
+                printError: async function(message,error){
+                    this.message = message
+                    errorParsed = JSON.stringify(error)
+                    for (var key in error) {
+                        if (error.hasOwnProperty(key)) {
+                            this.error = this.error + error[key] + " "
+                        }
+                    }
+                    this.loading=false
+                },
                 delElection: async function(){
                     if(this.election[0].ElectionStatus != ""){
-                        await axios
-                            .delete('/adminspace/api/delElectionStatus/'+this.election[0].ElectionName+"/"+this.election[0].ElectionStatus,{
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                                "X-CSRFToken": "{{ csrf_token }}",
-                            }
-                        })
-                        .then(function (response) {
-                            console.log(response);
-                        })
-                        .catch(response => (console.log(response.data)));
-                    }
-                    else{
-                        await axios
-                            .delete('/adminspace/api/delElection/'+this.election[0].ElectionName,{
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                                "X-CSRFToken": "{{ csrf_token }}",
-                            }
-                        })
-                        .then(function (response) {
-                            console.log(response);
-                        })
-                        .catch(response => (console.log(response.data)));
+                        try{
+                            await axios
+                                .delete('/adminspace/api/delElectionStatus/'+this.election[0].ElectionName+"/"+this.election[0].ElectionStatus,{
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                    "X-CSRFToken": "{{ csrf_token }}",
+                                }
+                            })
+                        }catch(error){
+                            this.printError("Une erreur est survenue lors de la suppression de l'élection",error.response.data)
+                            this.loading = false
+                        }
+                    }else{
+                        try{
+                            await axios
+                                .delete('/adminspace/api/delElection/'+this.election[0].ElectionName,{
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                    "X-CSRFToken": "{{ csrf_token }}",
+                                }
+                            })
+                        }catch(error){
+                            this.printError("Une erreur est survenue lors de la suppression de l'élection",error.response.data)
+                            this.loading = false
+                        }
                     }
                     window.location.href = "/";
                 },
@@ -338,9 +373,8 @@
                         console.log(this.resultElection)
                         this.loading=false
                     }catch(error){
-                        console.log(error)
-                        // this.printError("Une erreur est survenue lors de la création de l'élection dans la blockchain",error["message"])
-                        this.loading=false
+                        this.printError("Une erreur est survenue lors de la récupération des résultats",error["message"])
+                        this.loading = false
                     }
                 },
                 simugetElectionResults: async function(){
@@ -352,7 +386,7 @@
                         try{
                             this.candidates[candidate]["candidates_results"] = this.data["candidates_results"][this.candidates[candidate].CandidateName]
                         }catch(error){
-                            console.log(error)
+                            printError("Une erreur est survenue lors de l'assignation des résultats",error)
                         }
                     }
                 },
