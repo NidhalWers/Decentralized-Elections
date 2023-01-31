@@ -144,7 +144,7 @@
                                     <div class="mt-1 text-center text-muted-50">
                                         <p>Terminé depuis le [[printDate(election.ElectionEndDate)]]</p>
                                     </div>
-                                    <button type="button" class="btn btn-soft-success" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
+                                    <button type="button" class="btn btn-soft-success" v-on:click="redirectToElectionFinish(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
                                 </div>
                             </div>
                         </div>
@@ -161,7 +161,7 @@
                                     <div class="mt-1 text-center text-muted-50">
                                         <p>Terminé depuis le [[printDate(election.ElectionEndDate)]]</p>
                                     </div>
-                                    <button type="button" class="btn btn-soft-success" v-on:click="redirectToElection(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
+                                    <button type="button" class="btn btn-soft-success" v-on:click="redirectToElectionFinish(election.ElectionName,election.ElectionStatus)">Voir l'élection et les resultats</button>
                                 </div>
                             </div>
                         </div>
@@ -206,10 +206,8 @@
                     await axios
                     .get('/adminspace/api/getElections')
                     .then(response => (this.elections = response.data))
-
                     this.loading = false
                 }catch(error){
-                    console.log(error)
                     this.printError("Une erreur est survenue lors de la récupération des élections",error.response.data)
                     this.loading = false
                 }
@@ -246,15 +244,20 @@
                 const DateTime2 = day +'/'+ month+'/'+year+' '+hour+':'+minute+':'+second;
                 return DateTime2;
                 },
-
-            // Function to redirect to election page
             redirectToElection: function(electionName,electionStatus) {
-                    if(electionStatus.length == 0){
-                        window.location.href = "/adminspace/viewElection/"+electionName;
-                    }else{
-                        window.location.href = "/adminspace/viewElectionStatus/"+electionName+"/"+electionStatus;
-                    }
+                if(electionStatus.length == 0){
+                    window.location.href = "/adminspace/viewElection/"+electionName;
+                }else{
+                    window.location.href = "/adminspace/viewElectionStatus/"+electionName+"/"+electionStatus;
+                }
                     
+            },
+            redirectToElectionFinish: function(electionName,electionStatus) {
+                if(electionStatus.length == 0){
+                    window.location.href = "/adminspace/viewElectionResults/"+electionName;
+                }else{
+                    window.location.href = "/adminspace/viewElectionResultsStatus/"+electionName+"/"+electionStatus;
+                }
             },
             updateError: async function(){
                 this.error = ''
