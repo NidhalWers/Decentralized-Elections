@@ -205,8 +205,10 @@
               <ul class="left-panel list-inline mb-0 p-0">
                   <li class="list-inline-item"><a href="../dashboard/extra/privacy-policy.html">Privacy Policy</a></li>
                   <li class="list-inline-item"><a href="../dashboard/extra/terms-of-service.html">Terms of Use</a></li>
+                  {% if user.is_authenticated %}
+                  {% else %}
                   <li class="list-inline-item"><a href="/adminspace/connection">Se connecter en temps qu'administrateur</a></li>
-
+                  {% endif %}
               </ul>
               <div class="right-panel">
                   ©2022 Smart Vote, by <a href="https://iqonic.design/">Les 7 grands corsaires</a>.

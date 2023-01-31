@@ -53,9 +53,12 @@
             <button v-on:click="delElection()" type="button" class="btn btn-danger">Supprimer l'élection</button>
         </div>
 
-        <div class="form-check form-switch form-check-inline col-lg-2 float-end">
+        <div class="form-check form-switch form-check-inline col-lg-2 float-end mt-2">
             <input class="form-check-input" type="checkbox" id="switch2" v-model="election[0].ElectionBlind" v-on:click="updateElection()"/>
             <label class="form-check-label pl-2" for="switch2">Cacher l'élection</label>
+        </div>
+        <div class="form-check form-switch form-check-inline col-lg-4 float-end">
+            <div>Vote blanc <div v-if="election[0].ElectionBlind">autorisé</div><div v-if="!election[0].ElectionBlind">non autorisé</div></div>
         </div>
     </div>
     <div class="row">
@@ -67,7 +70,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="d-activity" class="d-activity"></div>
+                    <div id="activity-chart" class="d-activity"></div>
                 </div>
             </div>
         </div>         
@@ -98,154 +101,36 @@
                     <table id="basic-table" class="table mb-0 table-striped" role="grid">
                         <thead>
                             <tr>
-                            <th>CANDIDATS</th>
-                            <th>AFFILIATION</th>
-                            <th>TOTAL DE VOTE</th>
-                            <th>PART DE L'AUDIENCE</th>
+                                <th>CANDIDATS</th>
+                                <th>AFFILIATION</th>
+                                <th>TOTAL DE VOTE</th>
+                                <th>PART DE L'AUDIENCE</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded bg-soft-primary img-fluid avatar-40 me-3" src="../assets/images/shapes/01.png" alt="profile">
-                                    <h6>Addidis Sportwear</h6>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="iq-media-group iq-media-group-1">
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">SP</div>
-                                    </a>
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">PP</div>
-                                    </a>
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">MM</div>
-                                    </a>
-                                </div>
-                            </td>
-                            <td>$14,000</td>
-                            <td>
-                                <div class="mb-2 d-flex align-items-center">
-                                    <h6>60%</h6>
-                                </div>
-                                <div class="shadow-none progress bg-soft-primary w-100" style="height: 4px">
-                                    <div class="progress-bar bg-primary" data-toggle="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </td>
+                            <tr v-for="candidate in candidates">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img v-if="candidate.CandidateImage!=null" class="rounded bg-soft-primary img-fluid avatar-40 me-3" :src="candidate.CandidateImage" alt="profile">
+                                        <h6>[[candidate.CandidateName]]</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="iq-media-group iq-media-group-1">
+                                        [[candidate.CandidateDescription]]
+                                    </div>
+                                </td>
+                                <td>10000</td>
+                                <td>
+                                    <div class="mb-2 d-flex align-items-center">
+                                        <h6>60%</h6>
+                                    </div>
+                                    <div class="shadow-none progress bg-soft-primary w-100" style="height: 4px">
+                                        <div class="progress-bar bg-primary" data-toggle="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
                             </tr>
-                            <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded bg-soft-primary img-fluid avatar-40 me-3" src="../assets/images/shapes/05.png" alt="profile">
-                                    <h6>Netflixer Platforms</h6>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="iq-media-group iq-media-group-1">
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">SP</div>
-                                    </a>
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">PP</div>
-                                    </a>
-                                </div>
-                            </td>
-                            <td>$30,000</td>
-                            <td>
-                                <div class="mb-2 d-flex align-items-center">
-                                    <h6>25%</h6>
-                                </div>
-                                <div class="shadow-none progress bg-soft-primary w-100" style="height: 4px">
-                                    <div class="progress-bar bg-primary" data-toggle="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded bg-soft-primary img-fluid avatar-40 me-3" src="../assets/images/shapes/02.png" alt="profile">
-                                    <h6>Shopifi Stores</h6>
-                                </div>
-                            </td>
-                            <td>                                 
-                                <div class="iq-media-group iq-media-group-1">
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">PP</div>
-                                    </a>
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">TP</div>
-                                    </a>
-                                </div>
-                            </td>
-                            <td>$8,500</td>
-                            <td>
-                                <div class="mb-2 d-flex align-items-center">
-                                    <h6>100%</h6>
-                                </div>
-                                <div class="shadow-none progress bg-soft-success w-100" style="height: 4px">
-                                    <div class="progress-bar bg-success" data-toggle="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded bg-soft-primary img-fluid avatar-40 me-3" src="../assets/images/shapes/03.png" alt="profile">
-                                    <h6>Bootstrap Technologies</h6>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="iq-media-group iq-media-group-1">
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">SP</div>
-                                    </a>
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">PP</div>
-                                    </a>
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">MM</div>
-                                    </a>
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">TP</div>
-                                    </a>
-                                </div>
-                            </td>
-                            <td>$20,500</td>
-                            <td>
-                                <div class="mb-2 d-flex align-items-center">
-                                    <h6>100%</h6>
-                                </div>
-                                <div class="shadow-none progress bg-soft-success w-100" style="height: 4px">
-                                    <div class="progress-bar bg-success" data-toggle="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </td>
-                            </tr>
-                            <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img class="rounded bg-soft-primary img-fluid avatar-40 me-3" src="../assets/images/shapes/04.png" alt="profile">
-                                    <h6>Community First</h6>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="iq-media-group iq-media-group-1">
-                                    <a href="#" class="iq-media-1">
-                                        <div class="icon iq-icon-box-3 rounded-pill">MM</div>
-                                    </a>
-                                </div>
-                            </td>
-                            <td>$9,800</td>
-                            <td>
-                                <div class="mb-2 d-flex align-items-center">
-                                    <h6>75%</h6>
-                                </div>
-                                <div class="shadow-none progress bg-soft-primary w-100" style="height: 4px">
-                                    <div class="progress-bar bg-primary" data-toggle="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </td>
-                            </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -276,13 +161,20 @@
                     timeRemaining:0,
                     electionStarted: true,
                     electionBlind: false,
-                    resultElection:{}
+                    resultElection:{},
+                    data:{
+                        "candidates_results":{
+                            "Candidat2": 3,
+                        }
+                    },
                 }
         },
         async mounted() {
             await this.getElection()
             await this.fillCandidates()
-            await this.getElectionResults()
+            // await this.getElectionResults()
+            await this.simugetElectionResults()
+            await this.activity()
         },    
         methods: {
             getElection: async function () {
@@ -451,13 +343,119 @@
                         this.loading=false
                     }
                 },
+                simugetElectionResults: async function(){
+                    await this.addBlank()
+                    await this.assignResultToCandidate()
+                },
                 assignResultToCandidate: async function() {
-                    for(key in this.resultElection["candidates_results"]){
+                    for(var candidate in this.candidates){
                         try{
-                            this.candidates[key]["CandidateResult"] = this.resultElection["candidates_results"][key]["candidate_result"]
+                            this.candidates[candidate]["candidates_results"] = this.data["candidates_results"][this.candidates[candidate].CandidateName]
                         }catch(error){
                             console.log(error)
                         }
+                    }
+                },
+                getCandidatesNameList: function(){
+                    var candidatesNameList = []
+                    for(var candidate in this.candidates){
+                        candidatesNameList.push(this.candidates[candidate].CandidateName)
+                    }
+                    return candidatesNameList
+                },
+                addBlank: async function(){
+                    if(this.ElectionBlankVote){
+                        this.candidates.push({
+                        CandidateName: "blank_votes",
+                        CandidateResult: 0
+                    })
+                    }
+                },
+                getCandidatesResultList: function(){
+                    var candidatesResultList = []
+                    // for(var candidate in this.candidates){
+                    //     candidatesResultList.push(this.candidates[candidate].CandidateResult)
+                    // }
+                    for(var candidate in this.candidates){
+                        candidatesResultList.push(this.candidates[candidate].candidates_results)
+                    }
+                    return candidatesResultList
+                },
+                activity: async function(){
+                    if (document.querySelectorAll('#activity-chart').length) {
+                        const options = {
+                        series: [{
+                            name: 'Nombre de votes en faveur de ce candidat',
+                            data: this.getCandidatesResultList()
+                        }],
+                        chart: {
+                            type: 'bar',
+                            height: 230,
+                            stacked: true,
+                            toolbar: {
+                                show:false
+                            }
+                        },
+                        colors: ["#3a57e8"],
+                        plotOptions: {
+                            bar: {
+                            horizontal: false,
+                            columnWidth: '28%',
+                            endingShape: 'rounded',
+                            borderRadius: 5,
+                            },
+                        },
+                        legend: {
+                            show: false
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            show: true,
+                            width: 2,
+                            colors: ['transparent']
+                        },
+                        xaxis: {
+                            categories: this.getCandidatesNameList(),
+                            labels: {
+                            minHeight:20,
+                            maxHeight:20,
+                            style: {
+                                colors: "#8A92A6",
+                            },
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                            text: ''
+                            },
+                            labels: {
+                                minWidth: 19,
+                                maxWidth: 19,
+                                style: {
+                                colors: "#8A92A6",
+                                },
+                            }
+                        },
+                        fill: {
+                            opacity: 1
+                        },
+                        tooltip: {
+                            y: {
+                            formatter: function (val) {
+                                return val + " votes"
+                            }
+                            }
+                        }
+                        };
+                    
+                        const chart = new ApexCharts(document.querySelector("#activity-chart"), options);
+                        chart.render();
+                        document.addEventListener('ColorChange', (e) => {
+                        const newOpt = {colors: [e.detail.detail1, e.detail.detail2],}
+                        chart.updateOptions(newOpt)
+                        })
                     }
                 }
             },
