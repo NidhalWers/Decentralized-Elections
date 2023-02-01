@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "AdminSpace",
     "base",
     "Vote",
+    "SmartVoteLite",
     'import_export',
     'rest_framework',
     'corsheaders',

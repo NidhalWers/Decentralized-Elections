@@ -23,6 +23,7 @@ urlpatterns = [
     path('connect/', include('Connect.urls')),
     path('adminspace/', include('AdminSpace.urls')),
     path('base/', include('base.urls')),
+    path('smartvote_lite/', include('SmartVoteLite.urls')),
     path('', include('Vote.urls')),
 ]
 if settings.DEBUG:
