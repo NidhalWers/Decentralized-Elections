@@ -1,6 +1,11 @@
 from django.db import models
 
 # Create your models here.
+class CandidateLite(models.Model):
+    CandidateName = models.CharField(max_length=200,primary_key=True)
+    CandidateDescription = models.CharField(max_length=200, blank=True , null=True)
+    CandidateImage = models.ImageField(upload_to='CandidateImage', blank=True, null=True)
+    CandidateProgram  = models.FileField(upload_to='CandidateProgram',blank=True , null=True)
 
 class ElectionLite(models.Model):
     ElectionName = models.CharField(max_length=200)
@@ -12,4 +17,4 @@ class ElectionLite(models.Model):
     ElectionBlankVote = models.BooleanField(default=False)
     ElectionBlind = models.BooleanField(default=False)
     ElectionCode = models.CharField(max_length=200, blank=True , null=True)
-    ElectionCodeModification = models.CharField(max_length=200, blank=True , null=True)
+    ElectionCodeAdmin = models.CharField(max_length=200, blank=True , null=True)
