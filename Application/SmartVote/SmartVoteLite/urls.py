@@ -3,18 +3,18 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('parametre', views.parametre, name='parametre'),
+    path('parametrelite', views.parametre, name='parametrelite'),
     path('success', views.success, name='success'),
-    path('', views.home, name='home'),
+    path('', views.home, name='homelite'),
     path('viewElectionStatus/<str:name>/<str:status>', views.viewElectionStatus, name='viewElectionStatus'),
     path('viewElection/<str:name>', views.viewElection, name='viewElection'),
     path('viewElectionResults/<str:name>', views.resultElection, name='viewElectionResults'),
     path('viewElectionResultsStatus/<str:name>/<str:status>', views.resultElectionStatus, name='viewElectionResultsStatus'),
-    path('api/getCandidates', views.getCandidates, name='getCandidates'),
+    path('api/getCandidatesInElection/<str:election>', views.getCandidatesInElection, name='getCandidatesInElection'),
     path('api/getCandidate/<str:pk>', views.getCandidate, name='getCandidate'),
     path('api/addCandidate', views.addCandidate, name='addCandidate'),
-    path('api/delCandidate/<str:pk>', views.delCandidate, name='delCandidate'),
-    path('api/updateCandidate/<str:pk>', views.updateCandidate, name='updateCandidate'),
+    path('api/delCandidate/<str:pk>/<str:election>', views.delCandidate, name='delCandidate'),
+    path('api/updateCandidate/<str:pk>/<str:election>', views.updateCandidate, name='updateCandidate'),
     path('api/addElection', views.addElection, name='addElection'),
     path('api/getElections', views.getElections, name='getElections'),
     path('api/getElectionStatus/<str:name>/<str:status>', views.getElectionStatus, name='getElectionStatus'),

@@ -52,7 +52,7 @@
           </svg>
           </button>
           <div class="col-lg-2 col-lg-3 navbar-brand">
-            <a href="/" class="d-flex">
+            <a href="/smartvotelite" class="d-flex">
                 <!--Logo start-->
                 <!-- <svg width="30" class="" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="-0.757324" y="19.2427" width="28" height="4" rx="2" transform="rotate(-45 -0.757324 19.2427)" fill="currentColor"/>
@@ -80,7 +80,7 @@
                 <button class="btn-close float-end"></button>
              </div>
              <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link active" href="/"> Accueil </a></li>
+                <li class="nav-item"><a class="nav-link active" href="/smartvotelite"> Accueil </a></li>
                 <li class="nav-item"><a class="nav-link " href="../dashboard/index-dual-compact.html"><span class="item-name">Comment fonctionne SmartVote Lite ?</span></a></li>
              </ul>
           </div> <!-- container-fluid.// -->
@@ -165,17 +165,16 @@
                 </div>
               </li> -->
               <div class="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
-                <div class="container-login">
-                  <button type="button" class="btn btn-primary d-inline-flex">
-                    <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path d="M12.0001 8.32739V15.6537" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M15.6668 11.9904H8.3335" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16.6857 2H7.31429C4.04762 2 2 4.31208 2 7.58516V16.4148C2 19.6879 4.0381 22 7.31429 22H16.6857C19.9619 22 22 19.6879 22 16.4148V7.58516C22 4.31208 19.9619 2 16.6857 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
-                    <div class="mt-1 ms-2">Créer une élection</div>
+                  <a href="{% url 'parametrelite' %}">
+                    <button type="button" class="btn btn-primary d-inline-flex">
+                      <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path d="M12.0001 8.32739V15.6537" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M15.6668 11.9904H8.3335" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16.6857 2H7.31429C4.04762 2 2 4.31208 2 7.58516V16.4148C2 19.6879 4.0381 22 7.31429 22H16.6857C19.9619 22 22 19.6879 22 16.4148V7.58516C22 4.31208 19.9619 2 16.6857 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
+                      <div class="mt-1 ms-2">Créer une élection</div>
+                    </button>
+                  </a>
+                  <button type="button" class="btn btn-outline-primary d-inline-flex">
+                    <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path d="M15.8325 8.17463L10.109 13.9592L3.59944 9.88767C2.66675 9.30414 2.86077 7.88744 3.91572 7.57893L19.3712 3.05277C20.3373 2.76963 21.2326 3.67283 20.9456 4.642L16.3731 20.0868C16.0598 21.1432 14.6512 21.332 14.0732 20.3953L10.106 13.9602" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
+                    <div class="mt-1 ms-2">Entrer un code</div>
                   </button>
-                </div>
-                <div class="container-login">
-                <button type="button" class="btn btn-outline-primary d-inline-flex">
-                  <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path d="M15.8325 8.17463L10.109 13.9592L3.59944 9.88767C2.66675 9.30414 2.86077 7.88744 3.91572 7.57893L19.3712 3.05277C20.3373 2.76963 21.2326 3.67283 20.9456 4.642L16.3731 20.0868C16.0598 21.1432 14.6512 21.332 14.0732 20.3953L10.106 13.9602" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
-                  <div class="mt-1 ms-2">Entrer un code</div>
-                </button>
                 </div>
               </div>
             </ul>

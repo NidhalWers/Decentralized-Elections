@@ -13,6 +13,8 @@ from dotenv import load_dotenv
 load_dotenv('.env')
 from Connect.models import Citizen
 from django.contrib.auth import authenticate, login
+import random
+import string
 
 # Create your views here.
 def home(request):
@@ -20,40 +22,22 @@ def home(request):
 
 # Create your views here.
 def parametre(request):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return render(request,'AdminSpace/parametre.html')
-    return redirect('/')
+    return render(request,'SmartVoteLite/parametre.html')
 
 def success(request):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return render(request,'AdminSpace/success.html')
-    return redirect('/')
+    return render(request,'SmartVoteLite/success.html')
 
 def viewElectionStatus(request,name,status):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return render(request,'AdminSpace/viewElection.html', context={'name':name,'status':status})
-    return redirect('/')
+    return render(request,'SmartVoteLite/viewElection.html', context={'name':name,'status':status})
 
 def viewElection(request,name):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return render(request,'AdminSpace/viewElection.html', context={'name':name,'status':"None"})
-    return redirect('/')
+    return render(request,'SmartVoteLite/viewElection.html', context={'name':name,'status':"None"})
 
 def resultElection(request,name):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return render(request,'AdminSpace/result.html', context={'name':name , 'status':"None"})
-    return redirect('/')
+    return render(request,'SmartVoteLite/result.html', context={'name':name , 'status':"None"})
 
 def resultElectionStatus(request,name,status):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return render(request,'AdminSpace/result.html', context={'name':name, 'status':status})
-    return redirect('/')
+    return render(request,'SmartVoteLite/result.html', context={'name':name, 'status':status})
 
 # Utils
 
@@ -72,22 +56,25 @@ def encrypt(message: bytes, key: bytes) -> bytes:
 def decrypt(token: bytes, key: bytes) -> bytes:
     return Fernet(key).decrypt(token)
 
+def generate_random_string(length=8):
+    letters = string.ascii_letters + string.digits
+    return ''.join(random.choice(letters) for i in range(length))
+
 #Api
 @api_view(['POST'])
 def addCandidate(request):
     if(request.method == 'POST'):
-        serializer = CandidateLiteSerializer(data=request.data)
-        if not(isCandidateExist(request.data['CandidateName'])):
+        try:
+            serializer = CandidateLiteSerializer(data=request.data)
             if(serializer.is_valid()):
                 # if okay, save it on the database
                 serializer.save()
                 # provide a Json Response with the data that was saved
                 return JsonResponse(serializer.data, status=201)
-        else:
-            return JsonResponse({'message':'Ce candidat existe déjà'}, status=400)
-
-        return JsonResponse(serializer.errors, status=400)
-
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        except Exception as e:
+            return JsonResponse(serializer.errors, status=400)
 
 def getCandidate(request, pk):
     if(request.method == 'GET'):
@@ -101,13 +88,13 @@ def getCandidate(request, pk):
         return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
-def getCandidates(request):
+def getCandidatesInElection(request,election):
     '''
     List all candidates snippets
     '''
     if(request.method == 'GET'):
         # get all the tasks
-        candidate = CandidateLite.objects.all().order_by('CandidateName')
+        candidate = CandidateLite.objects.filter(CandidateElection=election).order_by('CandidateName')
         # serialize the task data
         serializer = CandidateLiteSerializer(candidate, many=True)
         # return a Json response
@@ -159,21 +146,16 @@ def getElections(request):
         return JsonResponse(serializer.data,safe=False)
 
 @api_view(['DELETE'])
-def delCandidate(request, pk):
+def delCandidate(request, pk,election):
     '''
     Delete a candidate
     '''
     if(request.method == 'DELETE'):
         # get the task with the id
         try:
-            candidate = CandidateLite.objects.get(CandidateName=pk)
+            candidate = CandidateLite.objects.get(CandidateName=pk,CandidateElection=election)
         except CandidateLite.DoesNotExist:
             return HttpResponse({'message':"Ce candidat n'existe pas"},status=400)
-
-        # check if is in an election
-        for election in ElectionLite.objects.all().values_list('ElectionCandidates',flat=True):
-            if pk in election:
-                return JsonResponse({"message":"CandidateLite is in an election, delete election before deleting the candidate"},status=400)
 
         # delete files
         try:
@@ -194,14 +176,14 @@ def delCandidate(request, pk):
         return HttpResponse(status=400)
 
 @api_view(['PUT'])
-def updateCandidate(request, pk):
+def updateCandidate(request, pk,election):
     '''
     Update a candidate
     '''
     if(request.method == 'PUT'):
         # get the task with the id
         try:
-            candidate = CandidateLite.objects.get(CandidateName=pk)
+            candidate = CandidateLite.objects.get(CandidateName=pk,CandidateElection=election)
         except CandidateLite.DoesNotExist:
             return JsonResponse({'message':"Ce candidat n'existe pas"},status=400)
         
@@ -272,6 +254,7 @@ def addElection(request):
     if(request.method == 'POST'):
         request.data._mutable=True
         request.data['ElectionApiKey']= encrypt(request.data['ElectionApiKey'].encode(), os.environ.get("DECRYPT_KEY").encode())
+        request.data['ElectionCode']=generate_random_string(8)
         serializer = ElectionLiteSerializer(data=request.data)
         if not(isElectionExist(request.data['ElectionName'],request.data['ElectionStatus'])):
             if(serializer.is_valid()):
