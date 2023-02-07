@@ -24,8 +24,8 @@ def home(request):
 def parametre(request):
     return render(request,'SmartVoteLite/parametre.html')
 
-def success(request):
-    return render(request,'SmartVoteLite/success.html')
+def success(request,code):
+    return render(request,'SmartVoteLite/success.html',context={'code':code})
 
 def viewElectionStatus(request,name,status):
     return render(request,'SmartVoteLite/viewElection.html', context={'name':name,'status':status})
@@ -41,8 +41,8 @@ def resultElectionStatus(request,name,status):
 
 # Utils
 
-def isCandidateExist(candidate):
-    return CandidateLite.objects.filter(CandidateName=candidate).exists()
+def isCandidateExistInElection(candidate,election):
+    return CandidateLite.objects.filter(CandidateName=candidate,CandidateElection=election).exists()
 
 def isElectionExist(name,status='None'):
     if status=='None':
@@ -66,13 +66,16 @@ def addCandidate(request):
     if(request.method == 'POST'):
         try:
             serializer = CandidateLiteSerializer(data=request.data)
-            if(serializer.is_valid()):
-                # if okay, save it on the database
-                serializer.save()
-                # provide a Json Response with the data that was saved
-                return JsonResponse(serializer.data, status=201)
+            if not(isCandidateExistInElection(request.data['CandidateName'],request.data['CandidateElection'])):
+                if(serializer.is_valid()):
+                    # if okay, save it on the database
+                    serializer.save()
+                    # provide a Json Response with the data that was saved
+                    return JsonResponse(serializer.data, status=201)
+                else:
+                    return JsonResponse(serializer.errors, status=400)
             else:
-                return JsonResponse(serializer.errors, status=400)
+                return JsonResponse({'message':'Ce candidat existe déjà'}, status=400)
         except Exception as e:
             return JsonResponse(serializer.errors, status=400)
 
@@ -101,7 +104,6 @@ def getCandidatesInElection(request,election):
         return JsonResponse(serializer.data,safe=False)
     else:
         return HttpResponse(status=400)
-
 
 def getElectionStatus(request,name,status='None'):
     '''

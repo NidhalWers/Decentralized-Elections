@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('parametrelite', views.parametre, name='parametrelite'),
-    path('success', views.success, name='success'),
+    path('success/<str:code>', views.success, name='success'),
     path('', views.home, name='homelite'),
     path('viewElectionStatus/<str:name>/<str:status>', views.viewElectionStatus, name='viewElectionStatus'),
     path('viewElection/<str:name>', views.viewElection, name='viewElection'),
