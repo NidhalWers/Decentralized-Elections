@@ -4,12 +4,12 @@ from . import views
 
 urlpatterns = [
     path('parametrelite', views.parametre, name='parametrelite'),
-    path('success/<str:code>', views.success, name='success'),
+    path('success/<int:code>', views.success, name='success'),
+    path('entercode',views.enterCode, name='entercode'),
+    path('verification/<int:code>',views.verification, name='verification'),
     path('', views.home, name='homelite'),
-    path('viewElectionStatus/<str:name>/<str:status>', views.viewElectionStatus, name='viewElectionStatus'),
-    path('viewElection/<str:name>', views.viewElection, name='viewElection'),
+    path('viewElection/<int:code>', views.viewElection, name='viewElection'),
     path('viewElectionResults/<str:name>', views.resultElection, name='viewElectionResults'),
-    path('viewElectionResultsStatus/<str:name>/<str:status>', views.resultElectionStatus, name='viewElectionResultsStatus'),
     path('api/getCandidatesInElection/<str:election>', views.getCandidatesInElection, name='getCandidatesInElection'),
     path('api/getCandidate/<str:pk>', views.getCandidate, name='getCandidate'),
     path('api/addCandidate', views.addCandidate, name='addCandidate'),

@@ -667,7 +667,6 @@
                 this.loading=false
             },
             getCandidatesInElection: async function () {
-                console.log(this.electionName)
                 try{
                     await axios.get('/smartvotelite/api/getCandidatesInElection/'+this.electionName)
                         .then(response => (this.candidates = response.data))
@@ -809,8 +808,8 @@
                     }
             },
             addElection: async function(){
-                electionCode = Math.floor(Math.random() * (999999 - 100000 + 100000) + 100000)
                 event.preventDefault();
+                electionCode = Math.floor(Math.random() * (999999 - 100000 + 100000) + 100000)
                 this.loading=true
                 let formData = new FormData();
                 formData.append('ElectionName', this.electionName);

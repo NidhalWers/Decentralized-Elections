@@ -16,4 +16,4 @@ class ElectionLite(models.Model):
     ElectionStartDate = models.DateTimeField(auto_now_add=False, blank=True, null=True)
     ElectionEndDate = models.DateTimeField(auto_now_add=False, blank=True, null=True)
     ElectionBlankVote = models.BooleanField(default=False)
-    ElectionCode = models.CharField(max_length=200,primary_key=True)
+    ElectionCode = models.BigIntegerField(primary_key=True)

@@ -15,6 +15,8 @@ from Connect.models import Citizen
 from django.contrib.auth import authenticate, login
 import random
 import string
+import smtplib
+from email.mime.text import MIMEText
 
 # Create your views here.
 def home(request):
@@ -30,8 +32,8 @@ def success(request,code):
 def viewElectionStatus(request,name,status):
     return render(request,'SmartVoteLite/viewElection.html', context={'name':name,'status':status})
 
-def viewElection(request,name):
-    return render(request,'SmartVoteLite/viewElection.html', context={'name':name,'status':"None"})
+def viewElection(request,code):
+    return render(request,'SmartVoteLite/viewElection.html', context={'code':code})
 
 def resultElection(request,name):
     return render(request,'SmartVoteLite/result.html', context={'name':name , 'status':"None"})
@@ -39,7 +41,90 @@ def resultElection(request,name):
 def resultElectionStatus(request,name,status):
     return render(request,'SmartVoteLite/result.html', context={'name':name, 'status':status})
 
+def verification(request,code):
+    if request.method == 'GET':
+        try:
+            codeSent = code
+            if(codeSent == request.session['codeVerification']):
+                print('sucess')
+                print(request.session['codeElection'])
+                # request.session = request.session.pop('codeVerification', None)
+                return JsonResponse({'message':'Code valide','ElectionCode':request.session['codeElection']}, status=200)
+            else:
+                print("code invalide")
+                return JsonResponse({'message':'Code invalide'}, status=400)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':e}, status=400)
+    else:
+        return render(request,'SmartVoteLite/verification.html')
+
+def enterCode(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        code = request.POST['code']
+        try:
+            election = ElectionLite.objects.get(ElectionCode=code)
+            try:
+                codeVerification = sendEmailConfirmation(email)
+                request.session['codeVerification'] = codeVerification
+            except:
+                return render(request,'SmartVoteLite/enterCode.html',context={'status':0,'error':'Erreur lors de l\'envoi du code'})
+        except:
+            return render(request,'SmartVoteLite/enterCode.html',context={'status':0,'error':'Code invalide'})
+        
+        request.session['codeElection'] = code
+        return render(request,'SmartVoteLite/verification.html',context={'status':1,'error':'Code envoyé'})
+    else:
+        return render(request,'SmartVoteLite/enterCode.html')
+
 # Utils
+
+def sendEmailConfirmation(receiver):
+    code = random.randint(100000,999999)
+    sender_email = os.environ.get("EMAIL")
+    sender_password = os.environ.get("EMAIL_KEY")
+    recipient_email = receiver
+    subject = "Smart Vote - Code de vérification"
+    body = """
+    <h1>Bonjour,</h1>
+
+    <p>Vous avez demandé à voter sur SmartVote. Veuillez entrer le code de vérification suivant afin d'avoir accès à l'élection smartvote:</p>
+
+    <h2>"""+str(code)+"""</h2>
+
+    <p>
+    Ce code n'est valide que pour cette élection et n'inclut aucune inscription à notre service. Il ne sert qu'à vérifier que vous êtes bien le propriétaire de l'adresse e-mail que vous avez fournie afin de vous permettre de voter.
+    </p>
+
+    <p>
+    Si vous rencontrez des problèmes ou avez des questions, n'hésitez pas à nous contacter. Nous sommes là pour vous aider.
+    </p>
+
+    <p>
+    Merci d'avoir choisi notre service.
+    </p>
+
+    <p>
+    --------------------------
+    </p>
+
+    <p>
+    SmartoVote: https://smartvote.com    
+    </p>     
+
+    """
+    html_message = MIMEText(body, 'html')
+    html_message['Subject'] = subject
+    html_message['From'] = sender_email
+    html_message['To'] = recipient_email
+    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    server.login(sender_email, sender_password)
+    server.sendmail(sender_email, recipient_email, html_message.as_string())
+    server.quit()
+
+
+    return code
 
 def isCandidateExistInElection(candidate,election):
     return CandidateLite.objects.filter(CandidateName=candidate,CandidateElection=election).exists()
@@ -256,7 +341,6 @@ def addElection(request):
     if(request.method == 'POST'):
         request.data._mutable=True
         request.data['ElectionApiKey']= encrypt(request.data['ElectionApiKey'].encode(), os.environ.get("DECRYPT_KEY").encode())
-        request.data['ElectionCode']=generate_random_string(8)
         serializer = ElectionLiteSerializer(data=request.data)
         if not(isElectionExist(request.data['ElectionName'],request.data['ElectionStatus'])):
             if(serializer.is_valid()):
