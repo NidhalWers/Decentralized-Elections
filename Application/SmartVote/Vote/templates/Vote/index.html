@@ -28,22 +28,11 @@
                 [[message]] : [[error]]
             </div>
         </div>
-        <div class="row">
-            <nav aria-label="breadcrumb" class="d-flex justify-content-between">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">Administration des votes</li>
-                </ol>
-                <div>
-                    <a href="viewCandidates" class=""><button type="button" class="btn btn-primary">Voir la liste des candidats</button></a>
-                    <a href="parametre"><button type="button" class="btn btn-primary">Créer une élection</button></a>
-                </div>
-                <!-- <p><em>[[currentDates]]</em></p> -->
-            </nav> 
-        </div>
+        
         <div class="row pb-5 mt-0">
-            <p class="h1 d-flex justify-content-center">Administration des votes</p>
+            <p class="h1 d-flex justify-content-center">Liste des élections</p>
 
-            <p class="h6 d-flex justify-content-center">Créez et paramétrez les élections</p>
+            <p class="h6 d-flex justify-content-center">Choisisser votre élection</p>
         </div>
         <div class="row">
             <div class="row">
@@ -204,7 +193,7 @@
             getElections: async function () {
                 try{
                     await axios
-                    .get('/adminspace/api/getElections')
+                    .get('/api/getElections')
                     .then(response => (this.elections = response.data))
                     this.loading = false
                 }catch(error){
@@ -273,17 +262,17 @@
                 },
             redirectToElection: function(electionName,electionStatus) {
                 if(electionStatus.length == 0){
-                    window.location.href = "/adminspace/viewElection/"+electionName;
+                    window.location.href = "/viewElection/"+electionName;
                 }else{
-                    window.location.href = "/adminspace/viewElectionStatus/"+electionName+"/"+electionStatus;
+                    window.location.href = "/viewElectionStatus/"+electionName+"/"+electionStatus;
                 }
                     
             },
             redirectToElectionFinish: function(electionName,electionStatus) {
                 if(electionStatus.length == 0){
-                    window.location.href = "/adminspace/viewElectionResults/"+electionName;
+                    window.location.href = "/viewElectionResults/"+electionName;
                 }else{
-                    window.location.href = "/adminspace/viewElectionResultsStatus/"+electionName+"/"+electionStatus;
+                    window.location.href = "/viewElectionResultsStatus/"+electionName+"/"+electionStatus;
                 }
             },
             updateError: async function(){
