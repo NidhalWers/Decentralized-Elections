@@ -118,20 +118,61 @@
             },
 
             currentDate: function() {
-                const today = new Date();
-                    const year = today.getFullYear();
-                    const month = ('0'+today.getMonth()+1).slice(-2);
-                    const day = ('0'+today.getDate()).slice(-2);
-                    const hour = ('0'+today.getHours()).slice(-2);
-                    const minute = ('0'+today.getMinutes()).slice(-2);
-                    const second = ('0'+today.getSeconds()).slice(-2);
-                    // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                    // const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate());
-                    const dateTime = year +'-'+ month+'-'+day+'T'+hour+':'+minute+':'+second+'Z'; 
-                    const currentDateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
-                    // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
-                    this.currentDates = currentDateTime;
-                    this.actualTime = dateTime;
+                var current_date = new Date();
+                var date = current_date.getDate();
+                var month = current_date.getMonth() + 1;
+                var year = current_date.getFullYear();
+                var hours = current_date.getHours();
+                var minutes = current_date.getMinutes();
+                var seconds = current_date.getSeconds();
+                if (date < 10) {
+                    date = '0' + date;
+                }
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (hours < 10) {
+                    hours = '0' + hours;
+                }
+                if (minutes < 10) {
+                    minutes = '0' + minutes;
+                }
+                if (seconds < 10) {
+                    seconds = '0' + seconds;
+                }
+                const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
+                const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
+                this.currentDates = currentDateTime;
+                this.actualTime = dateTime;
+                },
+
+            printDate: function(date) {
+                var current_date = new Date(date);
+                var date = current_date.getDate();
+                var month = current_date.getMonth() + 1;
+                var year = current_date.getFullYear();
+                var hours = current_date.getHours();
+                var minutes = current_date.getMinutes();
+                var seconds = current_date.getSeconds();
+                if (date < 10) {
+                    date = '0' + date;
+                }
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (hours < 10) {
+                    hours = '0' + hours;
+                }
+                if (minutes < 10) {
+                    minutes = '0' + minutes;
+                }
+                if (seconds < 10) {
+                    seconds = '0' + seconds;
+                }
+                const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
+                const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                return currentDateTime;
                 },
 
             // Function diffenrece between two dates and return number of days, hours, minutes and seconds
