@@ -1,4 +1,4 @@
-{% extends "base/base.html" %}
+{% extends "base/baselite.html" %}
 
 {% load static %}
 
@@ -21,31 +21,28 @@
                               </svg>
                               <!--logo End-->                              <h4 class="logo-title ms-3">Hope UI</h4>
                            </a>
-                           <h2 class="mb-2 text-center">Connection Admin</h2>
-                           <p class="text-center">Login to stay connected.</p>
-                           <form method = "POST" action="{% url 'connect_admin' %}">
+                           <h2 class="mb-2 text-center">Accès à l'élection</h2>
+                           <p class="text-center">Rentrez le code de l'élection ainsi que votre adresse mail afin de pouvoir voter</p>
+                           <form method = "POST" action="{% url 'entercode' %}">
                               {% csrf_token %}
                               <div class="row">
                                  <div class="col-lg-12">
                                     <div class="form-group">
-                                       <label for="email" class="form-label">Email</label>
-                                       <input type="email" name="email" class="form-control" id="email" aria-describedby="email" placeholder=" ">
+                                       <label for="email" class="form-label">Code de l'élection</label>
+                                       <input type="number" name="code" class="form-control" id="code" aria-describedby="code" placeholder=" ">
                                     </div>
                                  </div>
                                  <div class="col-lg-12">
                                     <div class="form-group">
-                                       <label for="password" class="form-label">Password</label>
-                                       <input type="password" name="password1" class="form-control" id="password" aria-describedby="password" placeholder=" ">
+                                       <label for="password" class="form-label">Adresse mail</label>
+                                       <input type="email" name="email" class="form-control" id="email" aria-describedby="email" placeholder=" ">
                                     </div>
-                                 </div>
-                                 <div class="col-lg-12 d-flex justify-content-between">
-                                    <a href="recoverpw.html">Forgot Password?</a>
                                  </div>
                                  {% if status == 0 %}
                                     <p class="text-danger">{{ error }}</p>
                                  {% endif %}
                                  <div class="d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-primary">Sign In</button>
+                                    <button type="submit" class="btn btn-primary">Entrer</button>
                                  </div>
                               </div>
                            </form>
