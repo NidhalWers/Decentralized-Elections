@@ -1,27 +1,5 @@
 from django.shortcuts import render,redirect
-
 from Connect.models import Citizen
-
-# Create your views here.
-
-# def vote(request):
-#     if request.user.is_authenticated:
-#         if request.user.is_superuser:
-#             return redirect('/Vote')
-#         else:
-#             return render(request,'Vote/vote.html')
-#     else:
-#         return redirect('/')
-
-# def selectVote(request):
-#     if request.user.is_authenticated:
-#         if request.user.is_superuser:
-#             return redirect('/Vote')
-#         else:
-#             return render(request,'Vote/selectVote.html',context={'status':1})
-#     else:
-#         return render(request,'Vote/home.html',context={'status':1})
-
 import os
 from django.shortcuts import render,redirect
 from AdminSpace.models import Candidate,Election
@@ -36,6 +14,8 @@ from dotenv import load_dotenv
 load_dotenv('.env')
 from Connect.models import Citizen
 from django.contrib.auth import authenticate, login
+import hashlib
+import base64
 
 
 def index(request):
@@ -94,6 +74,20 @@ def encrypt(message: bytes, key: bytes) -> bytes:
 
 def decrypt(token: bytes, key: bytes) -> bytes:
     return Fernet(key).decrypt(token)
+
+def num_to_random_string(num):
+    # Convert number to bytes
+    num_bytes = str(num).encode('utf-8')
+
+    # Generate hash value
+    hash_object = hashlib.sha256(num_bytes)
+    hash_bytes = hash_object.digest()
+
+    # Encode hash value as base64 string
+    random_string = base64.b64encode(hash_bytes).decode('utf-8')
+
+    return random_string
+
 
 #Api
 @api_view(['POST'])
@@ -426,4 +420,18 @@ def isElectionExistAPI(request, name):
         except Election.DoesNotExist:
             return JsonResponse({'message':"Cette élection n'existe pas"},status=201)
         return JsonResponse({'message':'Cette élection existe déjà'}, status=201)
+
+@api_view(['GET'])
+def getIdEncrypted(request, pk):
+    try:
+        return JsonResponse({'id_encrypted':num_to_random_string(pk)}, status=201)
+    except KeyError:
+        return JsonResponse({'message':"Identifiant introuvable"},status=400)
+
+@api_view(['GET'])
+def getAPIKeyDecrypted(request, apikey):
+    try:
+        return JsonResponse({'ElectionApiKey':decrypt(apikey, os.environ.get("DECRYPT_KEY").encode()).decode()}, status=201)
+    except Election.DoesNotExist:
+        return JsonResponse({'message':"Cette élection n'existe pas"},status=400)
     

@@ -18,4 +18,6 @@ urlpatterns = [
 
     path('api/isElectionExistStatus/<str:name>/<str:status>', views.isElectionExistStatusAPI, name='isElectionExistStatusAPI'),
     path('api/isElectionExist/<str:name>', views.isElectionExistAPI, name='isElectionExistAPI'),
+
+    path('api/getAPIKEYDecrypted/<str:apikey>', views.getAPIKeyDecrypted, name='getAPIKeyDecrypted'),
 ]

@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 load_dotenv('.env')
 import os
 import json
+import hashlib
+import base64
 
 # Create your views here.
 
@@ -70,11 +72,18 @@ def login_ameli(request):
 
 # Utils 
 
-def encrypt(message: bytes, key: bytes) -> bytes:
-    return Fernet(key).encrypt(message)
+def num_to_random_string(num):
+    # Convert number to bytes
+    num_bytes = str(num).encode('utf-8')
 
-def decrypt(token: bytes, key: bytes) -> bytes:
-    return Fernet(key).decrypt(token)
+    # Generate hash value
+    hash_object = hashlib.sha256(num_bytes)
+    hash_bytes = hash_object.digest()
+
+    # Encode hash value as base64 string
+    random_string = base64.b64encode(hash_bytes).decode('utf-8')
+
+    return random_string
 
 # API
 
@@ -111,6 +120,10 @@ def get_user_infos(request,pk):
 def get_user_id_crypted(request,pk):
     if request.method == 'GET':
         if request.user.is_authenticated:
-            return JsonResponse(encrypt(str(pk).encode(), os.environ.get("DECRYPT_KEY").encode()).decode("utf-8"), safe=False)
+            try:
+                return JsonResponse(num_to_random_string(pk), safe=False)
+            except Exception as e:
+                print(e)
+                return JsonResponse({'status':0,'error':e})
         else:
             return JsonResponse({'status':0,'error':'Utilisateur non connecté'})

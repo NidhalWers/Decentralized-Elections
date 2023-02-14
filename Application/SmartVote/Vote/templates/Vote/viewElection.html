@@ -2,6 +2,7 @@
 
 {% block body %}
 {% load static %}
+{% csrf_token %}
 <div id="Election">
     <div v-if="loading" class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -146,7 +147,7 @@
                         <input type="email" class="form-control" id="email" aria-describedby="email" :placeholder="candidateSelected" v-model="candidateToConfirm">
                     </div>
                     <div class="text-start">
-                        <button type="button" class="btn btn-primary" :disabled="candidateToConfirm != candidateSelected" data-bs-dismiss="modal">Voter</button>
+                        <button type="button" class="btn btn-primary" v-on:click="vote()" :disabled="candidateToConfirm != candidateSelected" data-bs-dismiss="modal">Voter</button>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </div>
@@ -185,6 +186,7 @@
                     candidateSelected:'',
                     candidateToConfirm:'',
                     idCrypted:'',
+                    APIKEYDecrypted:'',
                 }
         },
         async mounted() {
@@ -197,65 +199,77 @@
             },
         methods: {
 
-            VoteInBlockchain: async function (id){
+            VoteInBlockchain: async function (){
                 event.preventDefault();
                 this.loading=true
                 var data = JSON.stringify({
-                    "candidates" : this.electionCandidates,
-                    "starting_date" : this.electionStartDate,
-                    "closing_date" : this.electionEndDate,
                     "election_name" : this.electionName,
-                    "count_blank_votes" : this.electionBlank,
-                    "status" : this.electionStatut
+                    "candidate_name" : this.candidateSelected,
+                    "voting_time" : this.actualTime,
+                    "voter_id" : this.idCrypted,
                     });
 
                     var config = {
                     method: 'post',
-                    url: 'http://localhost:8080/smart-vote/api/v1/create-election',
+                    url: 'http://localhost:8080/smart-vote/api/v1/vote',
                     headers: { 
                         'Content-Type': 'application/json',
-                        "X-CSRFToken": "{{ csrf_token }}"
+                        "X-CSRFToken": "{{ csrf_token }}",
+                        'Key': this.APIKEYDecrypted.ElectionApiKey,
                     },
                     data : data
                     };
 
                     try{
+                        console.log("data",data)
                         await axios(config)
                         .then(response => (this.responseApiCall = response.data))
-
-                        await this.addElection()
+                        window.location.href = "/"
                         this.loading=false
                     }catch(error){
                         this.printError("Une erreur est survenue lors de la création de l'élection dans la blockchain",error["message"])
                         this.loading=false
                     }
             },
-
-
             vote: async function () {
                 try{
-                    await getIdCrypted()
-                    await VoteInBlockchain(this.idCrypted,this.candidateSelected)
+                    console.log("vote")
+                    await this.getIdCrypted()
+                    console.log("idCrypted",this.idCrypted)
+                    await this.getAPIKEYDecrypted()
+                    console.log("APIKEYDecrypted",this.APIKEYDecrypted.ElectionApiKey)
+                    await this.VoteInBlockchain()
                 }catch(error){
-                    this.printError("Une erreur est survenue lors de la récupération de l'identifiant crypté",error.response.data)
-                }
-               
+                    this.printError("Une erreur est survenue lors du cote",error.response)
+                } 
             },
-
-
+            getAPIKEYDecrypted: async function () {
+                try{
+                    await axios
+                    .get('/api/getAPIKEYDecrypted/'+this.election[0].ElectionApiKey)
+                    .then(response => (this.APIKEYDecrypted = response.data))
+                }catch(error){
+                    console.log(error)
+                    this.printError("Une erreur est survenue lors de la récupération de la clé API",error.response)
+                    return
+                }
+            },
             getIdCrypted: async function () {
-                await axios
-                    .get('/connect/api/getUserIdCrypted/{{ user.id }}')
-                    .then(response => (this.idCrypted = response.data))
-                    .catch(response => (console.log(response.data)));
+                try{
+                    console
+                    await axios
+                        .get('/connect/api/getUserIdCrypted/{{ user.id }}')
+                        .then(response => (this.idCrypted = response.data))
+                }catch(error){
+                    console.log(error)
+                    this.printError("Une erreur est survenue lors de la récupération de l'identifiant crypté",error.response.data)
+                    return
+                }
             },
 
             changeCandidate: function (candidate) {
                 this.candidateSelected = candidate
             },
-
-
-
             getElection: async function () {
                 electionName = "{{name}}"
                 electionStatus = "{{status}}"

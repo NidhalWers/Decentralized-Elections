@@ -17,6 +17,8 @@ import random
 import string
 import smtplib
 from email.mime.text import MIMEText
+import hashlib
+import base64
 
 # Create your views here.
 def home(request):
@@ -40,7 +42,6 @@ def verification(request,code):
         try:
             codeSent = code
             if(codeSent == request.session['codeVerification']):
-                print(request.session['codeElection'])
                 # request.session = request.session.pop('codeVerification', None)
                 request.session['codeVerification'] = None
                 request.session['Allowed'] = True
@@ -67,6 +68,7 @@ def enterCode(request):
             return render(request,'SmartVoteLite/enterCode.html',context={'status':0,'error':'Code invalide'})
         
         request.session['codeElection'] = code
+        request.session['id'] = email
         return render(request,'SmartVoteLite/verification.html',context={'status':1,'error':'Code envoyé'})
     else:
         return render(request,'SmartVoteLite/enterCode.html')
@@ -128,15 +130,29 @@ def isElectionExist(name,status='None'):
     else:
         return ElectionLite.objects.filter(ElectionName=name,ElectionStatus=status).exists()
 
+
+def generate_random_string(length=8):
+    letters = string.ascii_letters + string.digits
+    return ''.join(random.choice(letters) for i in range(length))
+
 def encrypt(message: bytes, key: bytes) -> bytes:
     return Fernet(key).encrypt(message)
 
 def decrypt(token: bytes, key: bytes) -> bytes:
     return Fernet(key).decrypt(token)
 
-def generate_random_string(length=8):
-    letters = string.ascii_letters + string.digits
-    return ''.join(random.choice(letters) for i in range(length))
+def num_to_random_string(num):
+    # Convert number to bytes
+    num_bytes = str(num).encode('utf-8')
+
+    # Generate hash value
+    hash_object = hashlib.sha256(num_bytes)
+    hash_bytes = hash_object.digest()
+
+    # Encode hash value as base64 string
+    random_string = base64.b64encode(hash_bytes).decode('utf-8')
+
+    return random_string
 
 #Api
 @api_view(['POST'])
@@ -330,44 +346,7 @@ def addElection(request):
                  return JsonResponse(serializer.errors, status=400)
         else:
             return JsonResponse({'message':'Cette élection existe déjà'}, status=400)
-       
-@api_view(['DELETE'])
-def delElectionStatus(request, pk, status='None'):
-    '''
-    Delete a election
-    '''
-    if(request.method == 'DELETE'):
-        # get the task with the id
-        try:
-            election = ElectionLite.objects.get(ElectionName=pk,ElectionStatus=status)
-        except ElectionLite.DoesNotExist:
-            return JsonResponse({'message':"Cette élection n'existe pas"},status=400)
 
-        # delete election
-        election.delete()
-        # return a Json response
-        return JsonResponse({'message':'ElectionLite deleted successfully'}, status=204)
-    else:
-        return HttpResponse(status=400)
-
-@api_view(['DELETE'])
-def delElection(request, pk):
-    '''
-    Delete a election
-    '''
-    if(request.method == 'DELETE'):
-        # get the task with the id
-        try:
-            election = ElectionLite.objects.get(ElectionName=pk,ElectionStatus="")
-        except ElectionLite.DoesNotExist:
-            return JsonResponse({'message':"Cette élection n'existe pas"},status=400)
-
-        # delete election
-        election.delete()
-        # return a Json response
-        return JsonResponse({'message':'ElectionLite deleted successfully'}, status=204)
-    else:
-        return HttpResponse(status=400)
 
 @api_view(['PUT'])
 def updateElection(request, pk):
@@ -450,3 +429,19 @@ def isElectionExistAPI(request, name):
         except ElectionLite.DoesNotExist:
             return JsonResponse({'message':"Cette élection n'existe pas"},status=201)
         return JsonResponse({'message':'Cette élection existe déjà'}, status=201)
+
+@api_view(['GET'])
+def getIdEncrypted(request):
+    try:
+        request.session['id']
+        return JsonResponse({'id_encrypted':num_to_random_string(request.session['id'])}, status=201)
+    except KeyError:
+        return JsonResponse({'message':"Identifiant introuvable"},status=400)
+
+@api_view(['GET'])
+def getAPIKeyDecrypted(request):
+    try:
+        election = ElectionLite.objects.get(ElectionCode=request.session['codeElection'])
+        return JsonResponse({'ElectionApiKey':decrypt(election.ElectionApiKey, os.environ.get("DECRYPT_KEY").encode()).decode()}, status=201)
+    except ElectionLite.DoesNotExist:
+        return JsonResponse({'message':"Cette élection n'existe pas"},status=400)

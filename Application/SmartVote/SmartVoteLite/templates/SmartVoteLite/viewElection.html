@@ -146,7 +146,7 @@
                         <input type="email" class="form-control" id="email" aria-describedby="email" :placeholder="candidateSelected" v-model="candidateToConfirm">
                     </div>
                     <div class="text-start">
-                        <button type="button" class="btn btn-primary" :disabled="candidateToConfirm != candidateSelected" data-bs-dismiss="modal">Voter</button>
+                        <button type="button" class="btn btn-primary" v-on:click="voteInBlockChain(candidateSelected)" :disabled="candidateToConfirm != candidateSelected" data-bs-dismiss="modal">Voter</button>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </div>
@@ -182,6 +182,8 @@
                     loading:true,
                     candidateSelected:'',
                     candidateToConfirm:'',
+                    idEncrypted:'',
+                    ApiKEY: '',
                 }
         },
         async mounted() {
@@ -301,6 +303,64 @@
                 changeCandidate: function (candidate) {
                     this.candidateSelected = candidate
                 },
+                voteInBlockChain: async function (candidate){
+                    event.preventDefault();
+                    this.loading=true
+                    try{
+                        await axios
+                            .get('/smartvotelite/api/getIdEncrypted')
+                            .then(response => (this.idEncrypted = response.data))
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération de l'identifiants",error.response.data)
+                    }
+
+                    if(this.idEncrypted == ''){
+                        this.printError("Vous n'avez pas d'identifiant, veuillez vous inscrire",null)
+                        this.loading=false
+                        return
+                    }
+
+                    try{
+                        await axios
+                            .get('/smartvotelite/api/getAPIKeyDecrypted')
+                            .then(response => (this.ApiKEY = response.data))
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération de l'identifiant de l'élection",error.response.data)
+                    }
+
+                    if(this.ApiKEY == ''){
+                        this.printError("Error identifiant élection",null)
+                        this.loading=false
+                        return
+                    }
+
+                    var data = JSON.stringify({
+                        "election_name" : this.electionName,
+                        "candidate_name" : candidate,
+                        "voting_time" : this.actualTime,
+                        "voter_id" : this.idEncrypted.id_encrypted,
+                        });
+
+                        var config = {
+                        method: 'post',
+                        url: 'http://localhost:8080/smart-vote/api/v1/vote',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            "X-CSRFToken": "{{ csrf_token }}",
+                            'Key': this.ApiKEY,
+                        },
+                        data : data
+                        };
+
+                        try{
+                            await axios(config)
+                            .then(response => (this.responseApiCall = response.data))
+                            this.loading=false
+                        }catch(error){
+                            this.printError("Une erreur est survenue lors du vote dans la blockchain",error["message"])
+                            this.loading=false
+                        }
+                }
             },
         },
     );
