@@ -52,7 +52,7 @@
             </div>  
             <div class="col-lg-6 col-md-0">
                 <p class="h1 d-flex justify-content-center">[[election[0].ElectionName]]</p>
-                <p class="h6 d-flex justify-content-center">Gérer l'élection</p>
+                <p class="h6 d-flex justify-content-center">Liste des candidats</p>
             </div> 
             <div class="col-lg-3 col-md-6">
                 <div class="card border-bottom border-4 border-0 border-primary">
@@ -69,22 +69,6 @@
                     </div>
                 </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-2">
-                <button type="button" class="btn btn-primary">Modifier les candidats</button>
-            </div>
-            <div class="col-lg-2">
-                <button v-on:click="delElection()" type="button" class="btn btn-danger">Supprimer l'élection</button>
-            </div>
-
-            <div class="form-check form-switch form-check-inline col-lg-2 float-end mt-2">
-                <input class="form-check-input" type="checkbox" id="switch2" v-model="election[0].ElectionBlind" v-on:click="updateElection()"/>
-                <label class="form-check-label pl-2" for="switch2">Cacher l'élection</label>
-            </div>
-            <div class="form-check form-switch form-check-inline col-lg-4 float-end">
-                <div>Vote blanc <div v-if="election[0].ElectionBlind">autorisé</div><div v-if="!election[0].ElectionBlind">non autorisé</div></div>
             </div>
         </div>
         <hr>
@@ -126,6 +110,22 @@
                                             stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>   
                                 </a>
+                                <button type="button" class="btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  v-on:click="changeCandidate(candidate.CandidateName)">Voter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="election[0].ElectionBlankVote == true" class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                <div class="fs-italic">
+                                    <h5>Vote blanc</h5>
+                                </div>	
+                                <!-- <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"> -->
+                                <button type="button" class="btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  v-on:click="changeCandidate('blanc')">Voter</button>
                             </div>
                         </div>
                     </div>
@@ -133,6 +133,28 @@
             </div>
         </div>  
     </div>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Confirmer le vote</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Veuillez enter <strong>[[candidateSelected]] </strong>  afin de valider votre vote</label>
+                        <input type="email" class="form-control" id="email" aria-describedby="email" :placeholder="candidateSelected" v-model="candidateToConfirm">
+                    </div>
+                    <div class="text-start">
+                        <button type="button" class="btn btn-primary" :disabled="candidateToConfirm != candidateSelected" data-bs-dismiss="modal">Voter</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 <!-- vue:js -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
@@ -155,60 +177,40 @@
                     candidates:[],
                     timeRemaining:0,
                     electionStarted: true,
-                    electionBlind: false,
                     error:'',
                     message:'',
                     loading:true,
+                    candidateSelected:'',
+                    candidateToConfirm:'',
                 }
         },
         async mounted() {
             await this.getElection()
-            await this.fillCandidates()
         },    
         created() {
                 setInterval(this.currentDate, 1000);
                 setInterval(this.getElection, 1000);
             },
         methods: {
-            
             getElection: async function () {
-                electionName = "{{name}}"
-                electionStatus = "{{status}}"
-                if(electionStatus != "None"){
+                electionCode = "{{code}}"
                     try{
                     await axios
-                        .get('/adminspace/api/getElectionStatus/'+electionName+'/'+electionStatus)
+                        .get('/smartvotelite/api/getElection/'+electionCode)
                         .then(response => (this.election = response.data))
                         this.loading = false
                     }catch(error){
                         this.printError("Une erreur est survenue lors de la récupération des élections",error.response.data)
                         this.loading = false
                     }
-                }
-                else{
-                    try{
-                    await axios
-                        .get('/adminspace/api/getElection/'+electionName)
-                        .then(response => (this.election = response.data))
-                        this.loading = false
-                    }catch(error){
-                        this.printError("Une erreur est survenue lors de la récupération des élections",error.response.data)
-                        this.loading = false
-                    }
-                };
                 this.election[0].ElectionCandidates = this.election[0].ElectionCandidates.split(",");
                 this.checkElectionStarted()
+                this.getCandidatesInElection()
             },
             checkElectionStarted:function(){
-                electionName = "{{name}}"
-                electionStatus = "{{status}}"
+                electionCode = "{{ElectionCode}}"
                 if (this.election[0].ElectionEndDate < this.actualTime){
-                    if(electionStatus != "None"){
-                        window.location.href = "/adminspace/viewElectionResultsStatus/"+electionName+"/"+electionStatus;
-                    }
-                    else{
-                        window.location.href = "/adminspace/viewElectionResults/"+electionName;
-                    }
+                    window.location.href = "/smartvotelite/viewElectionResults/"+electionCode;
                 }
                 if(this.election[0].ElectionStartDate < this.actualTime){
                     this.electionStarted = true
@@ -217,109 +219,67 @@
                     this.electionStarted = false
                 }
             },
-            updateElection: async function () {
-                let formData = new FormData();
-                formData.append('ElectionName', this.election[0].ElectionName);
-                formData.append('ElectionBlind', !this.election[0].ElectionBlind);
-                if(this.election[0].ElectionStatus != ""){
-                    try{
-                        await axios
-                            .put('/adminspace/api/updateElectionStatus/'+this.election[0].ElectionName+'/'+this.election[0].ElectionStatus,formData,{
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                                "X-CSRFToken": "{{ csrf_token }}",
-                            }
-                            })
-                    }catch(error){
-                        this.printError("Une erreur est survenue lors de la modification de l'élection",error.response.data)
-                    }
-                }else{
-                    try{
-                        await axios
-                            .put('/adminspace/api/updateElection/'+this.election[0].ElectionName,formData,{
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                                "X-CSRFToken": "{{ csrf_token }}",
-                            }
-                            })
-                    }catch(error){
-                        this.printError("Une erreur est survenue lors de la modification de l'élection",error.response.data)
-                    }
-                }
-                this.getElection()
-            },
                 printDate: function(date) {
-                    date = new Date(date);
-                    const year = date.getFullYear();
-                    const month = ('0'+date.getMonth()+1).slice(-2);
-                    const day = ('0'+date.getDate()).slice(-2);
-                    const hour = ('0'+date.getHours()).slice(-2);
-                    const minute = ('0'+date.getMinutes()).slice(-2);
-                    const second = ('0'+date.getSeconds()).slice(-2);
-                    const DateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
-                    const DateTime2 = day +'/'+ month+'/'+year+' '+hour+':'+minute+':'+second;
-                    return DateTime2;
+                    var current_date = new Date(date);
+                    var date = current_date.getDate();
+                    var month = current_date.getMonth() + 1;
+                    var year = current_date.getFullYear();
+                    var hours = current_date.getHours();
+                    var minutes = current_date.getMinutes();
+                    var seconds = current_date.getSeconds();
+                    if (date < 10) {
+                        date = '0' + date;
+                    }
+                    if (month < 10) {
+                        month = '0' + month;
+                    }
+                    if (hours < 10) {
+                        hours = '0' + hours;
+                    }
+                    if (minutes < 10) {
+                        minutes = '0' + minutes;
+                    }
+                    if (seconds < 10) {
+                        seconds = '0' + seconds;
+                    }
+                    const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
+                    const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                    return currentDateTime;
                 },
-                getCandidate: async function(candidateName){
+                getCandidatesInElection: async function(candidateName){
                     try{
                         await axios
-                        .get('/adminspace/api/getCandidate/'+candidateName)
-                        .then(response => (this.candidate = response.data))
+                        .get('/smartvotelite/api/getCandidatesInElection/'+this.election[0].ElectionName)
+                        .then(response => (this.candidates = response.data))
                     }catch(error){
-                        this.printError("Une erreur est survenue lors de la récupération du candidat",error.response.data)
+                        this.printError("Une erreur est survenue lors de la récupération des candidats",error.response.data)
                     }
-                },
-                fillCandidates: async function(){
-                    for(var candidate in this.election[0].ElectionCandidates){
-                        try{
-                            await axios
-                            .get('/adminspace/api/getCandidate/'+this.election[0].ElectionCandidates[candidate])
-                            .then(response => (this.candidates.push(response.data)))
-                        }catch(error){
-                            this.printError("Une erreur est survenue lors de la récupération des candidats",error.response.data)
-                        }
-                    }
-                },
-                delElection: async function(){
-                    if(this.election[0].ElectionStatus != ""){
-                        try{
-                            await axios
-                                .delete('/adminspace/api/delElectionStatus/'+this.election[0].ElectionName+"/"+this.election[0].ElectionStatus,{
-                                headers: {
-                                    'Content-Type': 'multipart/form-data',
-                                    "X-CSRFToken": "{{ csrf_token }}",
-                                }
-                            })
-                        }catch(error){
-                            this.printError("Une erreur est survenue lors de la suppression de l'élection",error.response.data)
-                        }
-                    }else{
-                        try{
-                            await axios
-                                .delete('/adminspace/api/delElection/'+this.election[0].ElectionName,{
-                                headers: {
-                                    'Content-Type': 'multipart/form-data',
-                                    "X-CSRFToken": "{{ csrf_token }}",
-                                }
-                            })
-                        }catch(error){
-                            this.printError("Une erreur est survenue lors de la suppression de l'élection",error.response.data)
-                        }
-                    }
-                    window.location.href = "/";
                 },
                 currentDate: function() {
-                    const today = new Date();
-                    const year = today.getFullYear();
-                    const month = ('0'+today.getMonth()+1).slice(-2);
-                    const day = ('0'+today.getDate()).slice(-2);
-                    const hour = ('0'+today.getHours()).slice(-2);
-                    const minute = ('0'+today.getMinutes()).slice(-2);
-                    const second = ('0'+today.getSeconds()).slice(-2);
-                    // const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                    // const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate());
-                    const dateTime = year +'-'+ month+'-'+day+'T'+hour+':'+minute+':'+second+'Z'; 
-                    const currentDateTime = year +'-'+ month+'-'+day+' '+hour+':'+minute+':'+second;
+                    var current_date = new Date();
+                    var date = current_date.getDate();
+                    var month = current_date.getMonth() + 1;
+                    var year = current_date.getFullYear();
+                    var hours = current_date.getHours();
+                    var minutes = current_date.getMinutes();
+                    var seconds = current_date.getSeconds();
+                    if (date < 10) {
+                        date = '0' + date;
+                    }
+                    if (month < 10) {
+                        month = '0' + month;
+                    }
+                    if (hours < 10) {
+                        hours = '0' + hours;
+                    }
+                    if (minutes < 10) {
+                        minutes = '0' + minutes;
+                    }
+                    if (seconds < 10) {
+                        seconds = '0' + seconds;
+                    }
+                    const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
+                    const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
                     // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
                     this.currentDates = currentDateTime;
                     this.actualTime = dateTime;
@@ -337,6 +297,9 @@
                         }
                     }
                     this.loading=false
+                },
+                changeCandidate: function (candidate) {
+                    this.candidateSelected = candidate
                 },
             },
         },

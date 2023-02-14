@@ -29,32 +29,25 @@ def parametre(request):
 def success(request,code):
     return render(request,'SmartVoteLite/success.html',context={'code':code})
 
-def viewElectionStatus(request,name,status):
-    return render(request,'SmartVoteLite/viewElection.html', context={'name':name,'status':status})
-
 def viewElection(request,code):
     return render(request,'SmartVoteLite/viewElection.html', context={'code':code})
 
-def resultElection(request,name):
-    return render(request,'SmartVoteLite/result.html', context={'name':name , 'status':"None"})
-
-def resultElectionStatus(request,name,status):
-    return render(request,'SmartVoteLite/result.html', context={'name':name, 'status':status})
+def resultElection(request,code):
+    return render(request,'SmartVoteLite/result.html', context={'code':code})
 
 def verification(request,code):
     if request.method == 'GET':
         try:
             codeSent = code
             if(codeSent == request.session['codeVerification']):
-                print('sucess')
                 print(request.session['codeElection'])
                 # request.session = request.session.pop('codeVerification', None)
+                request.session['codeVerification'] = None
+                request.session['Allowed'] = True
                 return JsonResponse({'message':'Code valide','ElectionCode':request.session['codeElection']}, status=200)
             else:
-                print("code invalide")
                 return JsonResponse({'message':'Code invalide'}, status=400)
         except Exception as e:
-            print(e)
             return JsonResponse({'message':e}, status=400)
     else:
         return render(request,'SmartVoteLite/verification.html')
@@ -190,35 +183,20 @@ def getCandidatesInElection(request,election):
     else:
         return HttpResponse(status=400)
 
-def getElectionStatus(request,name,status='None'):
-    '''
-    List all candidates snippets
-    '''
-    if(request.method == 'GET'):
-        # get all the tasks
-        try:
-            election = ElectionLite.objects.filter(ElectionName=name,ElectionStatus=status)
-        except ElectionLite.DoesNotExist:
-            return JsonResponse({'message':"Ce candidat n'existe pas"}, status=400)
-        # serialize the task data
-        serializer = ElectionLiteSerializer(election, many=True)
-        # return a Json response
-        return JsonResponse(serializer.data,safe=False)
-
-def getElection(request,name):
+def getElection(request,code):
     '''
     List all candidates snippets
     '''
     if(request.method == 'GET'):
         try:
             # get all the tasks
-            election = ElectionLite.objects.filter(ElectionName=name)
+            election = ElectionLite.objects.filter(ElectionCode=code)
             # serialize the task data
             serializer = ElectionLiteSerializer(election, many=True)
             # return a Json response
             return JsonResponse(serializer.data,safe=False)
         except ElectionLite.DoesNotExist:
-            return JsonResponse({'message':"Ce candidat n'existe pas"}, status=400)
+            return JsonResponse({'message':"Cette élection n'existe pas"}, status=400)
 
 def getElections(request):
     '''
