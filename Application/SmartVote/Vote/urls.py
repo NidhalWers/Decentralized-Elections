@@ -9,6 +9,9 @@ urlpatterns = [
 
     path('viewElectionResults/<str:name>', views.resultElection, name='viewElectionResults'),
     path('viewElectionResultsStatus/<str:name>/<str:status>', views.resultElectionStatus, name='viewElectionResultsStatus'),
+
+    path('success', views.success, name='success'),
+
     path('api/getCandidates', views.getCandidates, name='getCandidates'),
     path('api/getCandidate/<str:pk>', views.getCandidate, name='getCandidate'),
 

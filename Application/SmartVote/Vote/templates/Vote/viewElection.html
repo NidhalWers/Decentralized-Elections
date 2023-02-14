@@ -224,7 +224,7 @@
                         console.log("data",data)
                         await axios(config)
                         .then(response => (this.responseApiCall = response.data))
-                        window.location.href = "/"
+                        window.location.href = "/success"
                         this.loading=false
                     }catch(error){
                         this.printError("Une erreur est survenue lors de la création de l'élection dans la blockchain",error["message"])
