@@ -9,7 +9,6 @@ import com.septgrandcorsaire.blockchain.infrastructure.http.MyRequestWrapper;
 import com.septgrandcorsaire.blockchain.infrastructure.service.JsonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component
+//@Component
 public class ApiKeyRequestFilter extends OncePerRequestFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApiKeyRequestFilter.class);
@@ -37,7 +36,7 @@ public class ApiKeyRequestFilter extends OncePerRequestFilter {
         String path = currentRequest.getRequestURI();
 
         String key = currentRequest.getHeader("Key") == null ? "" : currentRequest.getHeader("Key");
-        
+
         if (path.equals("/smart-vote/api/v1/get-sandbox/")) {
             String electionName = "sandbox";
             boolean isExactApiKey = this.apiKeyRepository.isApiKeyCorrespondingToElection(key, electionName);

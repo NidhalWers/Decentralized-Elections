@@ -73,7 +73,7 @@ public class BlockchainController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public BlockResource voteInElection(@RequestBody VotePayload payload) {
         Application.LOGGER.info("POST /smart-vote/api/v1/vote");
-        Block result = electionApplicationService.voteInElection(payload.toQuery());
+        Block result = electionApplicationService.voteInElection(payload.toQuery(), payload.getApiKey());
         return BlockResource.of(result);
     }
 

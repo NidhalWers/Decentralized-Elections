@@ -42,6 +42,10 @@ public class ElectionApplicationService {
         return getElectionData(electionRequested, null);
     }
 
+    public Block voteInElection(VoteQuery query, String apiKey) {
+        return electionDomainService.voteInElection(query, apiKey);
+    }
+
     public Block voteInElection(VoteQuery query) {
         return electionDomainService.voteInElection(query);
     }

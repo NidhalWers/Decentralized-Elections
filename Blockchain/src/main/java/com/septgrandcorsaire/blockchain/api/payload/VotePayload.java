@@ -31,6 +31,8 @@ public class VotePayload {
 
     private String electionStatus;
 
+    private String apiKey;
+
     public VoteQuery toQuery() {
         validatePayload();
         return VoteQuery.builder()
@@ -57,6 +59,5 @@ public class VotePayload {
         if (votingTime == null || votingTime.isBlank()) {
             throw IllegalPayloadArgumentException.ofErrorCode(ErrorCode.REQUIRED_PARAMETER, "voting_time");
         }
-
     }
 }
