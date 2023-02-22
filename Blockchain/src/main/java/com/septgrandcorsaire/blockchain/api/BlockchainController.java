@@ -28,7 +28,6 @@ public class BlockchainController {
         this.electionApplicationService = electionApplicationService;
     }
 
-    @CrossOrigin(origins = "*")
     @PostMapping(value = "/smart-vote/api/v1/create-election",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,7 +37,6 @@ public class BlockchainController {
         return BlockChainResource.of(result.blockChain, result.apiKey, result.electionStatus);
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping(value = "/smart-vote/api/v1/get-election/{election_name}")
     public ElectionResource getElection(@PathVariable("election_name") String input, @RequestParam(required = false) String status) {
         Application.LOGGER.info(String.format("GET /smart-vote/api/v1/get-election/%s?status=%s", input, status));
@@ -50,14 +48,12 @@ public class BlockchainController {
 
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping(value = "/smart-vote/api/v1/get-sandbox/")
     public ElectionResource getSandboxElection() {
         Application.LOGGER.info("GET /smart-vote/api/v1/get-sandbox/");
         return getElection("sandbox", null);
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping(value = "/smart-vote/api/v1/get-vote")
     public BlockChainResource getVoteInElection(@RequestParam String election, @RequestParam(required = false) String status, @RequestParam(required = false) String vote) {
         Application.LOGGER.info(String.format("GET /smart-vote/api/v1/get-election/%s?status=%s&vote='%s'", election, status, vote));
@@ -67,7 +63,6 @@ public class BlockchainController {
         return BlockChainResource.of(election, status, result.vote);
     }
 
-    @CrossOrigin(origins = "*")
     @PostMapping(value = "/smart-vote/api/v1/vote",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
