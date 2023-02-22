@@ -9,6 +9,9 @@ urlpatterns = [
 
     path('viewElectionResults/<str:name>', views.resultElection, name='viewElectionResults'),
     path('viewElectionResultsStatus/<str:name>/<str:status>', views.resultElectionStatus, name='viewElectionResultsStatus'),
+
+    path('success', views.success, name='success'),
+
     path('api/getCandidates', views.getCandidates, name='getCandidates'),
     path('api/getCandidate/<str:pk>', views.getCandidate, name='getCandidate'),
 
@@ -18,4 +21,6 @@ urlpatterns = [
 
     path('api/isElectionExistStatus/<str:name>/<str:status>', views.isElectionExistStatusAPI, name='isElectionExistStatusAPI'),
     path('api/isElectionExist/<str:name>', views.isElectionExistAPI, name='isElectionExistAPI'),
+
+    path('api/getAPIKEYDecrypted/<str:apikey>', views.getAPIKeyDecrypted, name='getAPIKeyDecrypted'),
 ]
