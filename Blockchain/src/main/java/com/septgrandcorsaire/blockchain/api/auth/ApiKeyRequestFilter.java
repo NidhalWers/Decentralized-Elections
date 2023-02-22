@@ -39,6 +39,17 @@ public class ApiKeyRequestFilter extends GenericFilterBean {
 
         String key = currentRequest.getHeader("Key") == null ? "" : currentRequest.getHeader("Key");
 
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, Key");
+
+        if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) servletRequest).getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
         if (path.equals("/smart-vote/api/v1/get-sandbox/")) {
             String electionName = "sandbox";
             boolean isExactApiKey = this.apiKeyRepository.isApiKeyCorrespondingToElection(key, electionName);
