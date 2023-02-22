@@ -37,14 +37,7 @@ public class ApiKeyRequestFilter extends OncePerRequestFilter {
         String path = currentRequest.getRequestURI();
 
         String key = currentRequest.getHeader("Key") == null ? "" : currentRequest.getHeader("Key");
-
-        servletResponse.addHeader("Access-Control-Allow-Origin", "*");
-        servletResponse.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, PATCH, HEAD");
-        servletResponse.addHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-        servletResponse.addHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin, Access-Control-Allow-Credentials");
-        servletResponse.addHeader("Access-Control-Allow-Credentials", "true");
-        servletResponse.addIntHeader("Access-Control-Max-Age", 10);
-
+        
         if (path.equals("/smart-vote/api/v1/get-sandbox/")) {
             String electionName = "sandbox";
             boolean isExactApiKey = this.apiKeyRepository.isApiKeyCorrespondingToElection(key, electionName);
