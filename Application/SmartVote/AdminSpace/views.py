@@ -40,7 +40,7 @@ def connect_admin(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return redirect('/', context={'status':1})
+                return redirect('/adminspace', context={'status':1})
             else:
                 return render (request,'AdminSpace/connect/sign-in.html', context={'status':0,'error':'Compte inactif ou inexistant'})
         else:

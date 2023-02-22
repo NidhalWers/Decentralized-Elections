@@ -13,7 +13,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between flex-wrap">
                 <div class="header-title">
-                    <h4 class="card-title mb-0">Role & Permission</h4>
+                    <h4 class="card-title mb-0">Gestion des candidats</h4>
                 </div>
                 <div class="">
                     <a v-on:click="resetCandidate()" class=" text-center btn btn-primary btn-icon mt-lg-0 mt-md-0 mt-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -82,7 +82,7 @@
                             <tr>
                                 <th class="text-center">Candidats</th>
                                 <th class="text-center">Affiliation</th>
-                                <th class="text-center">Avatar</th>
+                                <!-- <th class="text-center">Avatar</th> -->
                                 <th class="text-center">Programme</th>
                                 <th class="text-center">Modifier</th>
 
@@ -90,25 +90,38 @@
                         </thead>
                         <tbody>
                             <tr v-for="candidate in candidates" :key="candidate.CandidateName" class="">
-                                <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">[[candidate.CandidateName]]</td>
+                                <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">
+                                    <div class="d-flex align-items-center">
+                                        <img v-if="candidate.CandidateImage!=null" class="rounded bg-soft-primary img-fluid avatar-40 me-3" :src="candidate.CandidateImage" alt="profile">
+                                        [[candidate.CandidateName]]
+                                    </div>
+                                </td>
                                 <td v-if="candidate.CandidateName == candidateToUpdate">
-                                    <input class="form-control form-control-lg" v-bind:class='{"is-invalid": candidateNameUpdate=="", "is-valid": candidateNameUpdate!=""}' type="text" :placeholder="candidate.CandidateName" v-model="candidateNameUpdate">
-                                    <!-- <div v-if='candidateNameUpdate==""' class="invalid-feedback">
+                                    <div class="d-flex align-items-center">
+                                        <input v-if="updateImage | candidate.CandidateImage==null" type="file" class="form-control" accept="image/png, image/jpeg" id="customFile" ref="imageUpdate" v-on:change="handleImageUploadUpdate()">
+                                        <img v-if="candidate.CandidateImage!=null" class="rounded bg-soft-primary img-fluid avatar-40 me-3" :src="candidate.CandidateImage" alt="profile">
+                                        <button v-if="!updateImage & candidate.CandidateImage!=null" class="btn btn-sm btn-soft-danger" v-on:click="updateImageForm()">
+                                            <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.737 2.76196H7.979C5.919 2.76196 4.25 4.43196 4.25 6.49096V17.34C4.262 19.439 5.973 21.13 8.072 21.117C8.112 21.117 8.151 21.116 8.19 21.115H16.073C18.141 21.094 19.806 19.409 19.802 17.34V8.03996L14.737 2.76196Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M14.4736 2.75024V5.65924C14.4736 7.07924 15.6216 8.23024 17.0416 8.23424H19.7966" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M13.5759 14.6481L10.1099 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M10.1108 14.6481L13.5768 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
+                                        </button>
+                                        <input class="form-control form-control-lg" v-bind:class='{"is-invalid": candidateNameUpdate=="", "is-valid": candidateNameUpdate!=""}' type="text" :placeholder="candidate.CandidateName" v-model="candidateNameUpdate">
+                                    </div>
+                                        <!-- <div v-if='candidateNameUpdate==""' class="invalid-feedback">
                                     Ce champs est requis
                                     </div> -->
+
                                 </td>
                                 
                                 <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">[[candidate.CandidateDescription]]</td>
                                 <td v-if="candidate.CandidateName == candidateToUpdate"><input class="form-control form-control-lg" type="text" :placeholder="candidate.CandidateDescription" v-model="candidateDescriptionUpdate"></td>
 
-                                <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center" ><img  v-if="candidate.CandidateName != candidateToUpdate  & candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-25"></td>
+                                <!-- <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center" ><img  v-if="candidate.CandidateName != candidateToUpdate  & candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-25"></td>
                                 <td v-if="candidate.CandidateName == candidateToUpdate">
                                     <input v-if="updateImage | candidate.CandidateImage==null" type="file" class="form-control" accept="image/png, image/jpeg" id="customFile" ref="imageUpdate" v-on:change="handleImageUploadUpdate()">
                                     <img  v-if="!updateImage & candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-25">
                                     <button v-if="!updateImage & candidate.CandidateImage!=null" class="btn btn-sm btn-soft-danger" v-on:click="updateImageForm()">
                                         <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.737 2.76196H7.979C5.919 2.76196 4.25 4.43196 4.25 6.49096V17.34C4.262 19.439 5.973 21.13 8.072 21.117C8.112 21.117 8.151 21.116 8.19 21.115H16.073C18.141 21.094 19.806 19.409 19.802 17.34V8.03996L14.737 2.76196Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M14.4736 2.75024V5.65924C14.4736 7.07924 15.6216 8.23024 17.0416 8.23424H19.7966" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M13.5759 14.6481L10.1099 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M10.1108 14.6481L13.5768 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
                                     </button>
-                                </td>    
+                                </td>     -->
 
                                 <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">
                                     <button v-if="candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
@@ -164,7 +177,7 @@
                                 </td>
 
                                 <td class="text-center" v-if="candidate.CandidateName != candidateToUpdate">
-                                    <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit" v-on:click="updateCandidateToUpdate(candidate.CandidateName)">
+                                    <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Modifier" v-on:click="updateCandidateToUpdate(candidate.CandidateName)">
                                         <span class="btn-inner">
                                             <svg width="20" viewBox="0 0 24 24" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">

@@ -1,9 +1,9 @@
-{% extends "base/base.html" %}
+{% extends "base/baselite.html" %}
 
 {% load static %}
 
 {% block body %}
-      <div class="wrapper">
+      <div id="parametre" class="wrapper">
       <section class="login-content">
          <div class="row m-0 align-items-center bg-white vh-100">            
             <div class="col-md-6">
@@ -21,31 +21,19 @@
                               </svg>
                               <!--logo End-->                              <h4 class="logo-title ms-3">Hope UI</h4>
                            </a>
-                           <h2 class="mb-2 text-center">Connection Admin</h2>
-                           <p class="text-center">Login to stay connected.</p>
-                           <form method = "POST" action="{% url 'connect_admin' %}">
-                              {% csrf_token %}
+                           <h2 class="mb-2 text-center">Accès à l'élection</h2>
+                           <p class="text-center">Entrez le code de vérification envoyé par mail</p>
+                           <form>
                               <div class="row">
                                  <div class="col-lg-12">
                                     <div class="form-group">
-                                       <label for="email" class="form-label">Email</label>
-                                       <input type="email" name="email" class="form-control" id="email" aria-describedby="email" placeholder=" ">
+                                       <label for="email" class="form-label">Code de vérification</label>
+                                       <input type="number" name="code" class="form-control" id="code" aria-describedby="code" placeholder=" " v-model="code">
                                     </div>
                                  </div>
-                                 <div class="col-lg-12">
-                                    <div class="form-group">
-                                       <label for="password" class="form-label">Password</label>
-                                       <input type="password" name="password1" class="form-control" id="password" aria-describedby="password" placeholder=" ">
-                                    </div>
-                                 </div>
-                                 <div class="col-lg-12 d-flex justify-content-between">
-                                    <a href="recoverpw.html">Forgot Password?</a>
-                                 </div>
-                                 {% if status == 0 %}
-                                    <p class="text-danger">{{ error }}</p>
-                                 {% endif %}
+                                    <p v-if="error != ''" class="text-danger">[[message]] : [[error]]</p>
                                  <div class="d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-primary">Sign In</button>
+                                    <button class="btn btn-primary" v-on:click="getVerification()">Vérifier</button>
                                  </div>
                               </div>
                            </form>
@@ -70,4 +58,58 @@
          </div>
       </section>
       </div>
+
+      
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    var parametre = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#parametre',
+        data() {
+            return {
+               code : '',
+               error:'',
+               message:'',
+               loading:false,
+               electionCode:''
+            }
+        },
+        async mounted() {
+        },
+        methods: {
+            getVerification: async function () {
+               event.preventDefault();
+               try{
+                  await axios.get('/smartvotelite/verification/'+this.code)
+                  .then(response => {
+                     this.electionCode = response.data.ElectionCode
+                     window.location.href = "/smartvotelite/viewElection/"+this.electionCode
+                  })         
+               }catch(error){
+                  this.printError("Erreur lors de la vérification",error.response.data)
+               }
+            },
+            printError: async function(message,error){
+               this.message = message
+               if(typeof(error) == "string"){
+                  this.error = error
+                  this.loading=false
+                  return
+               }
+               errorParsed = JSON.stringify(error)
+               for (var key in error) {
+                  if (error.hasOwnProperty(key)) {
+                     this.error = this.error + error[key] + "."
+                  }
+               }
+               this.loading=false
+            },
+            }
+        },
+    )
+</script>
 {% endblock %}

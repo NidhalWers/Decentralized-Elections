@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Smart Vote</title>
+      <title>Smart Vote Lite</title>
 
       {% load static %}
 
@@ -52,7 +52,7 @@
           </svg>
           </button>
           <div class="col-lg-2 col-lg-3 navbar-brand">
-            <a href="/" class="d-flex">
+            <a href="/smartvotelite" class="d-flex">
                 <!--Logo start-->
                 <!-- <svg width="30" class="" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="-0.757324" y="19.2427" width="28" height="4" rx="2" transform="rotate(-45 -0.757324 19.2427)" fill="currentColor"/>
@@ -60,7 +60,7 @@
                     <rect x="10.5366" y="16.3945" width="16" height="4" rx="2" transform="rotate(45 10.5366 16.3945)" fill="currentColor"/>
                     <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2" transform="rotate(45 10.5562 -0.556152)" fill="currentColor"/>
                 </svg> -->
-                <!--logo End-->          <h4 class="logo-title"> <strong>Smart Vote</strong></h4>
+                <!--logo End-->          <h4 class="logo-title"><strong>Smart Vote</strong> Lite</h4>
             </a>
           </div>
           <!-- Horizontal Menu Start -->
@@ -80,9 +80,8 @@
                 <button class="btn-close float-end"></button>
              </div>
              <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link active" href="/"> Accueil </a></li>
-                <li class="nav-item"><a class="nav-link " href="../dashboard/index-dual-horizontal.html"> Voir les programmes </a></li>
-                <li class="nav-item"><a class="nav-link " href="../dashboard/index-dual-compact.html"><span class="item-name">Comment fonctionne SmartVote ?</span></a></li>
+                <li class="nav-item"><a class="nav-link active" href="/smartvotelite"> Accueil </a></li>
+                <li class="nav-item"><a class="nav-link " href="../dashboard/index-dual-compact.html"><span class="item-name">Comment fonctionne SmartVote Lite ?</span></a></li>
              </ul>
           </div> <!-- container-fluid.// -->
           </nav>
@@ -165,33 +164,21 @@
                     </div>
                 </div>
               </li> -->
-              {% if user.is_authenticated %}
-              <li class="nav-item dropdown">
-                <a class="nav-link py-0 d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <div class="caption ms-3 ">
-                      <h6 class="mb-0 caption-title">{{ user.first_name }} {{ user.last_name }}</h6>
-                      <p class="mb-0 caption-sub-title">{{ user.street_number }} {{ user.street_name }}, {{ user.postal_code }} {{ user.city }}</p>
-                  </div>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="/connect/account/">Mes informations</a></li>
-                  <li><a class="dropdown-item" href="../dashboard/app/user-privacy-setting.html">Préférence de sécurité</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="/connect/logout/">Déconnexion</a></li>
-                </ul>
-              </li>
-              {% else %}
-                <div class="container-login">
-                  <a href="/connect/login/franceconnect">
-                    <button type="button" class="btn btn-primary" >
-                      <div class="btn-fc">
-                          <div><img src="{% static 'Connect/images/fc_avatar.png'%} " alt="France-Connect" class="img-fc"></div>
-                          <div class="text-fc"> S'identifier avec <br> <strong>France connect</strong></div>
-                      </div>
+              <div class="space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                  <a href="{% url 'parametrelite' %}">
+                    <button type="button" class="btn btn-primary d-inline-flex">
+                      <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path d="M12.0001 8.32739V15.6537" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M15.6668 11.9904H8.3335" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16.6857 2H7.31429C4.04762 2 2 4.31208 2 7.58516V16.4148C2 19.6879 4.0381 22 7.31429 22H16.6857C19.9619 22 22 19.6879 22 16.4148V7.58516C22 4.31208 19.9619 2 16.6857 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
+                      <div class="mt-1 ms-2">Créer une élection</div>
                     </button>
-                  </a>  
+                  </a>
+                  <a href="{% url 'entercode' %}">
+                    <button type="button" class="btn btn-outline-primary d-inline-flex">
+                      <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path d="M15.8325 8.17463L10.109 13.9592L3.59944 9.88767C2.66675 9.30414 2.86077 7.88744 3.91572 7.57893L19.3712 3.05277C20.3373 2.76963 21.2326 3.67283 20.9456 4.642L16.3731 20.0868C16.0598 21.1432 14.6512 21.332 14.0732 20.3953L10.106 13.9602" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
+                      <div class="mt-1 ms-2">Entrer un code</div>
+                    </button>
+                  </a>
                 </div>
-              {% endif %}
+              </div>
             </ul>
           </div>
         </div>
@@ -205,10 +192,6 @@
               <ul class="left-panel list-inline mb-0 p-0">
                   <li class="list-inline-item"><a href="../dashboard/extra/privacy-policy.html">Privacy Policy</a></li>
                   <li class="list-inline-item"><a href="../dashboard/extra/terms-of-service.html">Terms of Use</a></li>
-                  {% if user.is_authenticated %}
-                  {% else %}
-                  <li class="list-inline-item"><a href="/adminspace/connection">Se connecter en temps qu'administrateur</a></li>
-                  {% endif %}
               </ul>
               <div class="right-panel">
                   ©2022 Smart Vote, by <a href="https://iqonic.design/">Les 7 grands corsaires</a>.

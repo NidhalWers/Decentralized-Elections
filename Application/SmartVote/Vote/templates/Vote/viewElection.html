@@ -52,7 +52,7 @@
             </div>  
             <div class="col-lg-6 col-md-0">
                 <p class="h1 d-flex justify-content-center">[[election[0].ElectionName]]</p>
-                <p class="h6 d-flex justify-content-center">Gérer l'élection</p>
+                <p class="h6 d-flex justify-content-center">Liste des candidats</p>
             </div> 
             <div class="col-lg-3 col-md-6">
                 <div class="card border-bottom border-4 border-0 border-primary">
@@ -69,22 +69,6 @@
                     </div>
                 </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-2">
-                <button type="button" class="btn btn-primary">Modifier les candidats</button>
-            </div>
-            <div class="col-lg-2">
-                <button v-on:click="delElection()" type="button" class="btn btn-danger">Supprimer l'élection</button>
-            </div>
-
-            <div class="form-check form-switch form-check-inline col-lg-2 float-end mt-2">
-                <input class="form-check-input" type="checkbox" id="switch2" v-model="election[0].ElectionBlind" v-on:click="updateElection()"/>
-                <label class="form-check-label pl-2" for="switch2">Cacher l'élection</label>
-            </div>
-            <div class="form-check form-switch form-check-inline col-lg-4 float-end">
-                <div>Vote blanc <div v-if="election[0].ElectionBlind">autorisé</div><div v-if="!election[0].ElectionBlind">non autorisé</div></div>
             </div>
         </div>
         <hr>
@@ -126,6 +110,22 @@
                                             stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>   
                                 </a>
+                                <button type="button" class="btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  v-on:click="changeCandidate(candidate.CandidateName)">Voter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="election[0].ElectionBlankVote == true" class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                <div class="fs-italic">
+                                    <h5>Vote blanc</h5>
+                                </div>	
+                                <!-- <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"> -->
+                                <button type="button" class="btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  v-on:click="changeCandidate('blanc')">Voter</button>
                             </div>
                         </div>
                     </div>
@@ -133,6 +133,28 @@
             </div>
         </div>  
     </div>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Confirmer le vote</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Veuillez enter <strong>[[candidateSelected]] </strong>  afin de valider votre vote</label>
+                        <input type="email" class="form-control" id="email" aria-describedby="email" :placeholder="candidateSelected" v-model="candidateToConfirm">
+                    </div>
+                    <div class="text-start">
+                        <button type="button" class="btn btn-primary" :disabled="candidateToConfirm != candidateSelected" data-bs-dismiss="modal">Voter</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 <!-- vue:js -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
@@ -149,6 +171,7 @@
                         "ElectionName": "",
                         "ElectionStatus": "",
                         "ElectionBlind": false,
+                        
                     }],
                     actualTime:"",
                     currentDates:"",
@@ -159,6 +182,9 @@
                     error:'',
                     message:'',
                     loading:true,
+                    candidateSelected:'',
+                    candidateToConfirm:'',
+                    idCrypted:'',
                 }
         },
         async mounted() {
@@ -170,7 +196,66 @@
                 setInterval(this.getElection, 1000);
             },
         methods: {
-            
+
+            VoteInBlockchain: async function (id){
+                event.preventDefault();
+                this.loading=true
+                var data = JSON.stringify({
+                    "candidates" : this.electionCandidates,
+                    "starting_date" : this.electionStartDate,
+                    "closing_date" : this.electionEndDate,
+                    "election_name" : this.electionName,
+                    "count_blank_votes" : this.electionBlank,
+                    "status" : this.electionStatut
+                    });
+
+                    var config = {
+                    method: 'post',
+                    url: 'http://localhost:8080/smart-vote/api/v1/create-election',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    data : data
+                    };
+
+                    try{
+                        await axios(config)
+                        .then(response => (this.responseApiCall = response.data))
+
+                        await this.addElection()
+                        this.loading=false
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la création de l'élection dans la blockchain",error["message"])
+                        this.loading=false
+                    }
+            },
+
+
+            vote: async function () {
+                try{
+                    await getIdCrypted()
+                    await VoteInBlockchain(this.idCrypted,this.candidateSelected)
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de la récupération de l'identifiant crypté",error.response.data)
+                }
+               
+            },
+
+
+            getIdCrypted: async function () {
+                await axios
+                    .get('/connect/api/getUserIdCrypted/{{ user.id }}')
+                    .then(response => (this.idCrypted = response.data))
+                    .catch(response => (console.log(response.data)));
+            },
+
+            changeCandidate: function (candidate) {
+                this.candidateSelected = candidate
+            },
+
+
+
             getElection: async function () {
                 electionName = "{{name}}"
                 electionStatus = "{{status}}"

@@ -1,24 +1,19 @@
-{% extends "base/base.html" %}
+{% extends "base/baselite.html" %}
 
 {% load static %}
 
 {% block body %}
 
 {% csrf_token %}
-
 <!-- <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
 <script src="assets/plugins/global/plugins.bundle.js"></script> -->
-
-<div>
     <div class="row" id="parametre">
         <div class="col-sm-12 col-lg-12">
             <div class="card">
-
                 <div class="card-header d-flex justify-content-between">
                     <div class="header-title">
                         <h4 class="card-title">
-                            Création d'une éléction
-
+                            Création d'une éléction instantanée
                         </h4>
                     </div>
                 </div>
@@ -139,8 +134,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" >Nom de votre élection : </label>
-                                            <input type="email" v-bind:class='{"is-invalid": !allowed | electionName =="", "is-valid": allowed}' class="form-control" name="electionName"
-                                                placeholder="Présidentielle 2022 - 1er tour" v-model="electionName" v-on:change="electionExist">
+                                            <input type="email" v-bind:class='{"is-invalid": electionName =="", "is-valid": electionName !=""}' class="form-control" name="electionName"
+                                                placeholder="Présidentielle 2022 - 1er tour" v-model="electionName">
                                         </div>
                                         <p class="text-danger" v-if="error != ''">
                                             [[message]] : [[error]]
@@ -149,7 +144,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label">Statut de l'élélection : </label>
-                                            <input type="text" v-bind:class='{"is-invalid": !allowed, "is-valid": allowed}' class="form-control" placeholder="1 / 2" v-model="electionStatut" v-on:change="electionExist">
+                                            <input type="text" v-bind:class='{"is-invalid": electionName =="", "is-valid": electionName !=""}' class="form-control" placeholder="1 / 2" v-model="electionStatut">
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +165,7 @@
                                 Suivant...
                             </button>
                             <button type="button" name="next" class="btn btn-primary next action-button float-end" 
-                                value="Next" :disabled='!allowed' v-if="!loading">Suivant</button>
+                                value="Next" :disabled='electionName ==""' v-if="!loading" v-on:click="generateElectionName()">Suivant</button>
                         </fieldset>
 
                         <fieldset style="display: none;">
@@ -253,10 +248,6 @@
                                     <div class="form-check form-switch form-check-inline float-end">
                                         <input class="form-check-input" type="checkbox" id="switch2" v-model="electionBlankVote"/>
                                         <label class="form-check-label pl-2" for="switch2">Autoriser le vote blanc</label>
-                                    </div>
-                                    <div class="form-check form-switch form-check-inline float-end">
-                                        <input class="form-check-input" type="checkbox" id="switch2" v-model="electionBlind"/>
-                                        <label class="form-check-label pl-2" for="switch2">Cacher l'élection</label>
                                     </div>
                                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
                                         data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
@@ -505,7 +496,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td class="text-center">
-                                                            <h6 class="mb-0">[[electionName]]</h6>
+                                                            <h6 class="mb-0">[[electionName.substring(0, electionName.length-5)]]</h6>
                                                         </td>
                                                         <td class="text-center">
                                                             <h6 class="mb-0">[[electionStatut]]</h6>
@@ -590,8 +581,6 @@
 
     </div>
 
-
-</div>
 <!-- vue:js -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
 <!-- axios:js -->
@@ -623,17 +612,14 @@
                 electionEndDate:"",
                 electionCandidates:[],
                 electionBlankVote:false,
-                electionBlind:false,
                 responseApiCall:null,
                 error:'',
                 message:'',
                 loading:false,
-                allowed:false,
                 electionExistResponse:null,
             }
         },
         async mounted() {
-            await this.getCandidate()
         },
         methods: {
             handleImageUpload:function(){
@@ -648,11 +634,16 @@
             handleProgramUploadUpdate:function(){
                 this.candidateProgramUpdate = this.$refs.programUpdate[0].files[0];
             },
+            generateElectionName: async function(){
+                this.electionName = this.electionName + "-" + Math.floor(Math.random() * (9999 - 1000 + 1000) + 1000)
+                console.log(this.electionName)
+            },
             addCandidate: async function () {
                 this.loading=true
                 let formData = new FormData();
                 formData.append('CandidateName', this.candidateName);
                 formData.append('CandidateDescription', this.candidateDescription);
+                formData.append('CandidateElection', this.electionName);
                 if (this.candidateImage != null) {
                     formData.append('CandidateImage', this.candidateImage);
                 }
@@ -660,7 +651,7 @@
                     formData.append('CandidateProgram', this.candidateProgram);
                 }
                 try{
-                    await axios.post('/adminspace/api/addCandidate', formData,{
+                    await axios.post('/smartvotelite/api/addCandidate', formData,{
                         headers: {
                             'Content-Type': 'multipart/form-data',
                             "X-CSRFToken": "{{ csrf_token }}",
@@ -671,13 +662,13 @@
                     this.printError("Une erreur est survenue lors de l'ajout du candidat",error.response.data)
                 }
 
-                await this.getCandidate()
+                await this.getCandidatesInElection()
                 await this.resetCandidate()
                 this.loading=false
             },
-            getCandidate: async function () {
+            getCandidatesInElection: async function () {
                 try{
-                    await axios.get('/adminspace/api/getCandidates')
+                    await axios.get('/smartvotelite/api/getCandidatesInElection/'+this.electionName)
                         .then(response => (this.candidates = response.data))
                 }catch(error){
                     this.printError("Une erreur est survenue lors de la récupération des candidats",error.response.data)
@@ -687,7 +678,7 @@
                 this.loading=true
                 try{
                     await axios
-                        .delete('/adminspace/api/delCandidate/' + id,{
+                        .delete('/smartvotelite/api/delCandidate/' + id+'/'+this.electionName,{
                         headers: {
                             'Content-Type': 'multipart/form-data',
                             "X-CSRFToken": "{{ csrf_token }}",
@@ -698,7 +689,7 @@
                     this.printError("Une erreur est survenue lors de la suppression du candidat",error.response.data)
                 }
 
-                await this.getCandidate()
+                await this.getCandidatesInElection()
                 this.loading=false
             },
             updateCandidate: async function (id) {
@@ -706,7 +697,7 @@
                 let formData = new FormData();
                 formData.append('CandidateName', this.candidateNameUpdate);
                 formData.append('CandidateDescription', this.candidateDescriptionUpdate);
-
+                formData.append('CandidateElection', this.electionName);
                 if (this.candidateImageUpdate != null) {
                     formData.append('CandidateImage', this.candidateImageUpdate);
                 }else if (this.updateImage){
@@ -721,7 +712,7 @@
                 
                 try{
                 await axios
-                    .put('/adminspace/api/updateCandidate/' + id, formData,{
+                    .put('/smartvotelite/api/updateCandidate/' + id+'/'+this.electionName, formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         "X-CSRFToken": "{{ csrf_token }}",
@@ -733,7 +724,7 @@
                 }
 
                 await this.updateCandidateToUpdate()
-                await this.getCandidate()
+                await this.getCandidatesInElection()
                 await this.resetCandidateUpdate()
                 this.updateFile=false
                 this.updateImage=false
@@ -818,6 +809,7 @@
             },
             addElection: async function(){
                 event.preventDefault();
+                electionCode = Math.floor(Math.random() * (999999 - 100000 + 100000) + 100000)
                 this.loading=true
                 let formData = new FormData();
                 formData.append('ElectionName', this.electionName);
@@ -827,16 +819,16 @@
                 formData.append('ElectionStartDate', this.electionStartDate);
                 formData.append('ElectionEndDate', this.electionEndDate);
                 formData.append('ElectionBlankVote', this.electionBlankVote);
-                formData.append('ElectionBlind', this.electionBlind);
+                formData.append('ElectionCode', electionCode);
                 try{
-                await axios.post('/adminspace/api/addElection', formData,{
+                await axios.post('/smartvotelite/api/addElection', formData,{
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         "X-CSRFToken": "{{ csrf_token }}",
                     }
                     })
                     this.loading=false
-                    window.location = "/adminspace/success"
+                    window.location = "/smartvotelite/success/"+ electionCode
                 }catch(error){
                     this.printError("Une erreur est survenue lors de la création de l'élection, mais celle-ci existe dans la blockchain, veuillez contacter un administrateur",error.response.data) 
                 }
@@ -867,37 +859,6 @@
                     }
                 }
                 this.loading=false
-            },
-            electionExist: async function(){
-                this.updateLoading()
-                this.updateError()
-                if(this.electionName == ""){
-                    this.allowed = false
-                    this.updateLoading()
-                    return
-                }
-                try{
-                    if(this.electionStatut.length == "0"){
-                        await axios.get('/adminspace/api/isElectionExist/' + this.electionName)
-                        .then(response => (this.electionExistResponse = response.data))
-                    }else{
-                        await axios.get('/adminspace/api/isElectionExistStatus/' + this.electionName+'/'+this.electionStatut)
-                        .then(response => (this.electionExistResponse = response.data))
-                    }
-                    if(this.electionExistResponse["message"] == "Cette élection n'existe pas"){
-                        this.allowed = true
-                        this.updateLoading()
-                    }else{
-                        this.allowed = false
-                        this.printError("Une erreur est survenue","Une élection avec ce nom existe déjà")
-                    }                 
-                }catch(error){
-                    this.allowed = false
-                    this.printError("Une erreur est survenue",error.response.data)
-                    if(this.loading == true){
-                        this.updateLoading()
-                    }
-                }
             },
             updateAllowed: async function(){
                 if (this.allowed == true){

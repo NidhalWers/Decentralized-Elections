@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "AdminSpace",
     "base",
     "Vote",
+    "SmartVoteLite",
     'import_export',
     'rest_framework',
     'corsheaders',
@@ -143,10 +144,6 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'X-CSRFTOKEN',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://127.0.0.1:8080"
-]
   
 # Path where media is stored  
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')  
