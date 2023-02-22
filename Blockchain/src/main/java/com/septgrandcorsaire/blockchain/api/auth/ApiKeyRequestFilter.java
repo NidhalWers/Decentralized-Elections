@@ -10,18 +10,17 @@ import com.septgrandcorsaire.blockchain.infrastructure.service.JsonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class ApiKeyRequestFilter extends GenericFilterBean {
+public class ApiKeyRequestFilter extends OncePerRequestFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApiKeyRequestFilter.class);
 
@@ -32,23 +31,19 @@ public class ApiKeyRequestFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+    public void doFilterInternal(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest currentRequest = (HttpServletRequest) servletRequest;
         MyRequestWrapper myRequestWrapper = new MyRequestWrapper(currentRequest);
         String path = currentRequest.getRequestURI();
 
         String key = currentRequest.getHeader("Key") == null ? "" : currentRequest.getHeader("Key");
 
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, Key");
-
-        if ("OPTIONS".equalsIgnoreCase(((HttpServletRequest) servletRequest).getMethod())) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            return;
-        }
+        servletResponse.addHeader("Access-Control-Allow-Origin", "*");
+        servletResponse.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, PATCH, HEAD");
+        servletResponse.addHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+        servletResponse.addHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin, Access-Control-Allow-Credentials");
+        servletResponse.addHeader("Access-Control-Allow-Credentials", "true");
+        servletResponse.addIntHeader("Access-Control-Max-Age", 10);
 
         if (path.equals("/smart-vote/api/v1/get-sandbox/")) {
             String electionName = "sandbox";
