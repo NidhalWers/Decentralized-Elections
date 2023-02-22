@@ -11,7 +11,7 @@
       <link rel="stylesheet" href="{% static 'Connect/css/style.css' %}">
       
       <!-- Favicon -->
-      <link rel="shortcut icon" href="{% static 'base/images/favicon.ico' %}">
+      <link rel="shortcut icon" href="{% static 'base/images/logo-v0.png' %}">
 
       
       <!-- Library / Plugin Css Build -->
@@ -32,6 +32,9 @@
       
       <!-- RTL Css -->
       <link rel="stylesheet" href="{% static 'base/css/rtl.min.css' %}">
+
+      <!-- blobz Css -->
+      <link rel="stylesheet" href="{% static 'base/css/blobz.min.css' %}">
       
   </head>
   <body class="  ">
@@ -60,6 +63,9 @@
                     <rect x="10.5366" y="16.3945" width="16" height="4" rx="2" transform="rotate(45 10.5366 16.3945)" fill="currentColor"/>
                     <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2" transform="rotate(45 10.5562 -0.556152)" fill="currentColor"/>
                 </svg> -->
+                <img width="40" class="rounded-circle" src="{% static 'base/images/logo-v0.png' %}" alt="">
+
+                <img src="" alt="">
                 <!--logo End-->          <h4 class="logo-title"> <strong>Smart Vote</strong></h4>
             </a>
           </div>
@@ -203,15 +209,15 @@
       <footer class="footer">
           <div class="footer-body">
               <ul class="left-panel list-inline mb-0 p-0">
-                  <li class="list-inline-item"><a href="../dashboard/extra/privacy-policy.html">Privacy Policy</a></li>
-                  <li class="list-inline-item"><a href="../dashboard/extra/terms-of-service.html">Terms of Use</a></li>
+                  <li class="list-inline-item"><a href="/">Privacy Policy</a></li>
+                  <li class="list-inline-item"><a href="/">Terms of Use</a></li>
                   {% if user.is_authenticated %}
                   {% else %}
                   <li class="list-inline-item"><a href="/adminspace/connection">Se connecter en temps qu'administrateur</a></li>
                   {% endif %}
               </ul>
               <div class="right-panel">
-                  ©2022 Smart Vote, by <a href="https://iqonic.design/">Les 7 grands corsaires</a>.
+                  ©2022 Smart Vote, by <a href="/">Les 7 grands corsaires</a>.
               </div>
           </div>
       </footer>
