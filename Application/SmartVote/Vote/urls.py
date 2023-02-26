@@ -12,6 +12,8 @@ urlpatterns = [
 
     path('success', views.success, name='success'),
 
+    path('analyse', views.analyse, name='analyse'),
+
     path('api/getCandidates', views.getCandidates, name='getCandidates'),
     path('api/getCandidate/<str:pk>', views.getCandidate, name='getCandidate'),
 

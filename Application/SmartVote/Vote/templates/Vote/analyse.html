@@ -3,5 +3,32 @@
 {% block body %}
 {% load static %}
 
-<h1>Test</h1>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ma page PDF</title>
+	<!-- Ajouter les fichiers CSS et JavaScript de PDF.js -->
+	<link rel="stylesheet" href="pdfjs/web/viewer.css">
+	<script src="pdfjs/build/pdf.js"></script>
+	<script>
+		function showPDF(pdf_url) {
+			var iframe = document.getElementById('pdf_viewer');
+			iframe.src = 'pdfjs/web/viewer.html?file=' + encodeURIComponent(pdf_url);
+		}
+	</script>
+</head>
+<body>
+	<h1>Mes fichiers PDF</h1>
+	<ul>
+		<li><a href="#" onclick="showPDF('C:/Users/zmoha/OneDrive/Bureau/off/Project_AIKD_2023.pdf')">Fichier 1</a></li>
+		<!-- Ajoutez autant de liens que nécessaire -->
+	</ul>
+	<!-- Ajouter l'élément iframe pour afficher les PDF -->
+	<iframe id="pdf_viewer" src="pdfjs/web/viewer.html" width="100%" height="500px"></iframe>
+</body>
+</html>
+
+
+
+
 {% endblock %}

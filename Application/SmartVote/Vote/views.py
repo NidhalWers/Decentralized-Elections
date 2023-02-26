@@ -67,6 +67,14 @@ def success(request):
             return redirect('/adminspace')
     return redirect('/')
 
+def analyse(request):
+    if request.user.is_authenticated:
+        if not(request.user.is_superuser):
+            return render(request,'Vote/analyse.html')
+        else:
+            return redirect('/adminspace')
+    return redirect('/')
+
 # Utils
 
 def isCandidateExist(candidate):
