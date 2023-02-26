@@ -3,30 +3,71 @@
 {% block body %}
 {% load static %}
 
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Ma page PDF</title>
-	<!-- Ajouter les fichiers CSS et JavaScript de PDF.js -->
-	<link rel="stylesheet" href="pdfjs/web/viewer.css">
-	<script src="pdfjs/build/pdf.js"></script>
-	<script>
-		function showPDF(pdf_url) {
-			var iframe = document.getElementById('pdf_viewer');
-			iframe.src = 'pdfjs/web/viewer.html?file=' + encodeURIComponent(pdf_url);
-		}
-	</script>
-</head>
-<body>
-	<h1>Mes fichiers PDF</h1>
-	<ul>
-		<li><a href="#" onclick="showPDF('C:/Users/zmoha/OneDrive/Bureau/off/Project_AIKD_2023.pdf')">Fichier 1</a></li>
-		<!-- Ajoutez autant de liens que nécessaire -->
-	</ul>
-	<!-- Ajouter l'élément iframe pour afficher les PDF -->
-	<iframe id="pdf_viewer" src="pdfjs/web/viewer.html" width="100%" height="500px"></iframe>
-</body>
-</html>
+
+<div class="col-lg-3">
+<div class="card">
+<div class="card-body">
+    <div class="d-flex justify-content-between">
+        <div class="bg-soft-primary rounded p-3">
+            
+        </div>
+
+
+    </div>
+
+
+
+</div>
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h1>Lecteur PDF</h1>
+
+
+    <ul>
+        <li><a href="https://www.ecam.fr/wp-content/uploads/sites/3/2016/06/Exemple-fichier-PDF-1.pdf" target="_blank">Fichier PDF 1</a></li>
+        <li><a href="https://www.ecam.fr/wp-content/uploads/sites/3/2016/06/Exemple-fichier-PDF-1.pdf" target="_blank">Fichier PDF 2</a></li>
+        <li><a href="https://www.ecam.fr/wp-content/uploads/sites/3/2016/06/Exemple-fichier-PDF-1.pdf" target="_blank">Fichier PDF 3</a></li>
+    </ul>
+    <div id="pdf-container"></div>
+    <script>
+        const pdfContainer = document.getElementById('pdf-container');
+        const pdfLinks = document.querySelectorAll('ul li a');
+
+        function displayPdf(pdfUrl) {
+            const pdfObject = document.createElement('object');
+            pdfObject.data = pdfUrl;
+            pdfObject.type = 'application/pdf';
+            pdfObject.style.width = '100%';
+            pdfObject.style.height = '500px';
+
+            pdfContainer.innerHTML = '';
+            pdfContainer.appendChild(pdfObject);
+        }
+
+        pdfLinks.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                displayPdf(link.href);
+            });
+        });
+    </script>
+
 
 
 
