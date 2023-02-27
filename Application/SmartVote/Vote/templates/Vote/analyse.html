@@ -7,7 +7,7 @@
 <div class="col-md-12 col-lg-4">
     <div class="card">
         <div class="card-body">
-            <h4 class="text-uppercase text-black mb-0">test</h4>
+            <h4 class="text-uppercase text-black mb-0">[[results]]</h4>
             <div class="d-flex justify-content-between align-items-center mt-2">
                 <h2 class=" text-black">12</h2>
                 <div class="text-left">
@@ -97,6 +97,71 @@
 <!-- axios:js -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+
+<script>
+    var parametre = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#Analyse',
+        data() {
+                return {
+                    results:{},
+                    results2:{},
+                    nearest_themes:{},
+                    nearest_candidates:{},
+                }
+        },
+        async mounted() {
+            await this.getresults()
+            await this.getResults2()
+            await this.getnearest_themes()
+            await this.getnearest_candidates()
+        },
+        
+        created() {
+                setInterval(this.getresults, 1000);
+                setInterval(this.getResults2, 1000);
+                setInterval(this.getnearest_themes, 1000);
+                setInterval(this.getnearest_candidates, 1000);
+            },
+
+            
+        methods: {
+            getresults: async function () {
+                await axios
+                    .get('/api/results')
+                    .then(response => (this.results = response.data))
+                    .catch(response => (console.log(response.data)));
+                    
+            },
+
+            getResults2: async function () {
+                await axios
+                    .get('/api/results')
+                    .then(response => (this.results2 = response.data))
+                    .catch(response => (console.log(response.data)));
+            },
+
+            getnearest_themes: async function () {
+                await axios
+                    .get('/api/nearest_theme?theme=SMIC')
+                    .then(response => (this.nearest_themes = response.data))
+                    .catch(response => (console.log(response.data)));
+
+
+            },
+
+            getnearest_candidates: async function () {
+                await axios
+                    .get('/api/nearest_candidates?theme=SMIC')
+                    .then(response => (this.nearest_candidates = response.data))
+                    .catch(response => (console.log(response.data)));
+
+
+            },
+        }
+    });
+
+</script>
 
 
 {% endblock %}
