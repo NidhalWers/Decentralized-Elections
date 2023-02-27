@@ -106,6 +106,11 @@ def num_to_random_string(num):
     return random_string
 
 
+#Api for ML
+
+
+
+
 #Api
 @api_view(['POST'])
 def addCandidate(request):
