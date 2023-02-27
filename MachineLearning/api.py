@@ -5,7 +5,7 @@ import matplotlib
 import numpy as np
 import pandas as pd
 import io
-
+from flask_cors import CORS
 from matplotlib_inline.backend_inline import set_matplotlib_formats
 from sklearn.decomposition import LatentDirichletAllocation, NMF, PCA
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -69,7 +69,7 @@ def plot_top_words(model, feature_names, n_top_words=20):
     plt.show()
 
 app = Flask(__name__)
-
+CORS(app)
 # fonction qui retourne le candidat le plus proche du theme choisi
 @app.route('/api/nearest_theme', methods=['GET'])
 def get_nearest_theme():
@@ -125,4 +125,4 @@ def get_results2():
 
 # Lancer l'application Flask
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    app.run(debug=True, port=8080)
