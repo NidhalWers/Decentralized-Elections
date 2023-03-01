@@ -1,7 +1,11 @@
+cryptography==39.0.1
 Django==4.1.2
 django_cors_headers==3.13.0
 django_import_export==2.9.0
 djangorestframework==3.14.0
-import_export==0.2.67.dev6
-python-dotenv==0.21.0
+import_export==0.3.1
+python-dotenv==1.0.0
+
+# import_export==0.2.67.dev6
+
 psycopg2-binary==2.9.4
