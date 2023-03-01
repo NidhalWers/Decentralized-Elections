@@ -31,11 +31,14 @@ def parametre(request):
 def success(request,code):
     return render(request,'SmartVoteLite/success.html',context={'code':code})
 
+def successVote(request):
+    return render(request,'SmartVoteLite/successVote.html')
+
 def viewElection(request,code):
     return render(request,'SmartVoteLite/viewElection.html', context={'code':code})
 
-def resultElection(request,code):
-    return render(request,'SmartVoteLite/result.html', context={'code':code})
+def resultElection(request,name):
+    return render(request,'SmartVoteLite/result.html', context={'name':name})
 
 def verification(request,code):
     if request.method == 'GET':

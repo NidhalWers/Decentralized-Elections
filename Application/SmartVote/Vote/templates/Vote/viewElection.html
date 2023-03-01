@@ -126,7 +126,7 @@
                                     <h5>Vote blanc</h5>
                                 </div>	
                                 <!-- <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"> -->
-                                <button type="button" class="btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  v-on:click="changeCandidate('blanc')">Voter</button>
+                                <button type="button" class="btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropBlanc"  v-on:click='changeCandidate("")'>Voter</button>
                             </div>
                         </div>
                     </div>
@@ -154,6 +154,26 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="staticBackdropBlanc" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelBlanc" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropBlanc">Confirmer le vote</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Veuillez enter <strong>blanc </strong>  afin de valider votre vote</label>
+                        <input type="email" class="form-control" id="email" aria-describedby="email" :placeholder="candidateSelected" v-model="candidateToConfirm">
+                    </div>
+                    <div class="text-start">
+                        <button type="button" class="btn btn-primary" v-on:click="vote()" :disabled="candidateToConfirm != 'blanc'" data-bs-dismiss="modal">Voter</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </div>
@@ -175,6 +195,7 @@
                         
                     }],
                     actualTime:"",
+                    actualTimeForBC:"",
                     currentDates:"",
                     candidates:[],
                     timeRemaining:0,
@@ -193,54 +214,59 @@
             await this.getElection()
             await this.fillCandidates()
         },    
-        created() {
+        async created() {
                 setInterval(this.currentDate, 1000);
                 setInterval(this.getElection, 1000);
             },
         methods: {
 
             VoteInBlockchain: async function (){
+                electionName = "{{name}}"
+                electionStatus = "{{status}}"
                 event.preventDefault();
                 this.loading=true
-                var data = JSON.stringify({
-                    "election_name" : this.electionName,
-                    "candidate_name" : this.candidateSelected,
-                    "voting_time" : this.actualTime,
-                    "voter_id" : this.idCrypted,
-                    });
+                if(electionStatus == "None"){
+                        statusElection = ""
+                    }else{
+                        statusElection = electionStatus
+                    }
+                    var data = JSON.stringify({
+                        "election_name" : electionName,
+                        "candidate_name" : this.candidateSelected,
+                        "voting_time" : this.actualTimeForBC,
+                        "voter_id" : this.idCrypted,
+                        'api_key': this.APIKEYDecrypted.ElectionApiKey,
+                        "election_status":statusElection
+                        });
 
+                    console.log(data)
                     var config = {
                     method: 'post',
                     url: 'http://localhost:8080/smart-vote/api/v1/vote',
                     headers: { 
                         'Content-Type': 'application/json',
-                        "X-CSRFToken": "{{ csrf_token }}",
-                        'Key': this.APIKEYDecrypted.ElectionApiKey,
                     },
                     data : data
                     };
 
                     try{
-                        console.log("data",data)
                         await axios(config)
                         .then(response => (this.responseApiCall = response.data))
                         window.location.href = "/success"
                         this.loading=false
                     }catch(error){
-                        this.printError("Une erreur est survenue lors de la création de l'élection dans la blockchain",error["message"])
+                        console.log(error)
+                        this.printError("Une erreur est survenue lors du vote dans la blockchain",error["response"]["data"]["message"])
                         this.loading=false
                     }
             },
             vote: async function () {
                 try{
-                    console.log("vote")
                     await this.getIdCrypted()
-                    console.log("idCrypted",this.idCrypted)
                     await this.getAPIKEYDecrypted()
-                    console.log("APIKEYDecrypted",this.APIKEYDecrypted.ElectionApiKey)
                     await this.VoteInBlockchain()
                 }catch(error){
-                    this.printError("Une erreur est survenue lors du cote",error.response)
+                    this.printError("Une erreur est survenue lors du vote",error.response)
                 } 
             },
             getAPIKEYDecrypted: async function () {
@@ -249,7 +275,6 @@
                     .get('/api/getAPIKEYDecrypted/'+this.election[0].ElectionApiKey)
                     .then(response => (this.APIKEYDecrypted = response.data))
                 }catch(error){
-                    console.log(error)
                     this.printError("Une erreur est survenue lors de la récupération de la clé API",error.response)
                     return
                 }
@@ -261,12 +286,10 @@
                         .get('/connect/api/getUserIdCrypted/{{ user.id }}')
                         .then(response => (this.idCrypted = response.data))
                 }catch(error){
-                    console.log(error)
                     this.printError("Une erreur est survenue lors de la récupération de l'identifiant crypté",error.response.data)
                     return
                 }
             },
-
             changeCandidate: function (candidate) {
                 this.candidateSelected = candidate
             },
@@ -316,43 +339,12 @@
                     this.electionStarted = false
                 }
             },
-            updateElection: async function () {
-                let formData = new FormData();
-                formData.append('ElectionName', this.election[0].ElectionName);
-                formData.append('ElectionBlind', !this.election[0].ElectionBlind);
-                if(this.election[0].ElectionStatus != ""){
-                    try{
-                        await axios
-                            .put('/adminspace/api/updateElectionStatus/'+this.election[0].ElectionName+'/'+this.election[0].ElectionStatus,formData,{
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                                "X-CSRFToken": "{{ csrf_token }}",
-                            }
-                            })
-                    }catch(error){
-                        this.printError("Une erreur est survenue lors de la modification de l'élection",error.response.data)
-                    }
-                }else{
-                    try{
-                        await axios
-                            .put('/adminspace/api/updateElection/'+this.election[0].ElectionName,formData,{
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                                "X-CSRFToken": "{{ csrf_token }}",
-                            }
-                            })
-                    }catch(error){
-                        this.printError("Une erreur est survenue lors de la modification de l'élection",error.response.data)
-                    }
-                }
-                this.getElection()
-            },
             printDate: function(date) {
                 var current_date = new Date(date);
                 var date = current_date.getDate();
                 var month = current_date.getMonth() + 1;
                 var year = current_date.getFullYear();
-                var hours = current_date.getHours();
+                var hours = current_date.getHours()-1;
                 var minutes = current_date.getMinutes();
                 var seconds = current_date.getSeconds();
                 if (date < 10) {
@@ -394,34 +386,6 @@
                         }
                     }
                 },
-                delElection: async function(){
-                    if(this.election[0].ElectionStatus != ""){
-                        try{
-                            await axios
-                                .delete('/adminspace/api/delElectionStatus/'+this.election[0].ElectionName+"/"+this.election[0].ElectionStatus,{
-                                headers: {
-                                    'Content-Type': 'multipart/form-data',
-                                    "X-CSRFToken": "{{ csrf_token }}",
-                                }
-                            })
-                        }catch(error){
-                            this.printError("Une erreur est survenue lors de la suppression de l'élection",error.response.data)
-                        }
-                    }else{
-                        try{
-                            await axios
-                                .delete('/adminspace/api/delElection/'+this.election[0].ElectionName,{
-                                headers: {
-                                    'Content-Type': 'multipart/form-data',
-                                    "X-CSRFToken": "{{ csrf_token }}",
-                                }
-                            })
-                        }catch(error){
-                            this.printError("Une erreur est survenue lors de la suppression de l'élection",error.response.data)
-                        }
-                    }
-                    window.location.href = "/";
-                },
                 currentDate: function() {
                     var current_date = new Date();
                     var date = current_date.getDate();
@@ -446,9 +410,11 @@
                         seconds = '0' + seconds;
                     }
                     const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
+                    const dateTimeForBC = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds; 
                     const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
                     // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
                     this.currentDates = currentDateTime;
+                    this.actualTimeForBC = dateTimeForBC; 
                     this.actualTime = dateTime;
                 },
                 updateError: async function(){
@@ -458,11 +424,7 @@
                 printError: async function(message,error){
                     this.message = message
                     errorParsed = JSON.stringify(error)
-                    for (var key in error) {
-                        if (error.hasOwnProperty(key)) {
-                            this.error = this.error + error[key] + " "
-                        }
-                    }
+                    this.error = errorParsed
                     this.loading=false
                 },
             },

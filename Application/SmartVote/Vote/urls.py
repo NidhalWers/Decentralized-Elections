@@ -12,6 +12,9 @@ urlpatterns = [
 
     path('success', views.success, name='success'),
 
+    path('viewElectionResults/<str:name>', views.resultElection, name='resultElection'),
+    path('viewElectionResultsStatus/<str:name>/<str:status>', views.resultElectionStatus, name='resultElectionStatus'),
+
     path('api/getCandidates', views.getCandidates, name='getCandidates'),
     path('api/getCandidate/<str:pk>', views.getCandidate, name='getCandidate'),
 
