@@ -1,0 +1,512 @@
+{% extends "base/base.html" %}
+
+{% block body %}
+{% load static %}
+<div id="Election">
+    <div class="row">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Voir l'élection</li>
+            </ol>
+        </nav> 
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-bottom border-4 border-0 border-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span>Statut</span>
+                    </div>
+                    <div>
+                        <span class="counter">[[election[0].ElectionStatus]]</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>  
+        <div class="col-lg-6 col-md-0">
+            <p class="h1 d-flex justify-content-center">[[election[0].ElectionName]]</p>
+            <p class="h6 d-flex justify-content-center">Résultat de l'élection</p>
+        </div> 
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-bottom border-4 border-0 border-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span>Terminée depuis :</span>
+                    </div>
+                </div>
+                <div>
+                    <span>[[printDate(election[0].ElectionEndDate)]]</span>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <div class="row pb-4">
+        <div class="form-check form-switch form-check-inline col-lg-4 float-end">
+            <div>Vote blanc : <div v-if="election[0].ElectionBlankVote">autorisé</div><div v-if="!election[0].ElectionBlankVote">non autorisé</div></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card" data-aos="fade-up" data-aos-delay="1000">
+                <div class="flex-wrap card-header d-flex justify-content-between">
+                    <div class="header-title">
+                        <h4 class="card-title">Répartitions des votes</h4>            
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="activity-chart" class="d-activity"></div>
+                </div>
+            </div>
+        </div>         
+        <div class="col-md-12 col-lg-12">
+            <div class="overflow-hidden card" data-aos="fade-up" data-aos-delay="600">
+                <div class="flex-wrap card-header d-flex justify-content-between">
+                <div class="header-title">
+                    <h4 class="mb-2 card-title">Visualisation détaillées des votes</h4>
+                    <p class="mb-0">
+                        <svg class ="me-2 text-primary" width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
+                        </svg>
+                        [[totalVotes]] votes au total
+                    </p>            
+                </div>
+                <div class="dropdown">
+                    <span class="dropdown-toggle" id="dropdownMenuButton7" data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                    </span>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton7">
+                        <a class="dropdown-item " href="javascript:void(0);">Action</a>
+                        <a class="dropdown-item " href="javascript:void(0);">Another action</a>
+                        <a class="dropdown-item " href="javascript:void(0);">Something else here</a>
+                    </div>
+                </div>
+                </div>
+                <div class="p-0 card-body">
+                <div class="mt-4 table-responsive">
+                    <table id="basic-table" class="table mb-0 table-striped" role="grid">
+                        <thead>
+                            <tr>
+                                <th>CANDIDATS</th>
+                                <th>AFFILIATION</th>
+                                <th>TOTAL DE VOTES</th>
+                                <th>PART DE L'AUDIENCE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="candidate in candidates">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img v-if="candidate.CandidateImage!=null" class="rounded bg-soft-primary img-fluid avatar-40 me-3" :src="candidate.CandidateImage" alt="profile">
+                                        <h6>[[candidate.CandidateName]]</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="iq-media-group iq-media-group-1">
+                                        [[candidate.CandidateDescription]]
+                                    </div>
+                                </td>
+                                <td>[[candidate.candidates_results]]</td>
+                                <td>
+                                    <div class="mb-2 d-flex align-items-center">
+                                        <h6>[[candidate.candidates_results*100/totalVotes]]%</h6>
+                                    </div>
+                                    <div class="shadow-none progress bg-soft-primary w-100" style="height: 4px">
+                                        <div class="progress-bar bg-primary" role="progressbar" :aria-valuenow="candidate.candidates_results*100/totalVotes" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    var parametre = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#Election',
+        data() {
+                return {
+                    election:[{
+                        "ElectionName": "",
+                        "ElectionStatus": "",
+                        "ElectionBlind": false,
+                    }],
+                    actualTime:"",
+                    currentDates:"",
+                    candidates:[],
+                    timeRemaining:0,
+                    electionStarted: true,
+                    electionBlind: false,
+                    resultElection:{},
+                    totalVotes:0,
+                    error:'',
+                    message:'',
+                    loading:true,
+                }
+        },
+        async mounted() {
+            await this.getElection()
+            await this.fillCandidates()
+            await this.getElectionResults()
+            // await this.simugetElectionResults()
+            await this.activity()
+        },    
+        methods: {
+            getElection: async function () {
+                electionName = "{{name}}"
+                electionStatus = "{{status}}"
+                if(electionStatus != "None"){
+                    try{
+                    await axios
+                        .get('/adminspace/api/getElectionStatus/'+electionName+'/'+electionStatus)
+                        .then(response => (this.election = response.data))
+                    }
+                    catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération de l'élection",error.response.data)
+                        this.loading = false
+                    }
+                }
+                else{
+                    try{
+                    await axios
+                        .get('/adminspace/api/getElection/'+electionName)
+                        .then(response => (this.election = response.data))
+                    }
+                    catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération de l'élection",error.response.data)
+                        this.loading = false
+                    }
+                };
+                this.election[0].ElectionCandidates = this.election[0].ElectionCandidates.split(",");
+            },
+            updateElection: async function () {
+                let formData = new FormData();
+                formData.append('ElectionName', this.election[0].ElectionName);
+                formData.append('ElectionBlind', !this.election[0].ElectionBlind);
+                if(this.election[0].ElectionStatus != ""){
+                    try{
+                        await axios
+                            .put('/adminspace/api/updateElectionStatus/'+this.election[0].ElectionName+'/'+this.election[0].ElectionStatus,formData,{
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                "X-CSRFToken": "{{ csrf_token }}",
+                            }
+                            })
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la modification de l'élection",error.response.data)
+                        this.loading = false
+                    }
+                }else{
+                    try{
+                        await axios
+                            .put('/adminspace/api/updateElection/'+this.election[0].ElectionName,formData,{
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                "X-CSRFToken": "{{ csrf_token }}",
+                            }
+                            })
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la modification de l'élection",error.response.data)
+                        this.loading = false
+                    }
+                }
+                this.getElection()
+            },
+            currentDate: function() {
+                var current_date = new Date();
+                var date = current_date.getDate();
+                var month = current_date.getMonth() + 1;
+                var year = current_date.getFullYear();
+                var hours = current_date.getHours();
+                var minutes = current_date.getMinutes();
+                var seconds = current_date.getSeconds();
+                if (date < 10) {
+                    date = '0' + date;
+                }
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (hours < 10) {
+                    hours = '0' + hours;
+                }
+                if (minutes < 10) {
+                    minutes = '0' + minutes;
+                }
+                if (seconds < 10) {
+                    seconds = '0' + seconds;
+                }
+                const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
+                const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
+                this.currentDates = currentDateTime;
+                this.actualTime = dateTime;
+            },
+
+                printDate: function(date) {
+                    var current_date = new Date(date);
+                    var date = current_date.getDate();
+                    var month = current_date.getMonth() + 1;
+                    var year = current_date.getFullYear();
+                    var hours = current_date.getHours();
+                    var minutes = current_date.getMinutes();
+                    var seconds = current_date.getSeconds();
+                    if (date < 10) {
+                        date = '0' + date;
+                    }
+                    if (month < 10) {
+                        month = '0' + month;
+                    }
+                    if (hours < 10) {
+                        hours = '0' + hours;
+                    }
+                    if (minutes < 10) {
+                        minutes = '0' + minutes;
+                    }
+                    if (seconds < 10) {
+                        seconds = '0' + seconds;
+                    }
+                    const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
+                    const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                    return currentDateTime;
+                },
+
+                getCandidate: async function(candidateName){
+                    try{
+                        await axios
+                        .get('/adminspace/api/getCandidate/'+candidateName)
+                        .then(response => (this.candidate = response.data))
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération du candidat",error.response.data)
+                        this.loading = false
+                    }
+                },
+                fillCandidates: async function(){
+                    for(var candidate in this.election[0].ElectionCandidates){
+                        try{
+                            await axios
+                                .get('/adminspace/api/getCandidate/'+this.election[0].ElectionCandidates[candidate])
+                                .then(response => (this.candidates.push(response.data)))
+                            
+                        }catch(error){
+                            this.printError("Une erreur est survenue lors de la récupération des candidats",error.response.data)
+                            this.loading = false
+                        }
+                    }
+                },
+                updateError: async function(){
+                    this.error = ''
+                    this.message = ''
+                },
+                printError: async function(message,error){
+                    this.message = message
+                    errorParsed = JSON.stringify(error)
+                    for (var key in error) {
+                        if (error.hasOwnProperty(key)) {
+                            this.error = this.error + error[key] + " "
+                        }
+                    }
+                    this.loading=false
+                },
+                delElection: async function(){
+                    if(this.election[0].ElectionStatus != ""){
+                        try{
+                            await axios
+                                .delete('/adminspace/api/delElectionStatus/'+this.election[0].ElectionName+"/"+this.election[0].ElectionStatus,{
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                    "X-CSRFToken": "{{ csrf_token }}",
+                                }
+                            })
+                        }catch(error){
+                            this.printError("Une erreur est survenue lors de la suppression de l'élection",error.response.data)
+                            this.loading = false
+                        }
+                    }else{
+                        try{
+                            await axios
+                                .delete('/adminspace/api/delElection/'+this.election[0].ElectionName,{
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                    "X-CSRFToken": "{{ csrf_token }}",
+                                }
+                            })
+                        }catch(error){
+                            this.printError("Une erreur est survenue lors de la suppression de l'élection",error.response.data)
+                            this.loading = false
+                        }
+                    }
+                    window.location.href = "/";
+                },
+                getElectionResults: async function(){
+                    console.log("getElectionResults")
+                    electionName = "{{name}}"
+                    electionStatus = "{{status}}"
+                    event.preventDefault();
+                    this.loading=true
+
+                    if(electionStatus == "None"){
+                        var config = {
+                            method: 'get',
+                            url: 'http://localhost:8080/smart-vote/api/v1/get-election/'+electionName,
+                            headers: { 
+                            },
+                        };
+                    }else{
+                        var config = {
+                            method: 'get',
+                            url: 'http://localhost:8080/smart-vote/api/v1/get-election/'+electionName+'?status='+electionStatus,
+                            headers: { 
+                            },
+                        };
+                    }
+
+                    try{
+                        await axios(config)
+                        .then(response => (this.resultElection = response.data))
+                        this.assignResultToCandidate()
+                        this.loading=false
+                    }catch(error){
+                        console.log(error)
+                        this.printError("Une erreur est survenue lors de la récupération des résultats",error["message"])
+                        this.loading = false
+                    }
+                },
+                assignResultToCandidate: async function() {
+                    await this.addBlank()
+
+                    for(var candidate in this.candidates){
+                        try{
+                            this.candidates[candidate]["candidates_results"] = this.resultElection["candidates_results"][this.candidates[candidate].CandidateName]
+                        }catch(error){
+                            this.printError("Une erreur est survenue lors de l'assignation des résultats",error)
+                        }
+                    }
+                    for(var candidate in this.candidates){
+                        if(this.candidates[candidate]["candidates_results"]==undefined){
+                            this.candidates[candidate]["candidates_results"] = 0
+                        }else{
+                            this.totalVotes = this.totalVotes + this.candidates[candidate]["candidates_results"]
+                        }
+                    }
+                    console.log(this.candidates)
+                },
+                getCandidatesNameList: function(){
+                    var candidatesNameList = []
+                    for(var candidate in this.candidates){
+                        candidatesNameList.push(this.candidates[candidate].CandidateName)
+                    }
+                    return candidatesNameList
+                },
+                addBlank: async function(){
+                    if(this.election[0].ElectionBlankVote){
+                        this.candidates.push({
+                        CandidateName: "blank_votes",
+                        CandidateResult: 0
+                    })
+                    }
+                },
+                getCandidatesResultList: function(){
+                    var candidatesResultList = []
+                    // for(var candidate in this.candidates){
+                    //     candidatesResultList.push(this.candidates[candidate].CandidateResult)
+                    // }
+                    for(var candidate in this.candidates){
+                        candidatesResultList.push(this.candidates[candidate].candidates_results)
+                    }
+                    return candidatesResultList
+                },
+                activity: async function(){
+                    if (document.querySelectorAll('#activity-chart').length) {
+                        const options = {
+                        series: [{
+                            name: 'Nombre de votes en faveur de ce candidat',
+                            data: this.getCandidatesResultList()
+                        }],
+                        chart: {
+                            type: 'bar',
+                            height: 230,
+                            stacked: true,
+                            toolbar: {
+                                show:false
+                            }
+                        },
+                        colors: ["#3a57e8"],
+                        plotOptions: {
+                            bar: {
+                            horizontal: false,
+                            columnWidth: '28%',
+                            endingShape: 'rounded',
+                            borderRadius: 5,
+                            },
+                        },
+                        legend: {
+                            show: false
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            show: true,
+                            width: 2,
+                            colors: ['transparent']
+                        },
+                        xaxis: {
+                            categories: this.getCandidatesNameList(),
+                            labels: {
+                            minHeight:20,
+                            maxHeight:20,
+                            style: {
+                                colors: "#8A92A6",
+                            },
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                            text: ''
+                            },
+                            labels: {
+                                minWidth: 19,
+                                maxWidth: 19,
+                                style: {
+                                colors: "#8A92A6",
+                                },
+                            }
+                        },
+                        fill: {
+                            opacity: 1
+                        },
+                        tooltip: {
+                            y: {
+                            formatter: function (val) {
+                                return val + " votes"
+                            }
+                            }
+                        }
+                        };
+                    
+                        const chart = new ApexCharts(document.querySelector("#activity-chart"), options);
+                        chart.render();
+                        document.addEventListener('ColorChange', (e) => {
+                        const newOpt = {colors: [e.detail.detail1, e.detail.detail2],}
+                        chart.updateOptions(newOpt)
+                        })
+                    }
+                }
+            },
+        },
+    );
+</script>
+{% endblock %}

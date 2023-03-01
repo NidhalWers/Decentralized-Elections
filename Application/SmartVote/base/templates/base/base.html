@@ -11,7 +11,7 @@
       <link rel="stylesheet" href="{% static 'Connect/css/style.css' %}">
       
       <!-- Favicon -->
-      <link rel="shortcut icon" href="{% static 'base/images/favicon.ico' %}">
+      <link rel="shortcut icon" href="{% static 'base/images/logo-v0.png' %}">
 
       
       <!-- Library / Plugin Css Build -->
@@ -32,6 +32,9 @@
       
       <!-- RTL Css -->
       <link rel="stylesheet" href="{% static 'base/css/rtl.min.css' %}">
+
+      <!-- blobz Css -->
+      <link rel="stylesheet" href="{% static 'base/css/blobz.min.css' %}">
       
   </head>
   <body class="  ">
@@ -52,7 +55,7 @@
           </svg>
           </button>
           <div class="col-lg-2 col-lg-3 navbar-brand">
-            <a href="../dashboard/index.html" class="d-flex">
+            <a href="/" class="d-flex">
                 <!--Logo start-->
                 <!-- <svg width="30" class="" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="-0.757324" y="19.2427" width="28" height="4" rx="2" transform="rotate(-45 -0.757324 19.2427)" fill="currentColor"/>
@@ -60,7 +63,10 @@
                     <rect x="10.5366" y="16.3945" width="16" height="4" rx="2" transform="rotate(45 10.5366 16.3945)" fill="currentColor"/>
                     <rect x="10.5562" y="-0.556152" width="28" height="4" rx="2" transform="rotate(45 10.5562 -0.556152)" fill="currentColor"/>
                 </svg> -->
-                <!--logo End-->          <h4 class="logo-title">Smart Vote</h4>
+                <img width="40" class="rounded-circle" src="{% static 'base/images/logo-v0.png' %}" alt="">
+
+                <img src="" alt="">
+                <!--logo End-->          <h4 class="logo-title"> <strong>Smart Vote</strong></h4>
             </a>
           </div>
           <!-- Horizontal Menu Start -->
@@ -81,8 +87,7 @@
              </div>
              <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link active" href="/"> Accueil </a></li>
-                <li class="nav-item"><a class="nav-link " href="../dashboard/index-dual-horizontal.html"> Voir les programmes </a></li>
-                <li class="nav-item"><a class="nav-link " href="../dashboard/index-dual-compact.html"><span class="item-name">Comment fonctionne SmartVote ?</span></a></li>
+                <li class="nav-item"><a class="nav-link " href="/"><span class="item-name">Comment fonctionne SmartVote ?</span></a></li>
              </ul>
           </div> <!-- container-fluid.// -->
           </nav>
@@ -174,23 +179,23 @@
                   </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="../dashboard/app/user-profile.html">Mes informations</a></li>
+                  <li><a class="dropdown-item" href="/connect/account/">Mes informations</a></li>
                   <li><a class="dropdown-item" href="../dashboard/app/user-privacy-setting.html">Préférence de sécurité</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="/connect/logout/">Déconnexion</a></li>
                 </ul>
               </li>
               {% else %}
-              <div class="container-login">
-                <a href="/connect/login/franceconnect">
-                  <button type="button" class="btn btn-primary" >
-                    <div class="btn-fc">
-                        <div><img src="{% static 'Connect/images/fc_avatar.png'%} " alt="France-Connect" class="img-fc"></div>
-                        <div class="text-fc"> S'identifier avec <br> France connect</div>
-                    </div>
-                  </button>
-                </a>
-              </div>
+                <div class="container-login">
+                  <a href="/connect/login/franceconnect">
+                    <button type="button" class="btn btn-primary" >
+                      <div class="btn-fc">
+                          <div><img src="{% static 'Connect/images/fc_avatar.png'%} " alt="France-Connect" class="img-fc"></div>
+                          <div class="text-fc"> S'identifier avec <br> <strong>France connect</strong></div>
+                      </div>
+                    </button>
+                  </a>  
+                </div>
               {% endif %}
             </ul>
           </div>
@@ -203,11 +208,15 @@
       <footer class="footer">
           <div class="footer-body">
               <ul class="left-panel list-inline mb-0 p-0">
-                  <li class="list-inline-item"><a href="../dashboard/extra/privacy-policy.html">Privacy Policy</a></li>
-                  <li class="list-inline-item"><a href="../dashboard/extra/terms-of-service.html">Terms of Use</a></li>
+                  <li class="list-inline-item"><a href="/">Privacy Policy</a></li>
+                  <li class="list-inline-item"><a href="/">Terms of Use</a></li>
+                  {% if user.is_authenticated %}
+                  {% else %}
+                  <li class="list-inline-item"><a href="/adminspace/connection">Se connecter en temps qu'administrateur</a></li>
+                  {% endif %}
               </ul>
               <div class="right-panel">
-                  ©2022 Smart Vote, by <a href="https://iqonic.design/">Les 7 grands corsaires</a>.
+                  ©2022 Smart Vote, by <a href="/">Les 7 grands corsaires</a>.
               </div>
           </div>
       </footer>

@@ -1,0 +1,873 @@
+{% extends "base/baselite.html" %}
+
+{% load static %}
+
+{% block body %}
+
+{% csrf_token %}
+<!-- <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+<script src="assets/plugins/global/plugins.bundle.js"></script> -->
+    <div class="row" id="parametre">
+        <div class="col-sm-12 col-lg-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <div class="header-title">
+                        <h4 class="card-title">
+                            Création d'une éléction instantanée
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <form id="form-wizard1" class="mt-3 text-center">
+                        <ul id="top-tab-list" class="p-0 row list-inline">
+
+                            <li class="mb-2 col-lg-3 col-md-6 text-start active" id="account">
+                                <a href="javascript:void();">
+                                    <div class="iq-icon me-3">
+                                        <svg width="32" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M16.334 2.75H7.665C4.644 2.75 2.75 4.889 2.75 7.916V16.084C2.75 19.111 4.635 21.25 7.665 21.25H16.333C19.364 21.25 21.25 19.111 21.25 16.084V7.916C21.25 4.889 19.364 2.75 16.334 2.75Z"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                            <path d="M11.9946 16V12" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M11.9896 8.2041H11.9996" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="dark-wizard">Identité</span>
+                                </a>
+                            </li>
+
+                            <li class="mb-2 col-lg-3 col-md-6 text-start" id="personal">
+                                <a href="javascript:void();">
+                                    <div class="iq-icon me-3">
+                                        <svg width="32" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M3.09277 9.40421H20.9167" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M16.442 13.3097H16.4512" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M12.0045 13.3097H12.0137" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M7.55818 13.3097H7.56744" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M16.442 17.1962H16.4512" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M12.0045 17.1962H12.0137" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M7.55818 17.1962H7.56744" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M16.0433 2V5.29078" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M7.96515 2V5.29078" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M16.2383 3.5791H7.77096C4.83427 3.5791 3 5.21504 3 8.22213V17.2718C3 20.3261 4.83427 21.9999 7.77096 21.9999H16.229C19.175 21.9999 21 20.3545 21 17.3474V8.22213C21.0092 5.21504 19.1842 3.5791 16.2383 3.5791Z"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="dark-wizard">Période</span>
+                                </a>
+                            </li>
+
+                            <li class="mb-2 col-lg-3 col-md-6 text-start" id="payment">
+                                <a href="javascript:void();">
+                                    <div class="iq-icon me-3">
+                                        <svg width="32" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M9.59151 15.2068C13.2805 15.2068 16.4335 15.7658 16.4335 17.9988C16.4335 20.2318 13.3015 20.8068 9.59151 20.8068C5.90151 20.8068 2.74951 20.2528 2.74951 18.0188C2.74951 15.7848 5.88051 15.2068 9.59151 15.2068Z"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M9.59157 12.0198C7.16957 12.0198 5.20557 10.0568 5.20557 7.63476C5.20557 5.21276 7.16957 3.24976 9.59157 3.24976C12.0126 3.24976 13.9766 5.21276 13.9766 7.63476C13.9856 10.0478 12.0356 12.0108 9.62257 12.0198H9.59157Z"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                            <path
+                                                d="M16.4829 10.8815C18.0839 10.6565 19.3169 9.28253 19.3199 7.61953C19.3199 5.98053 18.1249 4.62053 16.5579 4.36353"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                            <path
+                                                d="M18.5952 14.7322C20.1462 14.9632 21.2292 15.5072 21.2292 16.6272C21.2292 17.3982 20.7192 17.8982 19.8952 18.2112"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="dark-wizard">Candidats</span>
+                                </a>
+                            </li>
+
+
+                            <li class="mb-2 col-lg-3 col-md-6 text-start" id="confirm">
+                                <a href="javascript:void();">
+                                    <div class="iq-icon me-3">
+                                        <svg width="32" viewBox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M11.9846 21.606C11.9846 21.606 19.6566 19.283 19.6566 12.879C19.6566 6.474 19.9346 5.974 19.3196 5.358C18.7036 4.742 12.9906 2.75 11.9846 2.75C10.9786 2.75 5.26557 4.742 4.65057 5.358C4.03457 5.974 4.31257 6.474 4.31257 12.879C4.31257 19.283 11.9846 21.606 11.9846 21.606Z"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                            <path d="M9.38574 11.8746L11.2777 13.7696L15.1757 9.86963"
+                                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="dark-wizard">Récapitulative</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <fieldset style="display: block;">
+                            <div class="form-card text-start">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <h2 class="steps">Etape 1/4</h2>
+                                        <br>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label" >Nom de votre élection : </label>
+                                            <input type="email" v-bind:class='{"is-invalid": electionName =="", "is-valid": electionName !=""}' class="form-control" name="electionName"
+                                                placeholder="Présidentielle 2022 - 1er tour" v-model="electionName">
+                                        </div>
+                                        <p class="text-danger" v-if="error != ''">
+                                            [[message]] : [[error]]
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Statut de l'élélection : </label>
+                                            <input type="text" v-bind:class='{"is-invalid": electionName =="", "is-valid": electionName !=""}' class="form-control" placeholder="1 / 2" v-model="electionStatut">
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                    </symbol>
+                                    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                                    </symbol>
+                                    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                    </symbol>
+                                </svg>
+                            </div>
+                            <button class="btn btn-primary float-end" type="button" disabled v-if="loading">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Suivant...
+                            </button>
+                            <button type="button" name="next" class="btn btn-primary next action-button float-end" 
+                                value="Next" :disabled='electionName ==""' v-if="!loading" v-on:click="generateElectionName()">Suivant</button>
+                        </fieldset>
+
+                        <fieldset style="display: none;">
+                            <div class="form-card text-start">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <h2 class="steps">Etape 2/4</h2>
+                                        <br>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="exampleInputdatetime">Date de départ</label>
+                                            <input type="datetime-local" class="form-control" id="exampleInputdatetime" 
+                                                v-model="electionStartDate" v-bind:class='{"is-invalid": electionStartDate=="", "is-valid": electionStartDate!=""}'>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label" for="exampleInputdatetime">Date de fin</label>
+                                            <input type="datetime-local" :min="electionStartDate" class="form-control" id="exampleInputdatetime"
+                                            v-model="electionEndDate" v-bind:class='{"is-invalid": electionEndDate=="", "is-valid": electionEndDate!=""}' :disabled="electionStartDate==''">
+                                        </div>
+                                    </div>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                    </symbol>
+                                    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                                    </symbol>
+                                    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                    </symbol>
+                                </svg>
+            
+                                <div v-if="error != ''" class="alert alert-danger d-flex align-items-center" role="alert">
+                                    <svg class="bi flex-shrink-0 me-2" width="24" height="24">
+                                        <use xlink:href="#exclamation-triangle-fill" />
+                                    </svg>
+                                    <div>
+                                        [[message]] : [[error]]
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary float-end" type="button" disabled v-if="loading">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Suivant...
+                            </button>
+                            <button type="button" name="next" class="btn btn-primary next action-button float-end"
+                                value="Next" :disabled="electionEndDate=='' | electionStartDate==''" v-on:click="updateError()" v-if="!loading">Suivant</button>
+                            <button type="button" name="previous"
+                                class="btn btn-dark previous action-button-previous float-end me-1"
+                                value="Previous" v-on:click="updateError()">Retour</button>
+                        </fieldset>
+
+
+                        <fieldset style="display: none;">
+                            <div class="form-card text-start">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <h2 class="steps">Etape 3/4</h3>
+                                            <br>
+                                    </div>
+
+                                </div>
+                                <div>
+                                    <a v-on:click="resetCandidate()" class=" text-center btn btn-primary btn-icon mt-lg-0 mt-md-0 mt-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        <i class="btn-inner">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                            </svg>
+                                        </i>
+                                        <span>Ajouter un candidat</span>
+
+                                    </a>
+                                    <div class="form-check form-switch form-check-inline float-end">
+                                        <input class="form-check-input" type="checkbox" id="switch2" v-model="electionBlankVote"/>
+                                        <label class="form-check-label pl-2" for="switch2">Autoriser le vote blanc</label>
+                                    </div>
+                                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+                                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                                        style="display: none;" aria-hidden="true">
+
+                                        <div class="modal-dialog">
+
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="staticBackdropLabel">Ajoutez un(e)
+                                                        nouveau(elle) candidat(e)</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label class="form-label">Nom du candidat</label>
+                                                            <input type="text" v-bind:class='{"is-invalid": candidateName=="", "is-valid": candidateName!=""}' class="form-control" v-model="candidateName" name="candidateName">
+                                                            <div v-if='candidateName==""' class="invalid-feedback">
+                                                            Ce champs est requis
+                                                            </div>
+                                                            <br>
+                                                            <label class="form-label">Affiliation du candidat</label>
+                                                            <input type="text" class="form-control" v-model="candidateDescription" name="candidateDescription">
+                                                            <hr>
+                                                            <label class="form-label" for="customFile">Image liée au
+                                                                candidat</label>
+                                                            <input type="file" class="form-control" accept="image/png, image/jpeg" id="customFile" ref="image" v-on:change="handleImageUpload()" name="candidateImage">
+                                                            <br>
+                                                            <label class="form-label" for="customFile">Programme du
+                                                                candidat</label>
+                                                            <input type="file" accept=".pdf" class="form-control" id="customFile" ref="program"  v-on:change="handleProgramUpload()" name="candidateProgram">
+                                                        </div>
+                                                        <div class="text-start">
+                                                            <button class="btn btn-primary" type="button" disabled v-if="loading">
+                                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                Ajouter...
+                                                            </button>
+                                                            <button type="button" class="btn btn-primary"
+                                                                data-bs-dismiss="modal" :disabled='candidateName==""' v-on:click="addCandidate()" v-if="!loading">Ajouter</button>
+                                                            <button type="button" class="btn btn-danger"
+                                                                data-bs-dismiss="modal" aria-label="Close">Annuler</button>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Candidats</th>
+                                            <th class="text-center">Affiliation</th>
+                                            <!-- <th class="text-center">Avatar</th> -->
+                                            <th class="text-center">Programme</th>
+                                            <th class="text-center">Sélectionner</th>
+                                            <th class="text-center">Modifier</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody >
+                                        <tr v-for="candidate in candidates" :key="candidate.CandidateName" class="">
+                                            <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">
+                                                <div class="d-flex align-items-center">
+                                                    <img v-if="candidate.CandidateImage!=null" class="rounded bg-soft-primary img-fluid avatar-40 me-3" :src="candidate.CandidateImage" alt="profile">
+                                                    [[candidate.CandidateName]]
+                                                </div>
+                                            </td>
+                                            <td v-if="candidate.CandidateName == candidateToUpdate">
+                                                <div class="d-flex align-items-center">
+                                                    <input v-if="updateImage | candidate.CandidateImage==null" type="file" class="form-control" accept="image/png, image/jpeg" id="customFile" ref="imageUpdate" v-on:change="handleImageUploadUpdate()">
+                                                    <img v-if="candidate.CandidateImage!=null" class="rounded bg-soft-primary img-fluid avatar-40 me-3" :src="candidate.CandidateImage" alt="profile">
+                                                    <button v-if="!updateImage & candidate.CandidateImage!=null" class="btn btn-sm btn-soft-danger" v-on:click="updateImageForm()">
+                                                        <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.737 2.76196H7.979C5.919 2.76196 4.25 4.43196 4.25 6.49096V17.34C4.262 19.439 5.973 21.13 8.072 21.117C8.112 21.117 8.151 21.116 8.19 21.115H16.073C18.141 21.094 19.806 19.409 19.802 17.34V8.03996L14.737 2.76196Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M14.4736 2.75024V5.65924C14.4736 7.07924 15.6216 8.23024 17.0416 8.23424H19.7966" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M13.5759 14.6481L10.1099 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M10.1108 14.6481L13.5768 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
+                                                    </button>
+                                                    <input class="form-control form-control-lg" v-bind:class='{"is-invalid": candidateNameUpdate=="", "is-valid": candidateNameUpdate!=""}' type="text" :placeholder="candidate.CandidateName" v-model="candidateNameUpdate">
+                                                </div>
+                                                    <!-- <div v-if='candidateNameUpdate==""' class="invalid-feedback">
+                                                Ce champs est requis
+                                                </div> -->
+            
+                                            </td>
+                                            
+                                            <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">[[candidate.CandidateDescription]]</td>
+                                            <td v-if="candidate.CandidateName == candidateToUpdate"><input class="form-control form-control-lg" type="text" :placeholder="candidate.CandidateDescription" v-model="candidateDescriptionUpdate"></td>
+
+                    
+                                            <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">
+                                                <button v-if="candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
+                                                    data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="PDF">
+                                                    [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length)]]
+                                                    <svg width="32" viewBox="0 0 24 24" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            d="M14.7364 2.76175H8.0844C6.0044 2.75375 4.3004 4.41075 4.2504 6.49075V17.2277C4.2054 19.3297 5.8734 21.0697 7.9744 21.1147C8.0114 21.1147 8.0484 21.1157 8.0844 21.1147H16.0724C18.1624 21.0407 19.8144 19.3187 19.8024 17.2277V8.03775L14.7364 2.76175Z"
+                                                            stroke="currentColor" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path
+                                                            d="M14.4746 2.75V5.659C14.4746 7.079 15.6236 8.23 17.0436 8.234H19.7976"
+                                                            stroke="currentColor" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path d="M11.6406 9.90869V15.9497" stroke="currentColor"
+                                                            stroke-width="1.5" stroke-linecap="round"
+                                                            stroke-linejoin="round" />
+                                                        <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642"
+                                                            stroke="currentColor" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>   
+                                                </button>
+                                            </td>
+                                            <td v-if="candidate.CandidateName == candidateToUpdate" class="text-center">
+                                                <button v-if="!updateFile & candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
+                                                    data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="PDF">
+                                                    [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length)]]
+                                                    <svg width="32" viewBox="0 0 24 24" fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                            d="M14.7364 2.76175H8.0844C6.0044 2.75375 4.3004 4.41075 4.2504 6.49075V17.2277C4.2054 19.3297 5.8734 21.0697 7.9744 21.1147C8.0114 21.1147 8.0484 21.1157 8.0844 21.1147H16.0724C18.1624 21.0407 19.8144 19.3187 19.8024 17.2277V8.03775L14.7364 2.76175Z"
+                                                            stroke="currentColor" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path
+                                                            d="M14.4746 2.75V5.659C14.4746 7.079 15.6236 8.23 17.0436 8.234H19.7976"
+                                                            stroke="currentColor" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path d="M11.6406 9.90869V15.9497" stroke="currentColor"
+                                                            stroke-width="1.5" stroke-linecap="round"
+                                                            stroke-linejoin="round" />
+                                                        <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642"
+                                                            stroke="currentColor" stroke-width="1.5"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>   
+                                                </button>
+                                                <input v-if="updateFile | candidate.CandidateProgram==null" type="file" accept=".pdf" class="form-control" id="customFile" ref="programUpdate"  v-on:change="handleProgramUploadUpdate()" name="candidateProgram">
+                                                <button v-if="!updateFile & candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-danger" v-on:click="updateFileForm()">
+                                                    <svg width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.737 2.76196H7.979C5.919 2.76196 4.25 4.43196 4.25 6.49096V17.34C4.262 19.439 5.973 21.13 8.072 21.117C8.112 21.117 8.151 21.116 8.19 21.115H16.073C18.141 21.094 19.806 19.409 19.802 17.34V8.03996L14.737 2.76196Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M14.4736 2.75024V5.65924C14.4736 7.07924 15.6216 8.23024 17.0416 8.23424H19.7966" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M13.5759 14.6481L10.1099 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                    <path d="M10.1108 14.6481L13.5768 11.1821" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>                                </svg>                            
+                                                </button>
+                                            </td>
+        
+
+                                            <td class="text-center">
+                                                <input class="form-check-input" type="checkbox" :value="candidate.CandidateName" v-model="electionCandidates">
+                                            </td>
+
+                                            <td class="text-center" v-if="candidate.CandidateName != candidateToUpdate">
+                                                <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit" v-on:click="updateCandidateToUpdate(candidate.CandidateName)">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <path
+                                                                d="M11.4925 2.78906H7.75349C4.67849 2.78906 2.75049 4.96606 2.75049 8.04806V16.3621C2.75049 19.4441 4.66949 21.6211 7.75349 21.6211H16.5775C19.6625 21.6211 21.5815 19.4441 21.5815 16.3621V12.3341"
+                                                                stroke="currentColor" stroke-width="1.5"
+                                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M8.82812 10.921L16.3011 3.44799C17.2321 2.51799 18.7411 2.51799 19.6721 3.44799L20.8891 4.66499C21.8201 5.59599 21.8201 7.10599 20.8891 8.03599L13.3801 15.545C12.9731 15.952 12.4211 16.181 11.8451 16.181H8.09912L8.19312 12.401C8.20712 11.845 8.43412 11.315 8.82812 10.921Z"
+                                                                stroke="currentColor" stroke-width="1.5"
+                                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M15.1655 4.60254L19.7315 9.16854"
+                                                                stroke="currentColor" stroke-width="1.5"
+                                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                                <a class="btn btn-sm btn-icon text-danger " data-bs-toggle="tooltip" v-on:click="deleteCandidate(candidate.CandidateName)" title="Delete">
+                                                    <span class="btn-inner">
+                                                        <svg width="20" viewBox="0 0 24 24" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                                                            <path
+                                                                d="M19.3248 9.46826C19.3248 9.46826 18.7818 16.2033 18.4668 19.0403C18.3168 20.3953 17.4798 21.1893 16.1088 21.2143C13.4998 21.2613 10.8878 21.2643 8.27979 21.2093C6.96079 21.1823 6.13779 20.3783 5.99079 19.0473C5.67379 16.1853 5.13379 9.46826 5.13379 9.46826"
+                                                                stroke="currentColor" stroke-width="1.5"
+                                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                                            <path d="M20.708 6.23975H3.75" stroke="currentColor"
+                                                                stroke-width="1.5" stroke-linecap="round"
+                                                                stroke-linejoin="round"></path>
+                                                            <path
+                                                                d="M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973"
+                                                                stroke="currentColor" stroke-width="1.5"
+                                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                                        </svg>
+                                                    </span>
+                                                </a>
+                                            </td>
+                                            <td class="text-center" v-if="candidate.CandidateName == candidateToUpdate">
+                                                <button type="button" class="btn btn-outline-success" :disabled='candidateNameUpdate==""' v-on:click="updateCandidate(candidate.CandidateName)">Appliquer</button>
+                                                <button type="button" class="btn btn-outline-danger" v-on:click="updateCandidateToUpdate()">Annuler</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                    </symbol>
+                                    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                                    </symbol>
+                                    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                    </symbol>
+                                </svg>
+            
+                                <div v-if="error != ''" class="alert alert-danger d-flex align-items-center" role="alert">
+                                    <svg class="bi flex-shrink-0 me-2" width="24" height="24">
+                                        <use xlink:href="#exclamation-triangle-fill" />
+                                    </svg>
+                                    <div>
+                                        [[message]] : [[error]]
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary float-end" type="button" disabled v-if="loading">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Suivant...
+                            </button>
+                            <button type="button" name="next" class="btn btn-primary next action-button float-end"
+                                value="Next" :disabled='electionCandidates.length==0' v-on:click="updateError()" v-if="!loading">Suivant</button>
+                            <button type="button" name="previous"
+                                class="btn btn-dark previous action-button-previous float-end me-1"
+                                value="Previous" v-on:click="updateError()">Retour</button>
+                        </fieldset>
+                        <fieldset style="display: none;">
+                            <div class="form-card text-start">
+                                <div class="row">
+                                    <div class="col-7">
+                                        <h2 class="steps">Etape 4/4</h3>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 mt-4">
+                                        <div class="table-responsive-lg">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center" scope="col">Nom de l'élection</th>
+                                                        <th class="text-center" scope="col">Statut de l'élection</th>
+                                                        <th class="text-center" scope="col">Date début élection</th>
+                                                        <th class="text-center" scope="col">Date fin élection</th>
+                                                        <th class="text-center" scope="col">Nom des candidats</th>
+
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <h6 class="mb-0">[[electionName.substring(0, electionName.length-5)]]</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6 class="mb-0">[[electionStatut]]</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6 class="mb-0">[[electionStartDate]]</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6 class="mb-0">[[electionEndDate]]</h6>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <h6 class="mb-0">
+                                                                <ul v-for="candidateSelected in electionCandidates" class="list-group">
+                                                                    <ol>[[candidateSelected]]</ol>
+                                                                </ul>
+                                                            </h6>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                                <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                </symbol>
+                                                <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                                                </symbol>
+                                                <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                                </symbol>
+                                            </svg>
+                        
+                                            <div v-if="error != ''" class="alert alert-danger d-flex align-items-center" role="alert">
+                                                <svg class="bi flex-shrink-0 me-2" width="24" height="24">
+                                                    <use xlink:href="#exclamation-triangle-fill" />
+                                                </svg>
+                                                <div>
+                                                    [[message]] : [[error]]
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <button type="button" v-if="!loading" name="next" class="btn btn-success action-button float-end" data-bs-toggle="modal" data-bs-target="#staticBackdropValidate">Valider</button>
+                            <button type="button" disabled v-if="loading" name="next" class="btn btn-success action-button float-end" data-bs-toggle="modal" data-bs-target="#staticBackdropValidate">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Validation...
+                            </button>
+                            <button type="button" name="previous"
+                                class="btn btn-dark previous action-button-previous float-end me-1"
+                                value="Previous" v-on:click="updateError()">Retour</button>
+                        </fieldset>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal fade" id="staticBackdropValidate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropValidate" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Confirmer la Création de l'élection</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="email" class="form-label"><strong>Attention</strong>, vous ne pourrez plus modifier ni <strong>l'élection</strong> ni <strong>les candidats</strong> inscrient dans cette élection après l'avoir créée. Veuillez vérifier l'ensemble des informations avant de la publier.</label>
+                        </div>
+                        <div class="text-start">
+                            <button type="button" v-on:click="createElectionInBlockchain()" v-if="!loading" class="btn btn-primary" data-bs-dismiss="modal">Créer l'élection</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    var parametre = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#parametre',
+        data() {
+            return {
+                error: 0,
+                message: '',
+                candidates: [],
+                candidateName:"",
+                candidateDescription:"",
+                candidateImage:null,
+                candidateProgram:null,
+                candidateNameUpdate:"",
+                candidateDescriptionUpdate:"",
+                candidateImageUpdate:null,
+                candidateProgramUpdate:null,
+                candidateToUpdate:null,
+                updateFile:false,
+                updateImage:false,
+                electionName:"",
+                electionStatut:"",
+                electionStartDate:"",
+                electionEndDate:"",
+                electionCandidates:[],
+                electionBlankVote:false,
+                responseApiCall:null,
+                error:'',
+                message:'',
+                loading:false,
+                electionExistResponse:null,
+            }
+        },
+        async mounted() {
+        },
+        methods: {
+            handleImageUpload:function(){
+                this.candidateImage = this.$refs.image.files[0];
+            },
+            handleProgramUpload:function(){
+                this.candidateProgram = this.$refs.program.files[0];
+            },
+            handleImageUploadUpdate:function(){
+                this.candidateImageUpdate = this.$refs.imageUpdate[0].files[0];
+            },
+            handleProgramUploadUpdate:function(){
+                this.candidateProgramUpdate = this.$refs.programUpdate[0].files[0];
+            },
+            generateElectionName: async function(){
+                this.electionName = this.electionName + "-" + Math.floor(Math.random() * (9999 - 1000 + 1000) + 1000)
+                console.log(this.electionName)
+            },
+            addCandidate: async function () {
+                this.loading=true
+                let formData = new FormData();
+                formData.append('CandidateName', this.candidateName);
+                formData.append('CandidateDescription', this.candidateDescription);
+                formData.append('CandidateElection', this.electionName);
+                if (this.candidateImage != null) {
+                    formData.append('CandidateImage', this.candidateImage);
+                }
+                if (this.candidateProgram != null) {
+                    formData.append('CandidateProgram', this.candidateProgram);
+                }
+                try{
+                    await axios.post('/smartvotelite/api/addCandidate', formData,{
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        }
+                    })
+                    this.updateError()
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de l'ajout du candidat",error.response.data)
+                }
+
+                await this.getCandidatesInElection()
+                await this.resetCandidate()
+                this.loading=false
+            },
+            getCandidatesInElection: async function () {
+                try{
+                    await axios.get('/smartvotelite/api/getCandidatesInElection/'+this.electionName)
+                        .then(response => (this.candidates = response.data))
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de la récupération des candidats",error.response.data)
+                }
+            },
+            deleteCandidate: async function (id) {
+                this.loading=true
+                try{
+                    await axios
+                        .delete('/smartvotelite/api/delCandidate/' + id+'/'+this.electionName,{
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        }
+                    })
+                    this.updateError()
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de la suppression du candidat",error.response.data)
+                }
+
+                await this.getCandidatesInElection()
+                this.loading=false
+            },
+            updateCandidate: async function (id) {
+                this.loading=true
+                let formData = new FormData();
+                formData.append('CandidateName', this.candidateNameUpdate);
+                formData.append('CandidateDescription', this.candidateDescriptionUpdate);
+                formData.append('CandidateElection', this.electionName);
+                if (this.candidateImageUpdate != null) {
+                    formData.append('CandidateImage', this.candidateImageUpdate);
+                }else if (this.updateImage){
+                    formData.append('CandidateImage', "");
+                }
+
+                if (this.candidateProgramUpdate != null) {
+                    formData.append('CandidateProgram', this.candidateProgramUpdate);
+                }else if (this.updateFile){
+                    formData.append('CandidateProgram', "");
+                }
+                
+                try{
+                    await axios
+                        .put('/smartvotelite/api/updateCandidate/' + id+'/'+this.electionName, formData,{
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        }
+                        })
+                    this.updateError()
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de la modification du candidat",error["response"]["data"]["message"])
+                }
+
+                await this.updateCandidateToUpdate()
+                await this.getCandidatesInElection()
+                await this.resetCandidateUpdate()
+                this.updateFile=false
+                this.updateImage=false
+                this.loading=false
+            },
+            updateCandidateToUpdate: async function (name){
+                if(this.candidateToUpdate == name){
+                    this.candidateToUpdate = null
+                }else{
+                    this.candidateToUpdate = name
+                }    
+                await this.resetCandidateUpdate()
+            },
+            updateFileForm: async function (){
+                if (this.updateFile == true){
+                    this.updateFile = false
+                }else{
+                this.updateFile = true}
+            },
+            updateImageForm: async function (){
+                if (this.updateImage == true){
+                    this.updateImage = false
+                }else{
+                this.updateImage = true}
+            },
+            resetCandidateFile: async function(){
+                this.candidateProgram = null
+            },
+            resetCandidateFileUpdate: async function(){
+                this.candidateProgramUpdate = null
+            },
+            resetCandidateImage: async function(){
+                this.candidateImage = null
+            },
+            resetCandidateImageUpdate: async function(){
+                this.candidateImageUpdate = null
+            },
+            resetCandidate: async function (){
+                this.candidateProgram = null
+                this.candidateImage = null
+                this.candidateDescription = ""
+                this.candidateName = ""
+            },
+            resetCandidateUpdate: async function (){
+                this.candidateProgramUpdate = null
+                this.candidateImageUpdate = null
+                this.candidateDescriptionUpdate = ""
+                this.candidateNameUpdate = ""
+            },
+            createElectionInBlockchain: async function (){
+                event.preventDefault();
+                this.loading=true
+                var data = JSON.stringify({
+                    "candidates" : this.electionCandidates,
+                    "starting_date" : this.electionStartDate,
+                    "closing_date" : this.electionEndDate,
+                    "election_name" : this.electionName,
+                    "count_blank_votes" : this.electionBlankVote,
+                    "status" : this.electionStatut
+                    });
+
+                    var config = {
+                    method: 'post',
+                    url: 'http://localhost:8080/smart-vote/api/v1/create-election',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    data : data
+                    };
+
+                    try{
+                        await axios(config)
+                        .then(response => (this.responseApiCall = response.data))
+
+                        await this.addElection()
+                        this.loading=false
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la création de l'élection dans la blockchain",error["message"])
+                        this.loading=false
+                    }
+            },
+            addElection: async function(){
+                event.preventDefault();
+                electionCode = Math.floor(Math.random() * (999999 - 100000 + 100000) + 100000)
+                this.loading=true
+                let formData = new FormData();
+                formData.append('ElectionName', this.electionName);
+                formData.append('ElectionStatus', this.electionStatut);
+                formData.append('ElectionApiKey', this.responseApiCall.api_key);
+                formData.append('ElectionCandidates', this.electionCandidates);
+                formData.append('ElectionStartDate', this.electionStartDate);
+                formData.append('ElectionEndDate', this.electionEndDate);
+                formData.append('ElectionBlankVote', this.electionBlankVote);
+                formData.append('ElectionCode', electionCode);
+                try{
+                await axios.post('/smartvotelite/api/addElection', formData,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    }
+                    })
+                    this.loading=false
+                    window.location = "/smartvotelite/success/"+ electionCode
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de la création de l'élection, mais celle-ci existe dans la blockchain, veuillez contacter un administrateur",error.response.data) 
+                }
+
+                this.loading=false
+            },
+            updateLoading: async function(){
+                if (this.loading == true){
+                    this.loading = false
+                }else{
+                this.loading = true}
+            },
+            updateError: async function(){
+                this.error = ''
+                this.message = ''
+            },
+            printError: async function(message,error){
+                this.message = message
+                if(typeof(error) == "string"){
+                    this.error = error
+                    this.loading=false
+                    return
+                }
+                errorParsed = JSON.stringify(error)
+                for (var key in error) {
+                    if (error.hasOwnProperty(key)) {
+                        this.error = this.error + error[key] + "."
+                    }
+                }
+                this.loading=false
+            },
+            updateAllowed: async function(){
+                if (this.allowed == true){
+                    this.allowed = false
+                }else{
+                this.allowed = true}
+            },
+            }
+        },
+    )
+</script>
+{% endblock %}

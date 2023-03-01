@@ -57,20 +57,20 @@ public class ElectionPayload {
 
     private void validatePayload() {
         if (electionName == null || electionName.isBlank()) {
-            throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "election_name"));
+            throw IllegalPayloadArgumentException.ofErrorCode(ErrorCode.REQUIRED_PARAMETER, "election_name");
         }
         if (startingDate == null || startingDate.isBlank()) {
-            throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "starting_date"));
+            throw IllegalPayloadArgumentException.ofErrorCode(ErrorCode.REQUIRED_PARAMETER, "starting_date");
         }
         if (closingDate == null || closingDate.isBlank()) {
-            throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "closing_date"));
+            throw IllegalPayloadArgumentException.ofErrorCode(ErrorCode.REQUIRED_PARAMETER, "closing_date");
         }
         if (candidates == null || candidates.isEmpty()) {
-            throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "candidates"));
+            throw IllegalPayloadArgumentException.ofErrorCode(ErrorCode.REQUIRED_PARAMETER, "candidates");
         }
         if (countBlankVotes != null) {
             if (!countBlankVotes.isBlank() && !("true".equals(countBlankVotes.toLowerCase()) || "false".equals(countBlankVotes.toLowerCase()))) {
-                throw new IllegalPayloadArgumentException(ErrorCode.INVALID_BOOLEAN_FORMAT, String.format(ErrorCode.INVALID_BOOLEAN_FORMAT.getDefaultMessage(), "count_blank_votes"));
+                throw IllegalPayloadArgumentException.ofErrorCode(ErrorCode.INVALID_BOOLEAN_FORMAT, "count_blank_votes");
             }
         }
 

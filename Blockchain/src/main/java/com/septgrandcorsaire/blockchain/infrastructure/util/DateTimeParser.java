@@ -16,7 +16,7 @@ public class DateTimeParser {
         try {
             dateTime = LocalDateTime.parse(parameter);
         } catch (Exception e) {
-            throw new IllegalPayloadArgumentException(ErrorCode.BAD_DATE_FORMAT, String.format(ErrorCode.BAD_DATE_FORMAT.getDefaultMessage(), parameterName));
+            throw IllegalPayloadArgumentException.ofErrorCode(ErrorCode.BAD_DATE_FORMAT, parameterName);
         }
         return dateTime;
     }

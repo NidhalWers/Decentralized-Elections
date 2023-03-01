@@ -31,6 +31,8 @@ public class VotePayload {
 
     private String electionStatus;
 
+    private String apiKey;
+
     public VoteQuery toQuery() {
         validatePayload();
         return VoteQuery.builder()
@@ -48,15 +50,14 @@ public class VotePayload {
 
     private void validatePayload() {
         if (electionName == null || electionName.isBlank()) {
-            throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "election_name"));
+            throw IllegalPayloadArgumentException.ofErrorCode(ErrorCode.REQUIRED_PARAMETER, "election_name");
         }
 
         if (voterId == null || voterId.isBlank()) {
-            throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "voter_id"));
+            throw IllegalPayloadArgumentException.ofErrorCode(ErrorCode.REQUIRED_PARAMETER, "voter_id");
         }
         if (votingTime == null || votingTime.isBlank()) {
-            throw new IllegalPayloadArgumentException(ErrorCode.REQUIRED_PARAMETER, String.format(ErrorCode.REQUIRED_PARAMETER.getDefaultMessage(), "voting_time"));
+            throw IllegalPayloadArgumentException.ofErrorCode(ErrorCode.REQUIRED_PARAMETER, "voting_time");
         }
-
     }
 }

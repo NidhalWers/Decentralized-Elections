@@ -2,93 +2,203 @@
 
 {% block body %}
 {% load static %}
-<div class="row">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">Accueil</li>
-        </ol>
-    </nav> 
+
+<div id="Election">
+
+    <div class="row">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-between">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Accueil</li>
+                
+            </ol>
+            <p class="breadcrumb-item active" aria-current="page" style="font-style: italic;">[[currentDates]]</p>
+        </nav> 
+    </div>
+    <div class="row pb-5 mt-0">
+        <p class="h1 d-flex justify-content-center">Election disponible</p>
+
+        <p class="h6 d-flex justify-content-center">Selectionner une élection</p>
+    </div>
+    <div class="row">
+        <p><em>Elections en cours</em></p>
+        <div v-for="election in elections" v-if="(actualTime > election.ElectionStartDate && election.ElectionEndDate > actualTime)" class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                            <div class="fs-italic">
+                                <h5>[[election.ElectionName]]</h5>
+                            </div>	
+                            <div class="mt-3 text-center text-muted-50">
+                                <p>Disponible pendant [[soustractionDate(election.ElectionEndDate,currentDates)]]</p>
+                            </div>
+                            <a href="/vote"><button type="button" class="btn btn-soft-primary">Choisir</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <hr>
+    <div class="row">
+        <p><em>Mes prochaines élections</em></p>
+        <div v-for="election in elections" v-if="election.ElectionStartDate>actualTime" class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                            <div class="fs-italic">
+                                <h5>[[election.ElectionName]]</h5>
+                            </div>	
+                            <div class="mt-3 text-center text-muted-50">
+                                <p>Démarre dans [[soustractionDate(election.ElectionStartDate,currentDates)]]</p>
+                            </div>
+                            <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <hr>
+    <div class="row">
+        <p><em>Mes anciennes élections</em></p>
+        <div v-for="election in elections" v-if="actualTime>election.ElectionEndDate" class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                            <div class="fs-italic">
+                                <h5>[[election.ElectionName]]</h5>
+                            </div>	
+                            <div class="mt-3 text-center text-muted-50">
+                                <p>Terminé depuis [[soustractionDate(currentDates,election.ElectionEndDate)]]</p>
+                            </div>
+                            <a href="/vote"><button type="button" class="btn btn-soft-success">Voir les résultats</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
 </div>
-<div class="row pb-5 mt-0">
-    <p class="h1 d-flex justify-content-center">Election disponible</p>
-    <p class="h6 d-flex justify-content-center">Selectionner une élection</p>
-</div>
-<div class="row">
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-center">
-                    <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                        <div class="fs-italic">
-                            <h5>Présidentiel 2022 - 1er tour</h5>
-                        </div>	
-                        <div class="mt-3 text-center text-muted-50">
-                            <p>temps restant : 23:59:00</p>
-                        </div>
-                        <a href="/vote"><button type="button" class="btn btn-soft-primary">Choisir</button></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> 
-<hr>
-<div class="row">
-    <p><em>Mes prochaines élections</em></p>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-center">
-                    <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                        <div class="fs-italic">
-                            <h5>Présidentiel 2022 - 2ème tour</h5>
-                        </div>	
-                        <div class="mt-3 text-center text-muted-50">
-                            <p>Disponible le 01/01/2023</p>
-                        </div>
-                        <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> 
-<hr>
-<div class="row">
-    <p><em>Mes anciennes élections</em></p>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-center">
-                    <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                        <div class="fs-italic">
-                            <h5>Présidentiel 2018 - 2ème tour</h5>
-                        </div>	
-                        <div class="mt-3 text-center text-muted-50">
-                            <p>Terminé le 01/01/2018</p>
-                        </div>
-                        <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex align-items-center justify-content-center">
-                    <div class="d-flex flex-column text-center align-items-center justify-content-between ">
-                        <div class="fs-italic">
-                            <h5>Présidentiel 2018 - 1er tour</h5>
-                        </div>	
-                        <div class="mt-3 text-center text-muted-50">
-                            <p>Terminé le 01/01/2018</p>
-                        </div>
-                        <button type="button" class="btn btn-soft-light" disabled>Non Disponible</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> 
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    var parametre = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#Election',
+        data() {
+                return {
+                    actualTime:"",
+                    currentDates:"",
+                    elections:{}
+                }
+        },
+        async mounted() {
+            await this.getElections()
+        },
+        
+        created() {
+                setInterval(this.currentDate, 1000);
+                setInterval(this.getElections, 1000);
+            },
+
+            
+        methods: {
+            getElections: async function () {
+                await axios
+                    .get('/adminspace/api/getElections')
+                    .then(response => (this.elections = response.data))
+                    .catch(response => (console.log(response.data)));
+                    
+            },
+
+            currentDate: function() {
+                var current_date = new Date();
+                var date = current_date.getDate();
+                var month = current_date.getMonth() + 1;
+                var year = current_date.getFullYear();
+                var hours = current_date.getHours();
+                var minutes = current_date.getMinutes();
+                var seconds = current_date.getSeconds();
+                if (date < 10) {
+                    date = '0' + date;
+                }
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (hours < 10) {
+                    hours = '0' + hours;
+                }
+                if (minutes < 10) {
+                    minutes = '0' + minutes;
+                }
+                if (seconds < 10) {
+                    seconds = '0' + seconds;
+                }
+                const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
+                const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
+                this.currentDates = currentDateTime;
+                this.actualTime = dateTime;
+                },
+
+            printDate: function(date) {
+                var current_date = new Date(date);
+                var date = current_date.getDate();
+                var month = current_date.getMonth() + 1;
+                var year = current_date.getFullYear();
+                var hours = current_date.getHours();
+                var minutes = current_date.getMinutes();
+                var seconds = current_date.getSeconds();
+                if (date < 10) {
+                    date = '0' + date;
+                }
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (hours < 10) {
+                    hours = '0' + hours;
+                }
+                if (minutes < 10) {
+                    minutes = '0' + minutes;
+                }
+                if (seconds < 10) {
+                    seconds = '0' + seconds;
+                }
+                const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
+                const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                return currentDateTime;
+                },
+
+            // Function diffenrece between two dates and return number of days, hours, minutes and seconds
+            soustractionDate: function(date1, date2) {
+                var date1 = new Date(date1);
+                var date2 = new Date(date2);
+                var diff = date1.getTime() - date2.getTime();
+                var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                var hours = Math.floor(diff / (1000 * 60 * 60));
+                var minutes = Math.floor(diff / (1000 * 60));
+                var seconds = Math.floor(diff / 1000);
+                if (days > 0) {
+                    return days + " jours";
+                } else if (hours > 0) {
+                    return hours + " heures";
+                } else if (minutes > 0) {
+                    return minutes + " minutes";
+                } else if (seconds > 0) {
+                    return seconds + " secondes";
+                } else {
+                    return "0 secondes";
+                }
+            },
+
+            },
+        },
+    );
+</script>
 {% endblock %}

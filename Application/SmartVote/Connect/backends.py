@@ -21,13 +21,22 @@ class AuthBackend(ModelBackend):
             user = Citizen.objects.get(
                 fiscal_number=kwargs['id_connect']
             )
-        except Citizen.DoesNotExist:
+        except:
             # return None
             try:
                 user = Citizen.objects.get(
                 sick_security_number=kwargs['id_connect']
             )
-            except Citizen.DoesNotExist:
-                return None
+            except:
+                try:
+                    user = Citizen.objects.get(
+                    email=kwargs['id_connect']
+                )     
+                    if user.is_superuser:
+                        return user if user.check_password(kwargs['password']) else None
+                    else:
+                        return None
+                except Citizen.DoesNotExist:
+                    return None
 
         return user if user.check_password(kwargs['password']) else None

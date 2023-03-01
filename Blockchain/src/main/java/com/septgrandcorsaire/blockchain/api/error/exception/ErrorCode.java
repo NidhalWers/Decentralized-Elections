@@ -17,7 +17,9 @@ public enum ErrorCode {
 
     HAS_ALREADY_VOTED("HAS_ALREADY_VOTED", "%s has already voted for the election named '%s'"),
 
-    INVALID_API_KEY("INVALID_API_KEY", "This API Key cannot be used for the '%s' election. Any attempt at fraud will be fought back !");
+    INVALID_API_KEY("INVALID_API_KEY", "This API Key cannot be used for the '%s' election. Any attempt at fraud will be fought back !"),
+
+    ELECTION_NOT_FINISHED("ELECTION_NOT_FINISHED", "Action not permitted until the end of %s election");
 
     private String value;
 
