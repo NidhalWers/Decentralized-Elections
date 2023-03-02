@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from import_export.admin import ImportExportModelAdmin
 
-from .models import Candidate
+from .models import Candidate, Election
 
 class CandidateRessource(resources.ModelResource):
     class Meta:
@@ -21,4 +21,17 @@ class CandidateAdmin(ImportExportModelAdmin,ExportMixin, admin.ModelAdmin):
     list_display = ('CandidateName','CandidateDescription','CandidateImage','CandidateProgram')
     pass
 
+class ElectionRessource(resources.ModelResource):
+    class Meta:
+        model = Election
+        fields = ('ElectionName','ElectionCandidates','ElectionStatus','ElectionApiKey','ElectionStartDate','ElectionEndDate','ElectionBlankVote','ElectionBlind')
+
+class ElectionAdmin(ImportExportModelAdmin,ExportMixin, admin.ModelAdmin):
+    resource_class = ElectionRessource
+    # Other admin definition here
+    list_display = ('ElectionName','ElectionCandidates','ElectionStatus','ElectionApiKey','ElectionStartDate','ElectionEndDate','ElectionBlankVote','ElectionBlind')
+    pass
+
+# Register your models here.
+admin.site.register(Election, ElectionAdmin)
 admin.site.register(Candidate, CandidateAdmin)
