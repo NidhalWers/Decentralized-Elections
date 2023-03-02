@@ -3,48 +3,83 @@
 {% block body %}
 {% load static %}
 
+<div id="Analyse">
+
+    <h1 class="text-center">Les candidats les plus proches du theme choisi</h1>
 
 
-<h1 class="text-center">Les candidats les plus proches du theme choisi</h1>
 
 
+    <div class="card align-items-center">
+    
 
-
-<div class="card align-items-center">
-   
-
-        <div class="col-md-12 col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group form-group-alt">
-                        <input type="text" class="form-control" placeholder="Veuiller saisir le thème">
-                    </div>
-                    <div class="text-center">                
-                        <button type="button" class="btn btn-primary">Envoyer</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-  
-</div>
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="card bg-soft-primary">
-                <div class="card-body">
-                    <div class="d-flex flex-column">
-                        <div class="mb-3">
-
-                            <!-- <span class="text-primary">Status</span> -->
+            <div v-for="value in nearest_theme" class="col-md-12 col-lg-4">
+                <div class="card">
+                    Choisissez un thème pour voir le candidat les plus proches
+                    <div class="card-body">
+                        <div class="form-group form-group-alt">
+                            <input type="text" class="form-control" placeholder="Veuiller saisir le thème" v-model.lazy="userQuery">
                         </div>
-                    
+                        <div class="text-center">              
+                            <button type="button" class="btn btn-primary" @click="getAnswer">Envoyer</button>
+                            <div  class="card bg-soft-primary">
+                                <div class="d-flex flex-column">
+                                    <div class="mb-3"> Le candidat le plus proche du thème que vous avez choisi est : [[value]] </div>
+                                    </div>
+                                </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div v-for="value in nearest_candidates" class="col-md-12 col-lg-4">
+                <div class="card">
+                    Choisissez un thème pour voir les candidats les plus proches
+                    <div class="card-body">
+                        <div class="form-group form-group-alt">
+                            <input type="text" class="form-control" placeholder="Veuiller saisir le thème">
+                        </div>
+                        <div class="text-center">              
+                            <button type="button" class="btn btn-primary">Envoyer</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div  class="card bg-soft-primary">
+                <div class="d-flex flex-column">
+                    <div class="mb-3"> Les candidats le plus proche du thème que vous avez choisi sont : [[value]] </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-12 col-lg-4">
+                <div class="card">
+                    Taper le nom d'un candidat pour voir son programme global
+                    <div class="card-body">
+                        <div class="form-group form-group-alt">
+                            <input type="text" class="form-control" placeholder="Veuiller saisir le thème">
+                        </div>
+                        <div class="text-center">              
+                            <button type="button" class="btn btn-primary">Envoyer</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div  class="card bg-soft-primary">
+                <div class="d-flex flex-column">
+                    
+                    <div v-for="user in word_cloud" :key="user.candidate_name" class="mb-3"> [[user]] </div>
+                    </div>
+                </div>
+            </div>
+
+
+    
     </div>
+
+</div>
 
 
 <!-- vue:js -->
@@ -59,60 +94,76 @@
         el: '#Analyse',
         data() {
                 return {
-                    results:{},
-                    results2:{},
-                    nearest_themes:{},
-                    nearest_candidates:{},
+                    userQuery: '',
+                    nearest_theme:'',
+                    nearest_candidates:'',
+                    word_cloud:'',
                 }
         },
         async mounted() {
-            await this.getresults()
-            await this.getResults2()
-            await this.getnearest_themes()
+            await this.getnearest_theme()
             await this.getnearest_candidates()
+            await this.getword_cloud()
         },
         
         created() {
-                setInterval(this.getresults, 1000);
-                setInterval(this.getResults2, 1000);
-                setInterval(this.getnearest_themes, 1000);
+                setInterval(this.getnearest_theme, 1000);
                 setInterval(this.getnearest_candidates, 1000);
+                setInterval(this.getword_cloud, 1000);
             },
 
             
         methods: {
-            getresults: async function () {
-                await axios
-                    .get('http://127.0.0.1:8080/api/results')
-                    .then(response => (this.results = response.data))
+            getAnswer() {
+                //logique de traitement pour trouver la réponse
+                this.nearest_theme = "La réponse à votre demande est ... ";
+            },
+            getnearest_theme: async function () {
+            
+                try{
+                    await axios
+                    .get('http://localhost:5000/nearest_theme/SMIC')
+                    .then(response => (this.nearest_theme = response.data))
                     .catch(response => (console.log(response.data)));
+                }
+                catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération de l'élection",error.response.data)
+                        this.loading = false
+                }
+        
                     
             },
-
-            getResults2: async function () {
-                await axios
-                    .get('http://127.0.0.1:8080/api/results')
-                    .then(response => (this.results2 = response.data))
-                    .catch(response => (console.log(response.data)));
-            },
-
-            getnearest_themes: async function () {
-                await axios
-                    .get('http://127.0.0.1:8080/api/nearest_theme?theme=SMIC')
-                    .then(response => (this.nearest_themes = response.data))
-                    .catch(response => (console.log(response.data)));
-
-
-            },
-
             getnearest_candidates: async function () {
+            
+            try{
                 await axios
-                    .get('http://127.0.0.1:8080/api/nearest_candidates?theme=SMIC')
-                    .then(response => (this.nearest_candidates = response.data))
-                    .catch(response => (console.log(response.data)));
-
-
+                .get('http://localhost:5000/nearest_candidates/SMIC')
+                .then(response => (this.nearest_candidates = response.data))
+                .catch(response => (console.log(response.data)));
+            }
+            catch(error){
+                    this.printError("Une erreur est survenue lors de la récupération de l'élection",error.response.data)
+                    this.loading = false
+            }
+    
+                
             },
+            getword_cloud: async function () {
+            
+            try{
+                await axios
+                .get('http://localhost:5000/wordcloud/Madame Nathalie ARTHAUD')
+                .then(response => (this.word_cloud = response.data))
+                .catch(response => (console.log(response.data)));
+            }
+            catch(error){
+                    this.printError("Une erreur est survenue lors de la récupération de l'élection",error.response.data)
+                    this.loading = false
+            }
+    
+                
+            },
+            
         }
     });
 

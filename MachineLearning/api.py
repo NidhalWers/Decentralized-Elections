@@ -5,7 +5,9 @@ import matplotlib
 import numpy as np
 import pandas as pd
 import io
+import json
 from flask_cors import CORS
+
 from matplotlib_inline.backend_inline import set_matplotlib_formats
 from sklearn.decomposition import LatentDirichletAllocation, NMF, PCA
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -42,6 +44,14 @@ vec_feature_names = vectorizer.get_feature_names_out()
 
 pd.DataFrame(vec_feature_names)
 
+candidates_names = ["Madame Nathalie ARTHAUD", "Monsieur François ASSELINEAU", "Madame Marine LE PEN", "Monsieur Emmanuel MACRON", "Monsieur Jean-Luc MÉLENCHON", "Monsieur Philippe POUTOU"]
+
+def generate_wordcloud_data(data, candidate_name, n_top_words=20):
+    idx = candidates_names.index(candidate_name)
+    wc = WordCloud(background_color="white", max_words=n_top_words)
+    wc.generate_from_frequencies(dict(zip(vec_feature_names, data[idx])))
+    return wc.to_array()
+
 # vue globale des programmes de chaque candidat
 def plot_wordclouds(data, names, n_top_words=20):
     fig, axes = plt.subplots(2, 3, figsize=(20, 10))
@@ -54,48 +64,40 @@ def plot_wordclouds(data, names, n_top_words=20):
     plt.ion()
     plt.show()
 
-
-# Les termes prépondérants dans ces programmes
-def plot_top_words(model, feature_names, n_top_words=20):
-    fig, axes = plt.subplots(2, 3, figsize=(20, 10))
-    for i, (topic, ax) in enumerate(zip(model.components_, axes.flatten())):
-        top_features_ind = topic.argsort()[:-n_top_words - 1:-1]
-        top_features = [feature_names[i] for i in top_features_ind]
-        top_features_val = topic[top_features_ind]
-        ax.barh(top_features, top_features_val)
-        ax.set_title(f"Topic {i}")
-        ax.invert_yaxis()
-    plt.tight_layout()
-    plt.show()
-
 app = Flask(__name__)
 CORS(app)
-# fonction qui retourne le candidat le plus proche du theme choisi
-@app.route('/api/nearest_theme', methods=['GET'])
-def get_nearest_theme():
-    # Récupération du thème depuis la requête
-    theme = request.args.get('theme')
+
+@app.route('/nearest_theme/<theme>', methods=['GET'])
+def nearest_theme(theme):
     vec = TfidfVectorizer(strip_accents="unicode", lowercase=True, stop_words=stop_words)
     vec.fit(data["program_text"])
     vec_theme = vec.transform([theme])
     nbrs = NearestNeighbors(n_neighbors=1, algorithm="ball_tree").fit(vec_program.toarray())
     distances, indices = nbrs.kneighbors(vec_theme.toarray())
-    nearest_program = data.iloc[indices[0][0]]
-# Renvoi du nom du programme le plus proche
-    return jsonify(nearest_program["name"])
+    candidate = data.iloc[indices[0][0]]["name"]
+    return json.dumps({"candidate": candidate})
 
-# fonction qui rassemble les candidats les plus proches du theme choisi
-@app.route('/api/nearest_candidates', methods=['GET'])
-def get_nearest_candidates(n_candidates=5):
-    theme = request.args.get('theme')
+@app.route('/nearest_candidates/<theme>', methods=['GET'])
+def get_nearest_candidates(theme, n_candidates=5):
     vec = TfidfVectorizer(strip_accents="unicode", lowercase=True, stop_words=stop_words)
     vec.fit(data["program_text"])
     vec_theme = vec.transform([theme])
     nbrs = NearestNeighbors(n_neighbors=n_candidates, algorithm="ball_tree").fit(vec_program.toarray())
     distances, indices = nbrs.kneighbors(vec_theme.toarray())
-    nearest_candidates = data.iloc[indices[0]]["name"].tolist()
-    return jsonify(nearest_candidates)
+    closest_candidate = data.iloc[indices[0]]["name"].tolist()
+    return json.dumps({"closest_candidate": closest_candidate})
 
+
+
+@app.route('/wordcloud/<candidate_name>', methods=['GET'])
+def wordcloud(candidate_name):
+    data = vec_program.toarray()
+    wordcloud_data = generate_wordcloud_data(data, candidate_name)
+    json_data = {
+        "candidate_name": candidate_name,
+        "wordcloud_data": wordcloud_data.tolist()
+    }
+    return jsonify(json_data)
 
 
 # Créer une route pour votre API
@@ -109,20 +111,5 @@ def get_results():
     buffer.seek(0)
     return send_file(buffer, mimetype='image/png')
 
-
-# Créer une route pour votre API
-@app.route('/api/results2', methods=['GET'])
-def get_results2():
-    # code pour exécuter votre modèle et récupérer les résultats
-    # par exemple, pour les graphes :
-    lda = LatentDirichletAllocation(n_components=6, random_state=0)
-    lda.fit(vec_program)
-    plot_top_words(lda, vec_feature_names)
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    return send_file(buffer, mimetype='image/png')
-
-# Lancer l'application Flask
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(debug=True)
