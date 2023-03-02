@@ -26,7 +26,7 @@ def home(request):
 
 # Create your views here.
 def parametre(request):
-    return render(request,'SmartVoteLite/parametre.html')
+    return render(request,'SmartVoteLite/Parametre.html')
 
 def success(request,code):
     return render(request,'SmartVoteLite/success.html',context={'code':code})
