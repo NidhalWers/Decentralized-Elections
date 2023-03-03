@@ -58,7 +58,7 @@
             <label class="form-check-label pl-2" for="switch2">Cacher l'élection</label>
         </div>
         <div class="form-check form-switch form-check-inline col-lg-4 float-end">
-            <div>Vote blanc <div v-if="election[0].ElectionBlind">autorisé</div><div v-if="!election[0].ElectionBlind">non autorisé</div></div>
+            <div>Vote blanc <div v-if="election[0].ElectionBlankVote">autorisé</div><div v-if="!election[0].ElectionBlankVote">non autorisé</div></div>
         </div>
     </div>
     <div class="row">
@@ -83,7 +83,7 @@
                         <svg class ="me-2 text-primary" width="24" height="24" viewBox="0 0 24 24">
                             <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
                         </svg>
-                        150 votes au total
+                        [[totalVotes]] votes au total
                     </p>            
                 </div>
                 <div class="dropdown">
@@ -103,7 +103,7 @@
                             <tr>
                                 <th>CANDIDATS</th>
                                 <th>AFFILIATION</th>
-                                <th>TOTAL DE VOTE</th>
+                                <th>TOTAL DE VOTES</th>
                                 <th>PART DE L'AUDIENCE</th>
                             </tr>
                         </thead>
@@ -120,13 +120,13 @@
                                         [[candidate.CandidateDescription]]
                                     </div>
                                 </td>
-                                <td>10000</td>
+                                <td>[[candidate.candidates_results]]</td>
                                 <td>
                                     <div class="mb-2 d-flex align-items-center">
-                                        <h6>60%</h6>
+                                        <h6>[[candidate.candidates_results*100/totalVotes]]%</h6>
                                     </div>
                                     <div class="shadow-none progress bg-soft-primary w-100" style="height: 4px">
-                                        <div class="progress-bar bg-primary" data-toggle="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-primary" role="progressbar" :aria-valuenow="candidate.candidates_results*100/totalVotes" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </td>
                             </tr>
@@ -162,11 +162,7 @@
                     electionStarted: true,
                     electionBlind: false,
                     resultElection:{},
-                    data:{
-                        "candidates_results":{
-                            "Candidat2": 3,
-                        }
-                    },
+                    totalVotes:0,
                     error:'',
                     message:'',
                     loading:true,
@@ -175,8 +171,8 @@
         async mounted() {
             await this.getElection()
             await this.fillCandidates()
-            // await this.getElectionResults()
-            await this.simugetElectionResults()
+            await this.getElectionResults()
+            // await this.simugetElectionResults()
             await this.activity()
         },    
         methods: {
@@ -275,7 +271,7 @@
                     var date = current_date.getDate();
                     var month = current_date.getMonth() + 1;
                     var year = current_date.getFullYear();
-                    var hours = current_date.getHours();
+                    var hours = current_date.getHours()-1;
                     var minutes = current_date.getMinutes();
                     var seconds = current_date.getSeconds();
                     if (date < 10) {
@@ -366,56 +362,57 @@
                     window.location.href = "/";
                 },
                 getElectionResults: async function(){
+                    console.log("getElectionResults")
                     electionName = "{{name}}"
                     electionStatus = "{{status}}"
                     event.preventDefault();
                     this.loading=true
 
                     if(electionStatus == "None"){
-                        statusElection = ""
+                        var config = {
+                            method: 'get',
+                            url: 'http://localhost:8080/smart-vote/api/v1/get-election/'+electionName,
+                            headers: { 
+                            },
+                        };
                     }else{
-                        statusElection = electionStatus
+                        var config = {
+                            method: 'get',
+                            url: 'http://localhost:8080/smart-vote/api/v1/get-election/'+electionName+'?status='+electionStatus,
+                            headers: { 
+                            },
+                        };
                     }
-
-                    var data = JSON.stringify({
-                        "status" : statusElection
-                        });
-
-                    var config = {
-                        method: 'post',
-                        url: 'http://localhost:8080/smart-vote/api/v1/get-sandbox/',
-                        // url: 'http://localhost:8080/smart-vote/api/v1/get-election/'+electionName,
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            "X-CSRFToken": "{{ csrf_token }}",
-                        },
-                        data : data
-                    };
 
                     try{
                         await axios(config)
                         .then(response => (this.resultElection = response.data))
-                        
                         this.assignResultToCandidate()
-                        console.log(this.resultElection)
                         this.loading=false
                     }catch(error){
+                        console.log(error)
                         this.printError("Une erreur est survenue lors de la récupération des résultats",error["message"])
                         this.loading = false
                     }
                 },
-                simugetElectionResults: async function(){
-                    await this.addBlank()
-                    await this.assignResultToCandidate()
-                },
                 assignResultToCandidate: async function() {
+                    await this.addBlank()
+
                     for(var candidate in this.candidates){
                         try{
-                            this.candidates[candidate]["candidates_results"] = this.data["candidates_results"][this.candidates[candidate].CandidateName]
+                            this.candidates[candidate]["candidates_results"] = this.resultElection["candidates_results"][this.candidates[candidate].CandidateName]
                         }catch(error){
-                            printError("Une erreur est survenue lors de l'assignation des résultats",error)
+                            this.printError("Une erreur est survenue lors de l'assignation des résultats",error)
                         }
                     }
+                    for(var candidate in this.candidates){
+                        if(this.candidates[candidate]["candidates_results"]==undefined){
+                            this.candidates[candidate]["candidates_results"] = 0
+                        }else{
+                            this.totalVotes = this.totalVotes + this.candidates[candidate]["candidates_results"]
+                        }
+                    }
+                    console.log(this.candidates)
                 },
                 getCandidatesNameList: function(){
                     var candidatesNameList = []
@@ -425,7 +422,7 @@
                     return candidatesNameList
                 },
                 addBlank: async function(){
-                    if(this.ElectionBlankVote){
+                    if(this.election[0].ElectionBlankVote){
                         this.candidates.push({
                         CandidateName: "blank_votes",
                         CandidateResult: 0

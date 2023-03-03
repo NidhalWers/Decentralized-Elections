@@ -711,16 +711,16 @@
                 }
                 
                 try{
-                await axios
-                    .put('/smartvotelite/api/updateCandidate/' + id+'/'+this.electionName, formData,{
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        "X-CSRFToken": "{{ csrf_token }}",
-                    }
-                })
-                this.updateError()
+                    await axios
+                        .put('/smartvotelite/api/updateCandidate/' + id+'/'+this.electionName, formData,{
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        }
+                        })
+                    this.updateError()
                 }catch(error){
-                    this.printError("Une erreur est survenue lors de la modification du candidat",error.response.data)
+                    this.printError("Une erreur est survenue lors de la modification du candidat",error["response"]["data"]["message"])
                 }
 
                 await this.updateCandidateToUpdate()
@@ -782,7 +782,7 @@
                     "starting_date" : this.electionStartDate,
                     "closing_date" : this.electionEndDate,
                     "election_name" : this.electionName,
-                    "count_blank_votes" : this.electionBlank,
+                    "count_blank_votes" : this.electionBlankVote,
                     "status" : this.electionStatut
                     });
 

@@ -791,7 +791,7 @@
                     "starting_date" : this.electionStartDate,
                     "closing_date" : this.electionEndDate,
                     "election_name" : this.electionName,
-                    "count_blank_votes" : this.electionBlank,
+                    "count_blank_votes" : this.electionBlankVote,
                     "status" : this.electionStatut
                     });
 
@@ -800,7 +800,6 @@
                     url: 'http://localhost:8080/smart-vote/api/v1/create-election',
                     headers: { 
                         'Content-Type': 'application/json',
-                        "X-CSRFToken": "{{ csrf_token }}"
                     },
                     data : data
                     };
@@ -812,7 +811,7 @@
                         await this.addElection()
                         this.loading=false
                     }catch(error){
-                        this.printError("Une erreur est survenue lors de la création de l'élection dans la blockchain",error["message"])
+                        this.printError("Une erreur est survenue lors de la création de l'élection dans la blockchain",error["response"]["data"]["message"])
                         this.loading=false
                     }
             },

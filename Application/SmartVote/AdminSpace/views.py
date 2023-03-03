@@ -17,7 +17,7 @@ from django.contrib.auth import authenticate, login
 def parametre(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
-            return render(request,'AdminSpace/parametre.html')
+            return render(request,'AdminSpace/Parametre.html')
     return redirect('/')
 
 def index(request):
