@@ -104,7 +104,7 @@
                                     <p>[[candidate.CandidateDescription]]</p>
                                 </div>
                                 <!-- <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"> -->
-                                <a v-if="candidate.CandidateProgram!=null" href="#" class="btn btn-sm rounded-pill px-2 py-2 ms-2" data-toggle="PDF"
+                                <button v-on:click="printPdf(candidate.CandidateProgram)" v-if="candidate.CandidateProgram!=null" href="#" class="btn btn-sm rounded-pill px-2 py-2 ms-2" data-toggle="PDF"
                                     data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
                                     data-bs-placement="top" title="Voir le programme">
                                     [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length-4)]]
@@ -125,7 +125,7 @@
                                             stroke="currentColor" stroke-width="1.5"
                                             stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>   
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -365,6 +365,9 @@
                         }
                     }
                     this.loading=false
+                },
+                printPdf: function(pdf){
+                    window.open(pdf, '_blank');
                 },
             },
         },

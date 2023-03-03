@@ -353,29 +353,36 @@
                 getElectionResults: async function(){
                     console.log("getElectionResults")
                     electionName = "{{name}}"
-                    electionStatus = "{{status}}"
+                    try{
+                        electionStatus = "{{status}}"
+                    }catch(error){
+                        pass
+                    }
+                    
                     event.preventDefault();
                     this.loading=true
 
                     if(electionStatus == "None"){
                         var config = {
                             method: 'get',
-                            url: 'http://localhost:8080/smart-vote/api/v1/get-election/'+electionName,
+                            url: 'https://smartvote-379311.lm.r.appspot.com/smart-vote/api/v1/get-election/'+electionName,
                             headers: { 
                             },
                         };
                     }else{
                         var config = {
                             method: 'get',
-                            url: 'http://localhost:8080/smart-vote/api/v1/get-election/'+electionName+'?status='+electionStatus,
+                            url: 'https://smartvote-379311.lm.r.appspot.com/smart-vote/api/v1/get-election/'+electionName+'?status='+electionStatus,
                             headers: { 
                             },
                         };
                     }
 
                     try{
+                        console.log(config)
                         await axios(config)
                         .then(response => (this.resultElection = response.data))
+                        console.log(this.resultElection)
                         this.assignResultToCandidate()
                         this.loading=false
                     }catch(error){
@@ -427,6 +434,9 @@
                         candidatesResultList.push(this.candidates[candidate].candidates_results)
                     }
                     return candidatesResultList
+                },
+                printPdf: function(pdf){
+                    window.open(pdf, '_blank');
                 },
                 activity: async function(){
                     if (document.querySelectorAll('#activity-chart').length) {

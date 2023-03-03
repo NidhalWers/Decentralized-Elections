@@ -90,7 +90,7 @@ DATABASES = {
     'default': {
         'ENGINE': os.environ.get("ENGINE"),
         'NAME': os.environ.get("NAME"),
-        'USER': os.environ.get("USER"),
+        'USER': os.environ.get("USERPG"),
         'PASSWORD': os.environ.get("PASSWORD"),
         'HOST': os.environ.get("HOST"),
         'POST': '',

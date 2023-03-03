@@ -124,7 +124,7 @@
                                 </td>     -->
 
                                 <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">
-                                    <button v-if="candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
+                                    <button v-on:click="printPdf(candidate.CandidateProgram)" v-if="candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
                                         data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
                                         data-bs-placement="top" title="PDF">
                                         [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length)]]
@@ -148,7 +148,7 @@
                                     </button>
                                 </td>
                                 <td v-if="candidate.CandidateName == candidateToUpdate" class="text-center">
-                                    <button v-if="!updateFile & candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
+                                    <button v-on:click="printPdf(candidate.CandidateProgram)" v-if="!updateFile & candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
                                         data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
                                         data-bs-placement="top" title="PDF">
                                         [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length)]]
@@ -445,6 +445,9 @@
                     }
                 }
                 this.loading=false
+            },
+            printPdf: function(pdf){
+                window.open(pdf, '_blank');
             },
             }
         },

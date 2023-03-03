@@ -347,7 +347,7 @@
 
                     
                                             <td v-if="candidate.CandidateName != candidateToUpdate" class="text-center">
-                                                <button v-if="candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
+                                                <button v-on:click="printPdf(candidate.CandidateProgram)" v-if="candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
                                                     data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
                                                     data-bs-placement="top" title="PDF">
                                                     [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length)]]
@@ -371,7 +371,7 @@
                                                 </button>
                                             </td>
                                             <td v-if="candidate.CandidateName == candidateToUpdate" class="text-center">
-                                                <button v-if="!updateFile & candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
+                                                <button v-on:click="printPdf(candidate.CandidateProgram)" v-if="!updateFile & candidate.CandidateProgram!=null" class="btn btn-sm btn-soft-primary" data-toggle="PDF"
                                                     data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
                                                     data-bs-placement="top" title="PDF">
                                                     [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length)]]
@@ -797,7 +797,7 @@
 
                     var config = {
                     method: 'post',
-                    url: 'http://localhost:8080/smart-vote/api/v1/create-election',
+                    url: 'https://smartvote-379311.lm.r.appspot.com/smart-vote/api/v1/create-election',
                     headers: { 
                         'Content-Type': 'application/json',
                     },
@@ -903,6 +903,9 @@
                     this.allowed = false
                 }else{
                 this.allowed = true}
+            },
+            printPdf: function(pdf){
+                window.open(pdf, '_blank');
             },
             }
         },
