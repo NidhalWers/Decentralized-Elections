@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<blockchain>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.septgrandcorsaire.blockchain.Application",
+            "projectName": "blockchain",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

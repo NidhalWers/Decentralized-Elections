@@ -1,3 +1,4 @@
+
 # État de l'art de la solution Machine Learning de SmartVote
 
 Le pôle Machine Learning de SmartVote ayant pour tâche d'analyser les programmes des candidats aux élections présidentielles, nous avons dans un premier temps fait des recherches sur l'existant en termes d'applications de l'intelligence artificielle dans le domaine politique.
@@ -18,4 +19,14 @@ https://www.acadys.com/acadys-bds-analyse/
 https://hal.archives-ouvertes.fr/hal-03167188/document
 <br>
 https://www.inbenta.com/fr/blog/analyse-des-discours-politiques/
+=======
+# Decentralized-Elections
+
+Voici le projet Smart-Vote
+
+**Liste des documentation**
+- [Documentation de la gestion de projet](docs/README.md)
+- [Documentation de la Blockchain](Blockchain/README.md)
+- [Documentation de l'Application](Application/README.md)
+
 

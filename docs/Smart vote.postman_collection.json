@@ -1,0 +1,1576 @@
+{
+	"info": {
+		"_postman_id": "b335f175-a03f-41cb-847b-d40b8ba52a6c",
+		"name": "Smart vote",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tuto - DO NOT MODIFY",
+			"item": [
+				{
+					"name": "create election",
+					"item": [
+						{
+							"name": "create election",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Set Api Key\", () => {",
+											"    pm.response.to.have.status(200);",
+											"    const responseJson = pm.response.json();",
+											"    var req = JSON.parse(pm.request.body.raw)",
+											"    var varName = \"SmartVote_\"+req.election_name+\"_api_key\";",
+											"    pm.globals.set(varName, responseJson.api_key);",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"candidates\" : [ \"one\", \"two\"],\n    \"starting_date\" : \"2022-10-24T08:30:00\",\n    \"closing_date\" : \"2022-10-24T17:16:00\",\n    \"election_name\" : \"first_test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/create-election",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"create-election"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create election with status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Set Api Key\", () => {",
+											"    pm.response.to.have.status(200);",
+											"    const responseJson = pm.response.json();",
+											"    var req = JSON.parse(pm.request.body.raw)",
+											"    var varName = \"SmartVote_\"+req.election_name+\"_api_key\";",
+											"    pm.globals.set(varName, responseJson.api_key);",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"candidates\" : [ \"one\", \"two\"],\n    \"starting_date\" : \"2022-10-24T08:30:00\",\n    \"closing_date\" : \"2022-10-24T17:16:00\",\n    \"election_name\" : \"status_test\",\n    \"status\" : \"second_tour\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/create-election",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"create-election"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create election : allowed blank vote",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Set Api Key\", () => {",
+											"    pm.response.to.have.status(200);",
+											"    const responseJson = pm.response.json();",
+											"    var req = JSON.parse(pm.request.body.raw)",
+											"    var varName = \"SmartVote_\"+req.election_name+\"_api_key\";",
+											"    pm.globals.set(varName, responseJson.api_key);",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"candidates\" : [ \"one\", \"two\"],\n    \"starting_date\" : \"2022-10-24T08:30:00\",\n    \"closing_date\" : \"2022-10-24T17:16:00\",\n    \"election_name\" : \"first_test\",\n    \"count_blank_votes\" : \"true\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/create-election",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"create-election"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create election - null starting date",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"candidates\" : [ \"one\", \"two\"],\n    \"closing_date\" : \"2022-10-20T08:30:00\",\n    \"election_name\" : \"second_test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/create-election",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"create-election"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create election - blank election Name",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"candidates\" : [ \"one\", \"two\"],\n    \"starting_date\" : \"2022-10-19T08:30:00\",\n    \"closing_date\" : \"2022-10-20T08:30:00\",\n    \"election_name\" : \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/create-election",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"create-election"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "visualize election",
+					"item": [
+						{
+							"name": "get Election",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_sandbox}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/get-election/first_test",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"get-election",
+										"first_test"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get Election with status",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_sandbox}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/get-election/first_test?status=second_tour",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"get-election",
+										"first_test"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "second_tour"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get sandbox Election",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_sandbox}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/get-sandbox/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"get-sandbox",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get Election - false name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/get-election/false-name",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"get-election",
+										"false-name"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get Election - no name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/get-election/ ",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"get-election",
+										" "
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "vote",
+					"item": [
+						{
+							"name": "vote for one - voter 1",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"one\",\n    \"voting_time\" : \"2022-10-24T12:30:00\",\n    \"voter_id\" : \"voter1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote for two - voter 2",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"two\",\n    \"voting_time\" : \"2022-10-24T12:35:00\",\n    \"voter_id\" : \"voter2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote blank - voter 3",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"\",\n    \"voting_time\" : \"2022-10-24T12:35:00\",\n    \"voter_id\" : \"voter3\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote blank - voter 3 again",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"\",\n    \"voting_time\" : \"2022-10-24T12:35:00\",\n    \"voter_id\" : \"voter3\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote for a false candidate",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"false_candidate\",\n    \"voting_time\" : \"2022-10-24T12:35:00\",\n    \"voter_id\" : \"voter4\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote for one - voter 1 status",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_status_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"status_test\",\n    \"candidate_name\" : \"one\",\n    \"voting_time\" : \"2022-10-24T12:30:00\",\n    \"voter_id\" : \"voter1\",\n    \"election_status\":\"second_tour\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote election does not exist",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"false\",\n    \"candidate_name\" : \"one\",\n    \"voting_time\" : \"2022-10-24T19:16:00\",\n    \"voter_id\" : \"voter6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote before starting date",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"one\",\n    \"voting_time\" : \"2022-10-24T07:30:00\",\n    \"voter_id\" : \"voter5\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote after ending date",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"one\",\n    \"voting_time\" : \"2022-10-24T19:16:00\",\n    \"voter_id\" : \"voter6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Playground - MODIFY AS YOU WANT",
+			"item": [
+				{
+					"name": "create election",
+					"item": [
+						{
+							"name": "create election",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Set Api Key\", () => {",
+											"    pm.response.to.have.status(200);",
+											"    const responseJson = pm.response.json();",
+											"    var req = JSON.parse(pm.request.body.raw)",
+											"    var varName = \"SmartVote_\"+req.election_name+\"_api_key\";",
+											"    pm.globals.set(varName, responseJson.api_key);",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"candidates\" : [ \"one\", \"two\"],\n    \"starting_date\" : \"2022-10-24T08:30:00\",\n    \"closing_date\" : \"2022-10-24T17:16:00\",\n    \"election_name\" : \"first_test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/create-election",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"create-election"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create election : allowed blank vote",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Set Api Key\", () => {",
+											"    pm.response.to.have.status(200);",
+											"    const responseJson = pm.response.json();",
+											"    var req = JSON.parse(pm.request.body.raw)",
+											"    var varName = \"SmartVote_\"+req.election_name+\"_api_key\";",
+											"    pm.globals.set(varName, responseJson.api_key);",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"candidates\" : [ \"one\", \"two\"],\n    \"starting_date\" : \"2022-10-24T08:30:00\",\n    \"closing_date\" : \"2022-10-24T17:16:00\",\n    \"election_name\" : \"first_test\",\n    \"count_blank_votes\" : \"true\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/create-election",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"create-election"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create election - null starting date",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"candidates\" : [ \"one\", \"two\"],\n    \"closing_date\" : \"2022-10-20T08:30:00\",\n    \"election_name\" : \"second_test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/create-election",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"create-election"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create election - blank election Name",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"candidates\" : [ \"one\", \"two\"],\n    \"starting_date\" : \"2022-10-19T08:30:00\",\n    \"closing_date\" : \"2022-10-20T08:30:00\",\n    \"election_name\" : \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/create-election",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"create-election"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "visualize election",
+					"item": [
+						{
+							"name": "get Election",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/get-election/first_test",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"get-election",
+										"first_test"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get sandbox Election",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_sandbox}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/get-sandbox/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"get-sandbox",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get Election - false name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/get-election/false-name",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"get-election",
+										"false-name"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get Election - no name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/get-election/ ",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"get-election",
+										" "
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "vote",
+					"item": [
+						{
+							"name": "vote for one - voter 1",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"one\",\n    \"voting_time\" : \"2022-10-24T12:30:00\",\n    \"voter_id\" : \"voter1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote for two - voter 2",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"two\",\n    \"voting_time\" : \"2022-10-24T12:35:00\",\n    \"voter_id\" : \"voter2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote blank - voter 3",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"\",\n    \"voting_time\" : \"2022-10-24T12:35:00\",\n    \"voter_id\" : \"voter3\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote blank - voter 3 again",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"\",\n    \"voting_time\" : \"2022-10-24T12:35:00\",\n    \"voter_id\" : \"voter3\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote for a false candidate",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"false_candidate\",\n    \"voting_time\" : \"2022-10-24T12:35:00\",\n    \"voter_id\" : \"voter4\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote election does not exist",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"one\",\n    \"voting_time\" : \"2022-10-24T19:16:00\",\n    \"voter_id\" : \"voter6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote before starting date",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"one\",\n    \"voting_time\" : \"2022-10-24T07:30:00\",\n    \"voter_id\" : \"voter5\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "vote after ending date",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{SmartVote_first_test_api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"election_name\" : \"first_test\",\n    \"candidate_name\" : \"one\",\n    \"voting_time\" : \"2022-10-24T19:16:00\",\n    \"voter_id\" : \"voter6\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/smart-vote/api/v1/vote",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"smart-vote",
+										"api",
+										"v1",
+										"vote"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

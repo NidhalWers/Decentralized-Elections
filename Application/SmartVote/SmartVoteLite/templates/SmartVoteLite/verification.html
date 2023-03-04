@@ -1,0 +1,96 @@
+{% extends "base/baselite.html" %}
+
+{% load static %}
+
+{% block body %}
+      <div id="parametre" class="wrapper">
+      <section class="login-content">
+         <div class="row m-0 align-items-center bg-white vh-100">            
+            <div class="col-md-6">
+               <div class="row justify-content-center">
+                  <div class="col-md-10">
+                     <div class="card card-transparent shadow-none d-flex justify-content-center mb-0 auth-card">
+                        <div class="card-body">
+                           <img src="{% static 'base/assets/images/auth/mail.png' %}" class="img-fluid" width="80" alt="">
+                           <h2 class="mb-2 text-center">Accès à l'élection</h2>
+                           <p class="text-center">Entrez le code de vérification envoyé par mail</p>
+                           <form>
+                              <div class="row">
+                                 <div class="col-lg-12">
+                                    <div class="form-group">
+                                       <label for="email" class="form-label">Code de vérification</label>
+                                       <input type="number" name="code" class="form-control" id="code" aria-describedby="code" placeholder=" " v-model="code">
+                                    </div>
+                                 </div>
+                                    <p v-if="error != ''" class="text-danger">[[message]] : [[error]]</p>
+                                 <div class="d-flex justify-content-center">
+                                    <button class="btn btn-primary" v-on:click="getVerification()">Vérifier</button>
+                                 </div>
+                              </div>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-md-6 d-md-block d-none bg-primary p-0 mt-n1 vh-100 overflow-hidden">
+               <img src="{% static 'base/images/logo-v0.png' %}" class="img-fluid gradient-main animated-scaleX" alt="images">
+            </div>
+         </div>
+      </section>
+      </div>
+
+      
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    var parametre = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#parametre',
+        data() {
+            return {
+               code : '',
+               error:'',
+               message:'',
+               loading:false,
+               electionCode:''
+            }
+        },
+        async mounted() {
+        },
+        methods: {
+            getVerification: async function () {
+               event.preventDefault();
+               try{
+                  await axios.get('/smartvotelite/verification/'+this.code)
+                  .then(response => {
+                     this.electionCode = response.data.ElectionCode
+                     window.location.href = "/smartvotelite/viewElection/"+this.electionCode
+                  })         
+               }catch(error){
+                  this.printError("Erreur lors de la vérification",error.response.data)
+               }
+            },
+            printError: async function(message,error){
+               this.message = message
+               if(typeof(error) == "string"){
+                  this.error = error
+                  this.loading=false
+                  return
+               }
+               errorParsed = JSON.stringify(error)
+               for (var key in error) {
+                  if (error.hasOwnProperty(key)) {
+                     this.error = this.error + error[key] + "."
+                  }
+               }
+               this.loading=false
+            },
+            }
+        },
+    )
+</script>
+{% endblock %}

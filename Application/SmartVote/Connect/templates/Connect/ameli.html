@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+
+
+
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    
+    {% load static %}
+    <!-- Library / Plugin Css Build -->
+    <link rel="stylesheet" href="{% static 'base/css/core/libs.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Connect/css/style.css' %}" ">
+    <!-- Hope Ui Design System Css -->
+    <link rel="stylesheet" href="{% static 'base/css/hope-ui.min.css' %}">
+
+    <title>Amelie.fr - France Connect</title>
+
+</head>
+
+
+<body data-new-gr-c-s-check-loaded="14.1084.0" data-gr-ext-installed>
+
+    
+    <!-- <a href="/connect/login/franceconnect"><button class="return-fc">Retourner à FranceConnect</button></a> -->
+    
+
+<div class="alert alert-bottom alert-danger alert-dismissible fade show " role="alert">
+    <span> Attention, ce site internet est à but expérimental, il ne s'agit en aucun cas d'un site officiel.</span>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+
+<div class="container-fc">
+    
+    <div class="text-top">
+        <img src="{% static 'Connect/images/fc_avatar.png'%} " alt="France-Connect" class="img-fc img-top">
+        
+    </div>
+    
+    <div class="text-top"> 
+        <div class="france"> 
+            France 
+        </div> 
+        <div class="connect"> 
+            Connect
+        </div>
+    </div>
+    <a href="/Connect/login/franceconnect"><button class="return-fc">Retourner à FranceConnect</button></a>
+</div>
+
+    <h1 class="divTitle">Je me connecte avec mon compte ameli</h1>
+
+<main id="divLogin">
+    <form method = "POST" action="{% url 'login_ameli' %}">
+        {% csrf_token %}
+        <div>
+           <div>
+              <div>
+                 <!-- <label for="email" class="form-label"></label> -->
+                    <input class="form-control" id="email" placeholder="Numéro de sécurité sociale" name="sick_security_number" type="number">
+                    <div id="aide">
+                        <p>
+                            Saisissez votre numéro de sécurité sociale à 13 chiffres.
+                        <br>
+					    Attention, si vous êtes ayant droit, saisissez le numéro de sécurité sociale de la personne à laquelle vous êtes rattaché. 
+				        </p>
+                    </div>
+              </div>
+           </div>
+           <div class="motdepasse">
+              <div>
+                 <!-- <label for="password" class="form-label">Mon code confidentiel</label> -->
+                 <input type="password" class="form-control" name="password1" id="password" aria-describedby="password" placeholder="Code confidentiel">
+              </div>
+           </div>    
+           
+           <div>
+            {% if status == 0 %}
+                <p class="text-danger">{{ error }}</p>
+            {% endif %}
+            </div>
+
+        </div>
+        <div class="d-flex justify-content-center" id="test">
+           <button type="submit" class="btn btn-primary">Connexion</button>
+        </div>
+        
+     </form>
+
+
+</main>
+
+
+</body>
+
+<script src="{% static 'base/js/core/libs.min.js' %}"></script>
+<script src="{% static 'Connect/js/ameli.js' %}"></script>
+
+</html>

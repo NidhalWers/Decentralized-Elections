@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./Application/SmartVote/SmartVote"
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
+}

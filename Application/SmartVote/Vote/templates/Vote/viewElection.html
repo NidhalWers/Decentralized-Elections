@@ -1,0 +1,437 @@
+{% extends "base/base.html" %}
+
+{% block body %}
+{% load static %}
+{% csrf_token %}
+<div id="Election">
+    <div v-if="loading" class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <div v-if="!loading">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+            </symbol>
+            <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+            </symbol>
+            <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+            </symbol>
+        </svg>
+
+        <div v-if="error != ''" class="alert alert-danger d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>
+                [[message]] : [[error]]
+            </div>
+        </div>
+        <div class="row">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Voir l'élection</li>
+                </ol>
+            </nav> 
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-bottom border-4 border-0 border-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span>Statut</span>
+                        </div>
+                        <div>
+                            <span class="counter">[[election[0].ElectionStatus]]</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>  
+            <div class="col-lg-6 col-md-0">
+                <p class="h1 d-flex justify-content-center">[[election[0].ElectionName]]</p>
+                <p class="h6 d-flex justify-content-center">Liste des candidats</p>
+            </div> 
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-bottom border-4 border-0 border-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span v-if="electionStarted">Disponible jusqu'à :</span>
+                            <span v-if="!electionStarted">Election disponible le :</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span v-if="electionStarted">[[printDate(election[0].ElectionEndDate)]]</span>
+                        <span v-if="!electionStarted">[[printDate(election[0].ElectionStartDate)]]</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div v-for="candidate in candidates" class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                <div class="fs-italic">
+                                    <h5> [[candidate.CandidateName]]</h5>
+                                </div>	
+                                <div class="card-profile-progress">
+                                    <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="User-Profile" class="rounded-circle w-25">
+                                </div>
+                                <div class="mt-3 text-center text-muted-50">
+                                    <p>[[candidate.CandidateDescription]]</p>
+                                </div>
+                                <!-- <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"> -->
+                                <button v-on:click="printPdf(candidate.CandidateProgram)" v-if="candidate.CandidateProgram!=null" href="#" class="btn btn-sm rounded-pill px-2 py-2 ms-2" data-toggle="PDF"
+                                    data-copy-target="#svg-container-72" data-bs-toggle="tooltip"
+                                    data-bs-placement="top" title="Voir le programme">
+                                    [[candidate.CandidateProgram.substring(24, candidate.CandidateProgram.length-4)]]
+                                    <svg width="32" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M14.7364 2.76175H8.0844C6.0044 2.75375 4.3004 4.41075 4.2504 6.49075V17.2277C4.2054 19.3297 5.8734 21.0697 7.9744 21.1147C8.0114 21.1147 8.0484 21.1157 8.0844 21.1147H16.0724C18.1624 21.0407 19.8144 19.3187 19.8024 17.2277V8.03775L14.7364 2.76175Z"
+                                            stroke="currentColor" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <path
+                                            d="M14.4746 2.75V5.659C14.4746 7.079 15.6236 8.23 17.0436 8.234H19.7976"
+                                            stroke="currentColor" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M11.6406 9.90869V15.9497" stroke="currentColor"
+                                            stroke-width="1.5" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                        <path d="M13.9864 12.2642L11.6414 9.90918L9.29639 12.2642"
+                                            stroke="currentColor" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>   
+                                </button>
+                                <button type="button" class="btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  v-on:click="changeCandidate(candidate.CandidateName)">Voter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="election[0].ElectionBlankVote == true" class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="d-flex flex-column text-center align-items-center justify-content-between ">
+                                <div class="fs-italic">
+                                    <h5>Vote blanc</h5>
+                                </div>	
+                                <!-- <img v-if="candidate.CandidateImage!=null" :src="candidate.CandidateImage" alt="Avatar" class="avatar w-50"> -->
+                                <button type="button" class="btn btn-soft-primary" data-bs-toggle="modal" data-bs-target="#staticBackdropBlanc"  v-on:click='changeCandidate("")'>Voter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Confirmer le vote</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Veuillez enter <strong>[[candidateSelected]] </strong>  afin de valider votre vote</label>
+                        <input type="email" class="form-control" id="email" aria-describedby="email" :placeholder="candidateSelected" v-model="candidateToConfirm">
+                    </div>
+                    <div class="text-start">
+                        <button type="button" class="btn btn-primary" v-on:click="vote()" :disabled="candidateToConfirm != candidateSelected" data-bs-dismiss="modal">Voter</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="staticBackdropBlanc" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelBlanc" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropBlanc">Confirmer le vote</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Veuillez enter <strong>blanc </strong>  afin de valider votre vote</label>
+                        <input type="email" class="form-control" id="email" aria-describedby="email" :placeholder="candidateSelected" v-model="candidateToConfirm">
+                    </div>
+                    <div class="text-start">
+                        <button type="button" class="btn btn-primary" v-on:click="vote()" :disabled="candidateToConfirm != 'blanc'" data-bs-dismiss="modal">Voter</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<!-- vue:js -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<!-- axios:js -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    var parametre = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#Election',
+        data() {
+                return {
+                    election:[{
+                        "ElectionName": "",
+                        "ElectionStatus": "",
+                        "ElectionBlind": false,
+                        
+                    }],
+                    actualTime:"",
+                    actualTimeForBC:"",
+                    currentDates:"",
+                    candidates:[],
+                    timeRemaining:0,
+                    electionStarted: true,
+                    electionBlind: false,
+                    error:'',
+                    message:'',
+                    loading:true,
+                    candidateSelected:'',
+                    candidateToConfirm:'',
+                    idCrypted:'',
+                    APIKEYDecrypted:'',
+                }
+        },
+        async mounted() {
+            await this.getElection()
+            await this.fillCandidates()
+        },    
+        async created() {
+                setInterval(this.currentDate, 1000);
+                setInterval(this.getElection, 1000);
+            },
+        methods: {
+
+            VoteInBlockchain: async function (){
+                electionName = "{{name}}"
+                electionStatus = "{{status}}"
+                event.preventDefault();
+                this.loading=true
+                if(electionStatus == "None"){
+                        statusElection = ""
+                    }else{
+                        statusElection = electionStatus
+                    }
+                    var data = JSON.stringify({
+                        "election_name" : electionName,
+                        "candidate_name" : this.candidateSelected,
+                        "voting_time" : this.actualTimeForBC,
+                        "voter_id" : this.idCrypted,
+                        'api_key': this.APIKEYDecrypted.ElectionApiKey,
+                        "election_status":statusElection
+                        });
+
+                    console.log(data)
+                    var config = {
+                    method: 'post',
+                    url: 'https://smartvote-379311.lm.r.appspot.com/smart-vote/api/v1/vote',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                    },
+                    data : data
+                    };
+
+                    try{
+                        await axios(config)
+                        .then(response => (this.responseApiCall = response.data))
+                        window.location.href = "/success"
+                        this.loading=false
+                    }catch(error){
+                        console.log(error)
+                        this.printError("Une erreur est survenue lors du vote dans la blockchain",error["response"]["data"]["message"])
+                        this.loading=false
+                    }
+            },
+            vote: async function () {
+                try{
+                    await this.getIdCrypted()
+                    await this.getAPIKEYDecrypted()
+                    await this.VoteInBlockchain()
+                }catch(error){
+                    this.printError("Une erreur est survenue lors du vote",error.response)
+                } 
+            },
+            getAPIKEYDecrypted: async function () {
+                try{
+                    await axios
+                    .get('/api/getAPIKEYDecrypted/'+this.election[0].ElectionApiKey)
+                    .then(response => (this.APIKEYDecrypted = response.data))
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de la récupération de la clé API",error.response)
+                    return
+                }
+            },
+            getIdCrypted: async function () {
+                try{
+                    console
+                    await axios
+                        .get('/connect/api/getUserIdCrypted/{{ user.id }}')
+                        .then(response => (this.idCrypted = response.data))
+                }catch(error){
+                    this.printError("Une erreur est survenue lors de la récupération de l'identifiant crypté",error.response.data)
+                    return
+                }
+            },
+            changeCandidate: function (candidate) {
+                this.candidateSelected = candidate
+            },
+            getElection: async function () {
+                electionName = "{{name}}"
+                electionStatus = "{{status}}"
+                if(electionStatus != "None"){
+                    try{
+                    await axios
+                        .get('/adminspace/api/getElectionStatus/'+electionName+'/'+electionStatus)
+                        .then(response => (this.election = response.data))
+                        this.loading = false
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération des élections",error.response.data)
+                        this.loading = false
+                    }
+                }
+                else{
+                    try{
+                    await axios
+                        .get('/adminspace/api/getElection/'+electionName)
+                        .then(response => (this.election = response.data))
+                        this.loading = false
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération des élections",error.response.data)
+                        this.loading = false
+                    }
+                };
+                this.election[0].ElectionCandidates = this.election[0].ElectionCandidates.split(",");
+                this.checkElectionStarted()
+            },
+            checkElectionStarted:function(){
+                electionName = "{{name}}"
+                electionStatus = "{{status}}"
+                if (this.election[0].ElectionEndDate < this.actualTime){
+                    if(electionStatus != "None"){
+                        window.location.href = "/adminspace/viewElectionResultsStatus/"+electionName+"/"+electionStatus;
+                    }
+                    else{
+                        window.location.href = "/adminspace/viewElectionResults/"+electionName;
+                    }
+                }
+                if(this.election[0].ElectionStartDate < this.actualTime){
+                    this.electionStarted = true
+                }
+                else{
+                    this.electionStarted = false
+                }
+            },
+            printDate: function(date) {
+                var current_date = new Date(date);
+                var date = current_date.getDate();
+                var month = current_date.getMonth() + 1;
+                var year = current_date.getFullYear();
+                var hours = current_date.getHours()-1;
+                var minutes = current_date.getMinutes();
+                var seconds = current_date.getSeconds();
+                if (date < 10) {
+                    date = '0' + date;
+                }
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (hours < 10) {
+                    hours = '0' + hours;
+                }
+                if (minutes < 10) {
+                    minutes = '0' + minutes;
+                }
+                if (seconds < 10) {
+                    seconds = '0' + seconds;
+                }
+                const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
+                const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                return currentDateTime;
+            },
+                getCandidate: async function(candidateName){
+                    try{
+                        await axios
+                        .get('/adminspace/api/getCandidate/'+candidateName)
+                        .then(response => (this.candidate = response.data))
+                    }catch(error){
+                        this.printError("Une erreur est survenue lors de la récupération du candidat",error.response.data)
+                    }
+                },
+                fillCandidates: async function(){
+                    for(var candidate in this.election[0].ElectionCandidates){
+                        try{
+                            await axios
+                            .get('/adminspace/api/getCandidate/'+this.election[0].ElectionCandidates[candidate])
+                            .then(response => (this.candidates.push(response.data)))
+                        }catch(error){
+                            this.printError("Une erreur est survenue lors de la récupération des candidats",error.response.data)
+                        }
+                    }
+                },
+                currentDate: function() {
+                    var current_date = new Date();
+                    var date = current_date.getDate();
+                    var month = current_date.getMonth() + 1;
+                    var year = current_date.getFullYear();
+                    var hours = current_date.getHours();
+                    var minutes = current_date.getMinutes();
+                    var seconds = current_date.getSeconds();
+                    if (date < 10) {
+                        date = '0' + date;
+                    }
+                    if (month < 10) {
+                        month = '0' + month;
+                    }
+                    if (hours < 10) {
+                        hours = '0' + hours;
+                    }
+                    if (minutes < 10) {
+                        minutes = '0' + minutes;
+                    }
+                    if (seconds < 10) {
+                        seconds = '0' + seconds;
+                    }
+                    const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
+                    const dateTimeForBC = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds; 
+                    const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+                    // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
+                    this.currentDates = currentDateTime;
+                    this.actualTimeForBC = dateTimeForBC; 
+                    this.actualTime = dateTime;
+                },
+                updateError: async function(){
+                    this.error = ''
+                    this.message = ''
+                },
+                printError: async function(message,error){
+                    this.message = message
+                    errorParsed = JSON.stringify(error)
+                    this.error = errorParsed
+                    this.loading=false
+                },
+                printPdf: function(pdf){
+                    window.open(pdf, '_blank');
+                },
+            },
+        },
+    );
+</script>
+{% endblock %}
