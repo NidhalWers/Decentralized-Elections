@@ -268,7 +268,7 @@
 
                     var config = {
                         method: 'get',
-                        url: 'http://localhost:8080/smart-vote/api/v1/get-election/'+this.election[0].ElectionName,
+                        url: 'https://smartvote-379311.lm.r.appspot.com/smart-vote/api/v1/get-election/'+this.election[0].ElectionName,
                         headers: { 
                         },
                     };
@@ -325,6 +325,9 @@
                         candidatesResultList.push(this.candidates[candidate].candidates_results)
                     }
                     return candidatesResultList
+                },
+                printPdf: function(pdf){
+                    window.open(pdf, '_blank');
                 },
                 activity: async function(){
                     if (document.querySelectorAll('#activity-chart').length) {
