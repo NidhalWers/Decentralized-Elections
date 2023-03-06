@@ -774,13 +774,40 @@
                 this.candidateDescriptionUpdate = ""
                 this.candidateNameUpdate = ""
             },
+            getDateForBc(date){
+                date = new Date(date)
+                var month = date.getMonth() + 1;
+                var year = date.getFullYear();
+                var hours = date.getHours()-1;
+                var minutes = date.getMinutes();
+                var seconds = date.getSeconds();
+                var date = date.getDate();
+                if (date < 10) {
+                    date = '0' + date;
+                }
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (hours < 10) {
+                    hours = '0' + hours;
+                }
+                if (minutes < 10) {
+                    minutes = '0' + minutes;
+                }
+                if (seconds < 10) {
+                    seconds = '0' + seconds;
+                }
+                return year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds; 
+            },
             createElectionInBlockchain: async function (){
                 event.preventDefault();
                 this.loading=true
+                start = this.getDateForBc(this.electionStartDate)
+                end = this.getDateForBc(this.electionEndDate)
                 var data = JSON.stringify({
                     "candidates" : this.electionCandidates,
-                    "starting_date" : this.electionStartDate,
-                    "closing_date" : this.electionEndDate,
+                    "starting_date" : start,
+                    "closing_date" : end,
                     "election_name" : this.electionName,
                     "count_blank_votes" : this.electionBlankVote,
                     "status" : this.electionStatut

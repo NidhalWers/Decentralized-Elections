@@ -285,6 +285,7 @@
                     var hours = current_date.getHours();
                     var minutes = current_date.getMinutes();
                     var seconds = current_date.getSeconds();
+                    var hoursForBC = current_date.getHours()-1;
                     if (date < 10) {
                         date = '0' + date;
                     }
@@ -301,7 +302,7 @@
                         seconds = '0' + seconds;
                     }
                     const dateTime = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds+'Z'; 
-                    const dateTimeForBC = year +'-'+ month+'-'+date+'T'+hours+':'+minutes+':'+seconds; 
+                    const dateTimeForBC = year +'-'+ month+'-'+date+'T'+hoursForBC+':'+minutes+':'+seconds; 
                     const currentDateTime =  date + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
                     // this.dateTime = moment(dateTime).format('YYYY-MM-DD[T]HH:mm:ss[Z]');
                     this.currentDates = currentDateTime;
