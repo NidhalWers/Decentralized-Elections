@@ -81,7 +81,7 @@
 
             <div class="form-check form-switch form-check-inline col-lg-2 float-end mt-2">
                 <input class="form-check-input" type="checkbox" id="switch2" v-model="election[0].ElectionBlind" v-on:click="updateElection()"/>
-                <label class="form-check-label pl-2" for="switch2">Cacher l'élection</label>
+                <label v-if="electionStarted" class="form-check-label pl-2" for="switch2">Cacher l'élection</label>
             </div>
             <div class="form-check form-switch form-check-inline col-lg-4 float-end">
                 <div>Vote blanc <div v-if="election[0].ElectionBlind">autorisé</div><div v-if="!election[0].ElectionBlind">non autorisé</div></div>
